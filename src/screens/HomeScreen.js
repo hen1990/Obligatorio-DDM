@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import {SafeAreaView, View, StyleSheet, ScrollView} from "react-native"
+import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native"
 import MyButton from "../components/MyButton"
 import databaseConection from "../database/database-manager"
 import OpenDatabase from "../database/import-database"
@@ -12,26 +12,27 @@ const HomeScreen = ({ navigation }) => {
             const readOnly = false;
             await db.transactionAsync(async tx => {
                 console.log("transaction", tx)
-                const tableExist = await databaseConection.checkTableExist(tx)
-                console.log("table exists", tableExist.rows)
-                if(tableExist.rows.length) {
+                //Chequear tabla Usuario
+                const existeTablaUsuario = await databaseConection.checkTableExistUser(tx)
+                console.log("table exists", existeTablaUsuario.rows)
+                if (existeTablaUsuario.rows.length) {
                     // await databaseConection.dropTable(tx)
                 }
-                const result = await databaseConection.createUserTable(tx)
-                console.log("### results ####", result)
+                const crearTablaUsuario = await databaseConection.createUserTable(tx)
+                console.log("### results ####", crearTablaUsuario)
+
+                const existeTablaTipoMaquina = await databaseConection.checkTableExistTipoMaquina(tx)
+                console.log("table exists", existeTablaTipoMaquina.rows)
+                if (existeTablaTipoMaquina.rows.length) {
+                    // await databaseConection.dropTable(tx)
+                }
+                const crearTablaTipoMaquina = await databaseConection.crearTablaTipoMaquina(tx)
+                console.log("### results ####", crearTablaTipoMaquina)
             }, readOnly);
         }
 
         init().then(() => console.log("exec"))
     }, [])
-
-    const clearDB = async () => {
-        const readOnly = false;
-        await db.transactionAsync(async tx => {
-            databaseConection.deleteAllUser(tx)
-            console.log("borrada")
-        }, readOnly)
-    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -40,20 +41,25 @@ const HomeScreen = ({ navigation }) => {
                     <View style={styles.internalView}>
                         <ScrollView style={styles.scollview}>
                             {/* button Usuario*/}
-                            <MyButton 
-                                onPress={() => navigation.navigate("Usuario")} 
-                                title="Usuario  🏋️‍♂️" 
-                                iconName="user-plus" 
+                            <MyButton
+                                onPress={() => navigation.navigate("Usuario")}
+                                title="Usuario  🏋️‍♂️"
+                                iconName="user-plus"
                                 btnColor="green"
                             />
-                            
-             
+                            {/* button Tipo Maquina*/}
+                            <MyButton
+                                onPress={() => navigation.navigate("TipoMaquina")}
+                                title="Tipo de Maquinas"
+                                iconName="user-plus"
+                                btnColor="green"
+                            />
 
                             {/* Importar db */}
-                            <MyButton 
-                                onPress={() => OpenDatabase("database.db")} 
-                                title="Importar DB" 
-                                iconName="add" 
+                            <MyButton
+                                onPress={() => OpenDatabase("database.db")}
+                                title="Importar DB"
+                                iconName="add"
                                 btnColor="gray"
                             />
                         </ScrollView>
@@ -86,9 +92,9 @@ const styles = StyleSheet.create({
     },
     scollview: {
         marginTop: 30,
-        flex:1,
+        flex: 1,
         flexDirection: "column",
-       
+
     }
 })
 

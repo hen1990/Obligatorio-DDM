@@ -6,56 +6,48 @@ import OpenDatabase from "../database/import-database"
 
 const db = databaseConection.getConnection()
 
-const Usuario = ({ navigation }) => {
+const TipoMaquina = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
                         <ScrollView style={styles.scollview}>
-                            {/* button add user*/}
+                            {/* Agregar Tipo Maquina*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("RegisterUser")} 
-                                title="Registrar Usuario 🖋" 
+                                onPress={() => navigation.navigate("CrearTipoMaquina")} 
+                                title="Agregar Tipo de Máquina 🖋" 
                                 iconName="user-plus" 
                                 btnColor="green"
                             />
                             
-                            {/* button update user */}
+                            {/* Actualizar tipo Maquina */}
                             <MyButton 
-                                onPress={() => navigation.navigate("UpdateUser")} 
-                                title="Actualizar Usuario  ✔✔" 
+                                onPress={() => navigation.navigate("ActualizarTipoMaquina")} 
+                                title="Actualizar Tipo de Máq  ✔✔" 
                                 iconName="user-circle" 
                                 btnColor="green"
                             />
 
-                              {/* button delete user*/}
+                              {/*Eliminar tipo de maquina*/}
                               <MyButton 
-                                onPress={() => navigation.navigate("DeleteUser")} 
-                                title="Borrar Usuario 🚫" 
+                                onPress={() => navigation.navigate("EliminarTipoMaquina")} 
+                                title="Borrar Tipo de Máquina 🚫" 
                                 iconName="user-times" 
                                 btnColor="green"
                             />
 
-                            {/* button Ver user */}
+                            {/* Ver todos tipos de maquina*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("ViewUser")} 
-                                title="Ver Usuario 👁‍🗨" 
+                                onPress={() => navigation.navigate("VerTodosTipoMaquina")} 
+                                title="Ver Tipos de Máquinas 👁‍🗨" 
                                 iconName="user-times" 
                                 btnColor="green"
                             />
 
-                            {/* button Ver todos los usuarios*/}
-                            <MyButton 
-                                onPress={() => navigation.navigate("ViewAllUsers")} 
-                                title="Ver todos los Usuarios 👁‍🗨" 
-                                iconName="user-times" 
-                                btnColor="green"
-                            />
-
-                             {/* button borrar todos los usuarios*/}
+                             {/* borrar todos tipos de maquinas*/}
                              <MyButton 
-                                onPress={() => navigation.navigate("UsuarioBorrarTodo")} 
+                                onPress={() => navigation.navigate("EliminarTodosTipoMaquina")} 
                                 title="Borrar todos! ❌" 
                                 iconName="user-times" 
                                 btnColor="red"
@@ -97,4 +89,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Usuario
+export default TipoMaquina;

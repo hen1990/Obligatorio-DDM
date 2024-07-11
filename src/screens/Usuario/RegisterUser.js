@@ -37,32 +37,80 @@ const RegisterUser = ({ navigation }) => {
   };
 
   // Validar datos
+  //Nombre
   const validateData = () => {
     if (!nombre.trim()) {
       Alert.alert("Ingresr nombre.");
       return false;
     }
-
+    //Apellido
     if (!apellido.trim()) {
       Alert.alert("Ingresar apellido.");
       return false;
     }
-
+    //Cedula
     if (!ci.trim()) {
       Alert.alert("Ingresar cedula.");
       return false;
+    } else {
+      for (i = 0; i < ci.length; i++) {
+        var code = ci.charCodeAt(i);
+        if (code < 48 || code > 57) {
+          Alert.alert("Ingrese solo números.");
+          return false;
+        } else if (ci.length != 8) {
+          Alert.alert("Cédula debe contener 8 dígitos.");
+          return false;
+        }
+      }
     }
+    //Dia
     if (!dia.trim()) {
       Alert.alert("Ingresar dia.");
       return false;
+    } else {
+      for (i = 0; i < dia.length; i++) {
+        var code = dia.charCodeAt(i);
+        if (code < 48 || code > 57) {
+          Alert.alert("Ingrese solo números.");
+          return false;
+        } else if (dia.length != 2) {
+          Alert.alert("Día debe contener 2 dígitos.");
+          return false;
+        }
+      }
     }
+    //Mes
     if (!mes.trim()) {
       Alert.alert("Ingresar mes.");
       return false;
+    } else {
+      for (i = 0; i < mes.length; i++) {
+        var code = mes.charCodeAt(i);
+        if (code < 48 || code > 57) {
+          Alert.alert("Ingrese solo números.");
+          return false;
+        } else if (mes.length != 2) {
+          Alert.alert("Mes debe contener 2 dígitos.");
+          return false;
+        }
+      }
     }
+    //Año
     if (!anio.trim()) {
       Alert.alert("Ingresar año.");
       return false;
+    } else {
+      for (i = 0; i < anio.length; i++) {
+        var code = anio.charCodeAt(i);
+        if (code < 48 || code > 57) {
+          Alert.alert("Ingrese solo números.");
+          return false;
+        } else if (anio.length != 4) {
+          Alert.alert("Año debe contener 4 dígitos.");
+          return false;
+        }
+      }
     }
     return true;
   };
@@ -134,6 +182,7 @@ const RegisterUser = ({ navigation }) => {
                 placeholder="Cédula (Sin puntos ni guión)"
                 onChangeText={setCi}
                 maxLength={8}
+                keyboardType="numeric"
                 style={styles.input}
                 value={ci}
               />
@@ -145,6 +194,7 @@ const RegisterUser = ({ navigation }) => {
                   placeholder="Dia"
                   onChangeText={setDia}
                   maxLength={2}
+                  keyboardType="numeric"
                   style={styles.inputFecha}
                   value={dia}
                 />
@@ -153,6 +203,7 @@ const RegisterUser = ({ navigation }) => {
                   placeholder="Mes"
                   onChangeText={setMes}
                   maxLength={2}
+                  keyboardType="numeric"
                   style={styles.inputFecha}
                   value={mes}
                 />
@@ -160,8 +211,8 @@ const RegisterUser = ({ navigation }) => {
                 <MyInputText
                   placeholder="Año"
                   onChangeText={setAnio}
-                  minLength={4}
                   maxLength={4}
+                  keyboardType="numeric"
                   style={styles.inputFecha}
                   value={anio}
                 />

@@ -7,24 +7,19 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const UpdateUser = ( {navigation}) => {
+const ActualizarTipoMaquina = ( {navigation}) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
     const [nombre, setNombre] = useState("");
-    const [apellido, setApellido] = useState("");
-    const [ci, setCi] = useState("");
-    const [dia, setDia] = useState("")
-    const [mes, setMes] = useState("")
-    const [anio, setAnio] = useState("")
+    const [fotoUrl, setFotoUrl] = useState("");
     const [id, setId] = useState("")
 
     const updateUserDB = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            const fechaNac = `${dia}/${mes}/${anio}`;
-            result = await databaseConection.updateUser(tx, nombre, apellido, ci, fechaNac, id);
+            result = await databaseConection.updateTipoMaquina(tx, nombre, fotoUrl, id);
         }, readOnly);
         return result
     }
@@ -33,7 +28,7 @@ const UpdateUser = ( {navigation}) => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneUser(tx, buscarNombre + "%");
+            result = await databaseConection.getOneTipoMaquina(tx, buscarNombre + "%");
         }, readOnly);
         return result
     }
@@ -41,35 +36,32 @@ const UpdateUser = ( {navigation}) => {
     // TODO funcion que busque al usuario
     const searchUser = async () => {
         if (!buscarNombre.trim()) {
-            Alert.alert("El nombre de usuario no puede estar vacio.")
+            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
             return
         }
         //  llamar a funcion buscar
         const res = await searchDB()
         if (res && res.rows && res.rows.length > 0) {
             setNombre(res.rows[0].nombre)
-            setApellido(res.rows[0].apellido)
-            setCi(res.rows[0].ci)
-            setDia(res.rows[0].fechaNac.slice(0, -8))
-            setMes(res.rows[0].fechaNac.slice(3, -5))
-            setAnio(res.rows[0].fechaNac.slice(6))
-            setId(res.rows[0].user_id)
+            setFotoUrl(res.rows[0].fotoUrl)
+            setId(res.rows[0].id)
         } else {
-            Alert.alert("No se encontró usuario.")
+            Alert.alert("No se encontró Tipo de Máquina.")
             setNombre("")
-            setApellido("")
+            setFotoUrl("")
+            setId("")
         }
     }
 
-    // TODO funcion de hacer el update del usuario
-    const updateUser = async () => {
+    // TODO funcion de hacer el update
+    const updateTipoMaquina = async () => {
         if (!nombre.trim()) {
-            Alert.alert("El nombre de usuario no puede estar vacio.")
+            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
             return
         }
 
-        if (!apellido.trim()) {
-            Alert.alert("El email de usuario no puede estar vacio.")
+        if (!fotoUrl.trim()) {
+            Alert.alert("El URL de la imagen no puede estar vacio.")
             return
         }
         // update
@@ -78,7 +70,7 @@ const UpdateUser = ( {navigation}) => {
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
-                "Usuario actualizado correctamente.",
+                "Tipo de Máquina actualizado correctamente.",
                 [
                   {
                     text: "OK",
@@ -90,7 +82,7 @@ const UpdateUser = ( {navigation}) => {
                 }
               );
         } else {
-            Alert.alert("No se pudo actualizar el usuario")
+            Alert.alert("No se pudo actualizar el Tipo de Máquina")
 
         }
     }
@@ -101,9 +93,9 @@ const UpdateUser = ( {navigation}) => {
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
-                            <MyText text="Buscar Usuario" style={styles.text} />
+                            <MyText text="Buscar Tipo de Máquina" style={styles.text} />
                             <MyInputText
-                                placeholder="Ingrese el nombre de Usuario"
+                                placeholder="Ingrese nombre de Tipo de Máquina"
                                 style={{}}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
@@ -114,62 +106,23 @@ const UpdateUser = ( {navigation}) => {
                                 <Text style={styles.texto}>Actualizar Datos</Text>
                                 {/* Nombre */}
                                 <MyInputText
-                                    placeholder="Nombre"
+                                    placeholder="Tipo de Máquina"
                                     onChangeText={setNombre}
                                     style={styles.input}
                                     value={nombre}
                                 />
 
-                                {/* Apellido */}
+                                {/* URL foto*/}
                                 <MyInputText
-                                    placeholder="Apellido"
-                                    onChangeText={setApellido}
+                                    placeholder="URL de la imágen"
+                                    onChangeText={setFotoUrl}
                                     style={styles.input}
-                                    value={apellido}
+                                    value={fotoUrl}
                                 />
 
-
-                                {/* Cedula */}
-                                <MyInputText
-                                    placeholder="Cédula (Sin puntos ni guión)"
-                                    onChangeText={setCi}
-                                    maxLength={8}
-                                    style={styles.input}
-                                    value={ci}
-                                />
-                                <Text style={styles.texto}>Fecha de Nacimiento:</Text>
-                                <View style={styles.enLinea}>
-                                    {/* Fecha */}
-                                    {/* Dia */}
-                                    <MyInputText
-                                        placeholder="Dia"
-                                        onChangeText={setDia}
-                                        maxLength={2}
-                                        style={styles.inputFecha}
-                                        value={dia}
-                                    />
-                                    {/* Mes */}
-                                    <MyInputText
-                                        placeholder="Mes"
-                                        onChangeText={setMes}
-                                        maxLength={2}
-                                        style={styles.inputFecha}
-                                        value={mes}
-                                    />
-                                    {/* Año */}
-                                    <MyInputText
-                                        placeholder="Año"
-                                        onChangeText={setAnio}
-                                        minLength={4}
-                                        maxLength={4}
-                                        style={styles.inputFecha}
-                                        value={anio}
-                                    />
-
-                                </View>
                                 <MySingleButton
                                     title="Actualizar"
-                                    onPress={updateUser}
+                                    onPress={updateTipoMaquina}
                                     style={styles.button}
                                 />
                             </View>
@@ -230,4 +183,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default UpdateUser
+export default ActualizarTipoMaquina;

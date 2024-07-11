@@ -5,14 +5,20 @@ import { NavigationContainer } from "@react-navigation/native";
 const Stack = createStackNavigator();
 
 // importo todas las pantallas
+//Home Screen
 import HomeScreen from "../screens/HomeScreen";
+import Usuario from "../screens/Usuario";
+
+//Usuario screen
 import RegisterUser from "../screens/Usuario/RegisterUser";
 import UpdateUser from "../screens/Usuario/UpdateUser";
 import DeleteUser from "../screens/Usuario/DeleteUser";
 import ViewUser from "../screens/Usuario/ViewUser";
 import ViewAllUsers from "../screens/Usuario/ViewAllUsers"
-import Usuario from "../screens/Usuario";
 import UsuarioBorrarTodo from "../screens/Usuario/UsuarioBorrarTodo";
+import TipoMaquina from "../screens/TipoMaquina";
+import CrearTipoMaquina from "../screens/TipoMaquina/CrearTipoMaquina";
+import ActualizarTipoMaquina from "../screens/TipoMaquina/ActualizarTipoMaquina";
 
 const RootStack = () => {
     return (
@@ -129,7 +135,7 @@ const RootStack = () => {
                                 fontWeight: "bold",
                                 fontSize: 26
                             }
-                        }} 
+                        }}
                     />
                     {/* ver todos los usuario */}
                     <Stack.Screen
@@ -147,6 +153,57 @@ const RootStack = () => {
                             }
                         }}
                     />
+
+
+                    {/* Tipo Maquina */}
+                    <Stack.Screen
+                        name="TipoMaquina"
+                        component={TipoMaquina}
+                        options={{
+                            title: "Tipos de Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Crear Tipo Maquina */}
+                    <Stack.Screen
+                        name="CrearTipoMaquina"
+                        component={CrearTipoMaquina}
+                        options={{
+                            title: "Tipos de Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Crear Tipo Maquina */}
+                    <Stack.Screen
+                        name="ActualizarTipoMaquina"
+                        component={ActualizarTipoMaquina}
+                        options={{
+                            title: "Actualizar Tipos de Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
                 </Stack.Navigator>
             </NavigationContainer>
         </>

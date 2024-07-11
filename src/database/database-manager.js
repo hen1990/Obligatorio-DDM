@@ -5,12 +5,13 @@ const databaseConection = {
      getConnection() {
         return SQLite.openDatabase(dbName)
     },
+
     //Usuario
-    async checkTableExist(tx) {
+    async checkTableExistUser(tx) {
         const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", []) 
         return res
     },
-    async dropTable(tx) {
+    async dropTableUser(tx) {
         const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS users", [])
         return res
     },
@@ -41,6 +42,45 @@ const databaseConection = {
     },
     async deleteAllUser(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM users", [])
+        return res
+    },
+
+    //Tipo de Maquina
+    async checkTableExistTipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='tipoMaquina'", []) 
+        return res
+    },
+    async dropTabletipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS tipoMaquina", [])
+        return res
+    },
+    async crearTablaTipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS tipoMaquina(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(50), fotoUrl VARCHAR(200))", [])
+        return res
+    },
+    async createTipoMaquina(tx, nombre, fotoUrl) {
+        const res = await tx.executeSqlAsync("INSERT INTO tipoMaquina (nombre, fotoUrl) VALUES (?, ?)", [nombre, fotoUrl])
+        return res
+    },
+    async updateTipoMaquina(tx, nombre, fotoUrl, Id) {
+        console.log(userId)
+        const res = await tx.executeSqlAsync("UPDATE tipoMaquina SET nombre = ?, fotoUrl = ? WHERE id = ?", [nombre, fotoUrl, Id]) 
+        return res
+    },
+    async deleteTipoMaquina(tx, Id) {
+        const res = await tx.executeSqlAsync("DELETE FROM tipoMaquina WHERE id = ?", [Id])
+        return res
+    },
+    async getOneTipoMaquina(tx, nombre) {
+        const res = await tx.executeSqlAsync("SELECT * FROM tipoMaquina WHERE nombre like ?", [nombre])
+        return res
+    },
+    async getAllTipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("SELECT * FROM tipoMaquina", [])
+        return res
+    },
+    async deleteAllTipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("DELETE FROM tipoMaquina", [])
         return res
     },
 }

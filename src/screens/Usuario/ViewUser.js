@@ -14,7 +14,7 @@ import MySingleButton from "../../components/MySingleButton";
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const ViewUser = () => {
+const ViewUser = ({navigation}) => {
   const [nombre, setNombre] = useState("");
   const [userData, setUserData] = useState(null);
 
@@ -90,7 +90,7 @@ const ViewUser = () => {
                 placeholder="Nombre"
                 onChangeText={(text) => setNombre(text)}
               />
-            
+
               <MySingleButton title="Buscar" onPress={getUserData} />
             </KeyboardAvoidingView>
 
