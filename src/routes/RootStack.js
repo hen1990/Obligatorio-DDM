@@ -19,6 +19,15 @@ import UsuarioBorrarTodo from "../screens/Usuario/UsuarioBorrarTodo";
 import TipoMaquina from "../screens/TipoMaquina";
 import CrearTipoMaquina from "../screens/TipoMaquina/CrearTipoMaquina";
 import ActualizarTipoMaquina from "../screens/TipoMaquina/ActualizarTipoMaquina";
+import EliminarTodosTipoMaquina from "../screens/TipoMaquina/EliminarTodosTipoMaquina";
+import VerTodosTipoMaquina from "../screens/TipoMaquina/VerTodosTipoMaquina";
+import Maquina from "../screens/Maquina";
+import CrearMaquina from "../screens/Maquina/CrearMaquina";
+import ActualizarMaquina from "../screens/Maquina/ActualizarMaquina";
+import VerTodoMaquina from "../screens/Maquina/VerTodasMaquinas";
+import EliminarTodoMaquina from "../screens/Maquina/EliminarTodasMaquinas";
+import ElimiarMaquina from "../screens/Maquina/EliminarMaquina";
+import EliminarTipoMaquina from "../screens/TipoMaquina/EliminarTipoMaquina";
 
 const RootStack = () => {
     return (
@@ -153,9 +162,7 @@ const RootStack = () => {
                             }
                         }}
                     />
-
-
-                    {/* Tipo Maquina */}
+                    {/* Tipo Maquina ____________________________________________________________________________________________________________________*/}
                     <Stack.Screen
                         name="TipoMaquina"
                         component={TipoMaquina}
@@ -176,7 +183,7 @@ const RootStack = () => {
                         name="CrearTipoMaquina"
                         component={CrearTipoMaquina}
                         options={{
-                            title: "Tipos de Maquinas",
+                            title: "Ingresar Maquinas",
                             headerStyle: {
                                 backgroundColor: "#b1cb72",
                             },
@@ -187,12 +194,159 @@ const RootStack = () => {
                             }
                         }}
                     />
-                    {/* Crear Tipo Maquina */}
+                    {/* ActualizarTipo Maquina */}
                     <Stack.Screen
                         name="ActualizarTipoMaquina"
                         component={ActualizarTipoMaquina}
                         options={{
                             title: "Actualizar Tipos de Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                      {/* Eliminar Tipo Maquina */}
+                      <Stack.Screen
+                        name="EliminarTipoMaquina"
+                        component={EliminarTipoMaquina}
+                        options={{
+                            title: "Eliminar Tipo de Maquina",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Ver Tipo Maquina */}
+                    <Stack.Screen
+                        name="VerTodosTipoMaquina"
+                        component={VerTodosTipoMaquina}
+                        options={{
+                            title: "Listar Tipos de Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Eliminar Todo Tipo Maquina */}
+                    <Stack.Screen
+                        name="EliminarTodosTipoMaquina"
+                        component={EliminarTodosTipoMaquina}
+                        options={{
+                            title: "Eliminar todos los Tipos de Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Maquina _____________________________________________________________________________________________________________________*/}
+                    <Stack.Screen
+                        name="Maquina"
+                        component={Maquina}
+                        options={{
+                            title: "Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Crear Maquina */}
+                    <Stack.Screen
+                        name="CrearMaquina"
+                        component={CrearMaquina}
+                        options={{
+                            title: "Ingresar Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Actualizar Maquina */}
+                    <Stack.Screen
+                        name="ActualizarMaquina"
+                        component={ActualizarMaquina}
+                        options={{
+                            title: "Actualizar Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Ver Maquina */}
+                    <Stack.Screen
+                        name="VerTodoMaquina"
+                        component={VerTodoMaquina}
+                        options={{
+                            title: "Listar Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                     {/* Eliminar Maquina */}
+                     <Stack.Screen
+                        name="ElimiarMaquina"
+                        component={ElimiarMaquina}
+                        options={{
+                            title: "Eliminar Maquinas",
+                            headerStyle: {
+                                backgroundColor: "#b1cb72",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Eliminar Todo Maquina */}
+                    <Stack.Screen
+                        name="EliminarTodoMaquina"
+                        component={EliminarTodoMaquina}
+                        options={{
+                            title: "Eliminar todas las Maquinas",
                             headerStyle: {
                                 backgroundColor: "#b1cb72",
                             },

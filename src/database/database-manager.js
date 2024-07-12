@@ -2,13 +2,13 @@ import * as SQLite from 'expo-sqlite/legacy';
 const dbName = "database.db"
 
 const databaseConection = {
-     getConnection() {
+    getConnection() {
         return SQLite.openDatabase(dbName)
     },
 
     //Usuario
     async checkTableExistUser(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", []) 
+        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", [])
         return res
     },
     async dropTableUser(tx) {
@@ -24,8 +24,7 @@ const databaseConection = {
         return res
     },
     async updateUser(tx, nombre, apellido, ci, fechaNac, userId) {
-        console.log(userId)
-        const res = await tx.executeSqlAsync("UPDATE users SET nombre = ?, apellido = ?, ci = ?, fechaNac = ? WHERE user_id = ?", [nombre, apellido, ci, fechaNac, userId]) 
+        const res = await tx.executeSqlAsync("UPDATE users SET nombre = ?, apellido = ?, ci = ?, fechaNac = ? WHERE user_id = ?", [nombre, apellido, ci, fechaNac, userId])
         return res
     },
     async deleteUser(tx, userId) {
@@ -47,7 +46,7 @@ const databaseConection = {
 
     //Tipo de Maquina
     async checkTableExistTipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='tipoMaquina'", []) 
+        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='tipoMaquina'", [])
         return res
     },
     async dropTabletipoMaquina(tx) {
@@ -63,8 +62,7 @@ const databaseConection = {
         return res
     },
     async updateTipoMaquina(tx, nombre, fotoUrl, Id) {
-        console.log(userId)
-        const res = await tx.executeSqlAsync("UPDATE tipoMaquina SET nombre = ?, fotoUrl = ? WHERE id = ?", [nombre, fotoUrl, Id]) 
+        const res = await tx.executeSqlAsync("UPDATE tipoMaquina SET nombre = ?, fotoUrl = ? WHERE id = ?", [nombre, fotoUrl, Id])
         return res
     },
     async deleteTipoMaquina(tx, Id) {
@@ -81,6 +79,44 @@ const databaseConection = {
     },
     async deleteAllTipoMaquina(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM tipoMaquina", [])
+        return res
+    },
+
+    //Maquina
+    async checkTableExistMaquina(tx) {
+        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='maquina'", [])
+        return res
+    },
+    async dropTableMaquina(tx) {
+        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS maquina", [])
+        return res
+    },
+    async crearTablaMaquina(tx) {
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS maquina(id INTEGER PRIMARY KEY AUTOINCREMENT, tipoMaquina INTEGER, sala INTEGER, FOREIGN KEY (tipoMaquina) REFERENCES tipoMaquina(id))", [])
+        return res
+    },
+    async createMaquina(tx, tipoMaquina, sala) {
+        const res = await tx.executeSqlAsync("INSERT INTO maquina (tipoMaquina, sala) VALUES (?, ?)", [tipoMaquina, sala])
+        return res
+    },
+    async updateMaquina(tx, tipoMaquina, sala, Id) {
+        const res = await tx.executeSqlAsync("UPDATE maquina SET nombre = ?, fotoUrl = ? WHERE id = ?", [tipoMaquina, sala, Id])
+        return res
+    },
+    async deleteMaquina(tx, Id) {
+        const res = await tx.executeSqlAsync("DELETE FROM maquina WHERE id = ?", [Id])
+        return res
+    },
+    async getOneMaquina(tx, nombre) {
+        const res = await tx.executeSqlAsync("SELECT * FROM maquina WHERE nombre like ?", [nombre])
+        return res
+    },
+    async getAllMaquina(tx) {
+        const res = await tx.executeSqlAsync("SELECT * FROM maquina", [])
+        return res
+    },
+    async deleteAllTipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("DELETE FROM maquina", [])
         return res
     },
 }

@@ -8,7 +8,6 @@ import {
     View,
     Text,
     Button,
-    Image,
 } from "react-native";
 // importar inputs
 import MyInputText from "../../components/MyInputText";
@@ -17,56 +16,57 @@ import MySingleButton from "../../components/MySingleButton";
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const CrearTipoMaquina = ({ navigation }) => {
+const CrearMaquina = ({ navigation }) => {
     // Definir los estados.
-    const [nombre, setNombre] = useState("");
-    const [fotoUrl, setFotoUrl] = useState("");
+    const [tipoMaquina, setTipoMaquina] = useState("");
+    const [sala, setSala] = useState("");
 
     // funcion de borrar los estados
     const clearData = () => {
-        setNombre("");
-        setFotoUrl("");
+        setTipoMaquina("");
+        setSala("");
     };
 
     // Validar datos
-    //Nombre
+    //Tipo Maquina
     const validateData = () => {
-        if (!nombre.trim()) {
-            Alert.alert("Ingresr nombre.");
+        if (!tipoMaquina.trim()) {
+            Alert.alert("Ingresr Tipo de Máquina.");
             return false;
         }
-        //fotoUrl
-        if (!fotoUrl.trim()) {
-            Alert.alert("Ingresar URL de la imagen.");
+        //Sala
+        if (!sala.trim()) {
+            Alert.alert("Ingresar número de sala.");
             return false;
         }
         return true;
     }
 
-    const guardarTipoMaquina = async () => {
+    const guardarMaquina = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.createTipoMaquina(tx, nombre, fotoUrl);
+            result = await databaseConection.createMaquina(tx, tipoMaquina, sala);
         }, readOnly);
 
         return result
     };
 
     // funcion que se encargue de guardar los datos.
-    const crearTipoMaquina = async () => {
+    const crearMaquina = async () => {
         if (validateData()) {
             //guardar datos
-            const result = await guardarTipoMaquina();
+            const result = await guardarMaquina();
+            
             if (result.rowsAffected > 0) {
                 //  validar si se guardar los datos
                 Alert.alert(
                     "Exito",
-                    "Tipo de Máquina ingresada correctamente.",
+                    "Máquina ingresada correctamente.",
                     [
                         {
                             text: "OK",
-                            onPress: () => navigation.navigate("TipoMaquina"),
+                            onPress: () => navigation.navigate("Maquina"),
                         },
                     ],
                     {
@@ -74,7 +74,7 @@ const CrearTipoMaquina = ({ navigation }) => {
                     }
                 );
             } else {
-                Alert.alert("Error al registrar usuario.")
+                Alert.alert("Error al ingresar una máquina.")
             }
         }
     };
@@ -86,36 +86,25 @@ const CrearTipoMaquina = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
 
-                            <Text style={styles.texto}>Tipo de Máquina</Text>
-                            {/* Nombre */}
+                            <Text style={styles.texto}>Máquina</Text>
+                            {/* Tipo Maquina */}
                             <MyInputText
-                                placeholder="Nombre"
-                                onChangeText={setNombre}
+                                placeholder="Tipo de Maquina"
+                                onChangeText={setTipoMaquina}
                                 style={styles.input}
-                                value={nombre}
+                                value={tipoMaquina}
                             />
-                            <Text style={styles.texto}>URL de la Imágen</Text>
-                            {/* URL de imagen */}
+                            <Text style={styles.texto}>Número de Sala</Text>
+                            {/* Sala */}
                             <MyInputText
-                                placeholder="URL de la imágen"
-                                onChangeText={setFotoUrl}
+                                placeholder="Número de Sala"
+                                onChangeText={setSala}
                                 style={styles.input}
-                                value={fotoUrl}
-                            />
-                            <Image
-                                source={{
-                                    uri: `${fotoUrl}`,
-                                    method: 'POST',
-                                    headers: {
-                                        Pragma: 'no-cache',
-                                    },
-                                    body: 'Your Body goes here',
-                                }}
-                                style={{ width: "100%", height: 300 }}
+                                value={sala}
                             />
 
                             {/* button */}
-                            <MySingleButton onPress={crearTipoMaquina} title={"Crear"} />
+                            <MySingleButton onPress={crearMaquina} title={"Ingresar"} />
                         </KeyboardAvoidingView>
                     </ScrollView>
                 </View>
@@ -153,4 +142,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CrearTipoMaquina;
+export default CrearMaquina;

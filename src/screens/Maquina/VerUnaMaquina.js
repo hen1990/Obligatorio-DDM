@@ -1,21 +1,28 @@
-import { useState } from "react"
-import { StyleSheet, View, SafeAreaView, Alert, KeyboardAvoidingView, ScrollView, Image } from "react-native"
-import MyInputText from "../../components/MyInputText"
-import MySingleButton from "../../components/MySingleButton"
-import MyText from "../../components/MyText"
+import { useState } from "react";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  View,
+} from "react-native";
+import MyText from "../../components/MyText";
+import MyInputText from "../../components/MyInputText";
+import MySingleButton from "../../components/MySingleButton";
 
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const EliminarTipoMaquina = ({navigation}) => {
-    const [nombre, setNombre] = useState("");
-  const [tipoMaquinaDatos, setTipoMaquinaDatos] = useState(null);
+const VerUnaMaquina = ({navigation}) => {
+  const [nombre, setNombre] = useState("");
+  const [userData, setUserData] = useState(null);
 
   const getUserDB = async () => {
     const readOnly = false;
     let result = null;
     await db.transactionAsync(async (tx) => {
-      result = await databaseConection.getOneTipoMaquina(tx, nombre + "%");
+      result = await databaseConection.getOneUser(tx, nombre + "%");
     }, readOnly);
     return result;
   };
@@ -23,51 +30,51 @@ const EliminarTipoMaquina = ({navigation}) => {
   const getUserData = async () => {
     //  validar username
     if (!nombre.trim()) {
-      Alert.alert("Ingrese un Tipo de Máquina.");
+      Alert.alert("El nombre de usuario es requerido");
       return;
     }
     // consultar por los datos del usuario
     const res = await getUserDB()
 
     if (res.rows.length > 0) {
-      setTipoMaquinaDatos(res.rows[0])
+      setUserData(res.rows[0])
 
     } else {
-      Alert.alert("Tipo de máquina no encontrado")
-      setTipoMaquinaDatos(null)
+      Alert.alert("Usuario no encontrado")
+      setUserData(null)
     }
   };
 
-  const deleteTipoMaquinaDB = async () => {
+  const deleteUserDB = async () => {
     const readOnly = false;
     let result = null
     await db.transactionAsync(async (tx) => {
-      result = await databaseConection.deleteTipoMaquina(tx, tipoMaquinaDatos.id);
+      result = await databaseConection.deleteUser(tx, userData.user_id);
     }, readOnly);
     return result
   }
 
-  const deleteTipoMaquina = async () => {
+  const deleteUser = async () => {
     // TODO hacer funcionalidad de borrado
-    const res = await deleteTipoMaquinaDB()
+    const res = await deleteUserDB()
     if (res.rowsAffected > 0) {
       Alert.alert(
         "Exito!",
-        "Tipo de Máquina eliminado.",
+        "Usuario eliminado.",
         [
           {
             text: "OK",
-            onPress: () => navigation.navigate("TipoMaquina"),
+            onPress: () => navigation.navigate("Usuario"),
           },
         ],
         {
           cancelable: false,
         }
       );
-      setTipoMaquinaDatos(null)
+      setUserData(null)
     } else {
-      Alert.alert("El Tipo de máquina no existe")
-      setTipoMaquinaDatos(null)
+      Alert.alert("El usuario no existe")
+      setUserData(null)
     }
   }
 
@@ -77,39 +84,35 @@ const EliminarTipoMaquina = ({navigation}) => {
         <View style={styles.generalView}>
           <ScrollView>
             <KeyboardAvoidingView style={styles.keyboardView}>
-              <MyText text="Buscar Tipo de Máquina" style={styles.text} />
+              <MyText text="Buscar Usuario" style={styles.text} />
               <MyInputText
                 style={styles.inputStyle}
-                placeholder="Tipo de máquina"
+                placeholder="Nombre"
                 onChangeText={(text) => setNombre(text)}
               />
-            
+
               <MySingleButton title="Buscar" onPress={getUserData} />
             </KeyboardAvoidingView>
 
-            {(!tipoMaquinaDatos) ? "" :
+            {(!userData) ? "" :
               <>
                 <View style={styles.presenterView}>
                   <MyText
-                    text={`${tipoMaquinaDatos == null ? "" : tipoMaquinaDatos.nombre}`}
+                    text={`Usuario: ${userData == null ? "" : userData.nombre + " " + userData.apellido}`}
                     style={styles.presenterText}
                   />
-                 <Image
-                    source={{
-                        uri: `${tipoMaquinaDatos.fotoUrl}`,
-                        method: 'POST',
-                        headers: {
-                            Pragma: 'no-cache',
-                        },
-                        body: 'Your Body goes here',
-                    }}
-                    style={{ width: "100%", height: 300 }}
-                />
-
+                  <MyText
+                    text={`Cédula: ${userData == null ? "" : userData.ci}`}
+                    style={styles.presenterText}
+                  />
+                  <MyText
+                    text={`F. Nacimiento: ${userData == null ? "" : userData.fechaNac}`}
+                    style={styles.presenterText}
+                  />
                 </View>
 
                 <MySingleButton title="Eliminar"
-                  onPress={deleteTipoMaquina} />
+                  onPress={deleteUser} />
               </>}
           </ScrollView>
         </View>
@@ -141,23 +144,22 @@ const styles = StyleSheet.create({
     color: "black",
   },
   presenterView: {
-    marginLeft: 30,
-    marginRight: 30,
+    // flex: 2,
+    marginLeft: 10,
+    marginRight: 10,
     marginTop: 15,
-    padding: 1,
     fontSize: 30,
-    backgroundColor: "#fff",
-    borderColor: "#A9DFBF",
+    backgroundColor: "2f2f2f",
+    borderColor: "2f2f2f",
     borderRadius: 5,
-    borderWidth: 1,
+    borderWidth: 0,
+    padding: 20
   },
   presenterText: {
-    textAlign: "center",
     margin: 5,
-    fontSize: 30,
-    color: "black",
-    backgroundColor: "#A9DFBF"
+    fontSize: 20,
+    color: "black"
   },
 });
 
-export default EliminarTipoMaquina;
+export default VerUnaMaquina;

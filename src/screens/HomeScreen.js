@@ -21,13 +21,18 @@ const HomeScreen = ({ navigation }) => {
                 const crearTablaUsuario = await databaseConection.createUserTable(tx)
                 console.log("### results ####", crearTablaUsuario)
 
-                const existeTablaTipoMaquina = await databaseConection.checkTableExistTipoMaquina(tx)
-                console.log("table exists", existeTablaTipoMaquina.rows)
-                if (existeTablaTipoMaquina.rows.length) {
+                //Chequear tabla TipoMaquina
+                const crearTablaTipoMaquina = await databaseConection.crearTablaTipoMaquina(tx)
+
+                //Chequear tabla Maquina
+                const existeTablaMaquina = await databaseConection.checkTableExistMaquina(tx)
+                console.log("table exists", existeTablaMaquina.rows)
+                if (existeTablaMaquina.rows.length) {
                     // await databaseConection.dropTable(tx)
                 }
-                const crearTablaTipoMaquina = await databaseConection.crearTablaTipoMaquina(tx)
-                console.log("### results ####", crearTablaTipoMaquina)
+                const crearTablaMaquina = await databaseConection.crearTablaMaquina(tx)
+                console.log("### results ####", crearTablaMaquina)
+
             }, readOnly);
         }
 
@@ -43,14 +48,22 @@ const HomeScreen = ({ navigation }) => {
                             {/* button Usuario*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Usuario")}
-                                title="Usuario  🏋️‍♂️"
+                                title="Usuarios"
                                 iconName="user-plus"
                                 btnColor="green"
                             />
                             {/* button Tipo Maquina*/}
                             <MyButton
                                 onPress={() => navigation.navigate("TipoMaquina")}
-                                title="Tipo de Maquinas"
+                                title="Tipos de Maquinas"
+                                iconName="user-plus"
+                                btnColor="green"
+                            />
+
+                            {/* button Maquina*/}
+                            <MyButton
+                                onPress={() => navigation.navigate("Maquina")}
+                                title="Maquinas"
                                 iconName="user-plus"
                                 btnColor="green"
                             />
@@ -98,4 +111,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default HomeScreen
+export default HomeScreen;

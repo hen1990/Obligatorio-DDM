@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -7,19 +7,19 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const ActualizarTipoMaquina = ({ navigation }) => {
+const EliminarMaquina = ( {navigation}) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
-    const [nombre, setNombre] = useState("");
-    const [fotoUrl, setFotoUrl] = useState("");
+    const [tipoMaquina, setTipoMaquina] = useState("");
+    const [sala, setSala] = useState("");
     const [id, setId] = useState("")
 
-    const updateUserDB = async () => {
+    const updateMaquinaDB = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateTipoMaquina(tx, nombre, fotoUrl, id);
+            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
         }, readOnly);
         return result
     }
@@ -28,7 +28,7 @@ const ActualizarTipoMaquina = ({ navigation }) => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneTipoMaquina(tx, buscarNombre + "%");
+            result = await databaseConection.getOneMaquina(tx, buscarNombre + "%");
         }, readOnly);
         console.log(result)
         return result
@@ -37,51 +37,51 @@ const ActualizarTipoMaquina = ({ navigation }) => {
     // TODO funcion que busque al usuario
     const searchUser = async () => {
         if (!buscarNombre.trim()) {
-            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
+            Alert.alert("El nombre de Máquina no puede estar vacio.")
             return
         }
         //  llamar a funcion buscar
         const res = await searchDB()
         if (res && res.rows && res.rows.length > 0) {
-            setNombre(res.rows[0].nombre)
-            setFotoUrl(res.rows[0].fotoUrl)
+            setTipoMaquina(res.rows[0].nombre)
+            setSala(res.rows[0].fotoUrl)
             setId(res.rows[0].id)
         } else {
-            Alert.alert("No se encontró Tipo de Máquina.")
-            setNombre("")
-            setFotoUrl("")
+            Alert.alert("No se encontró Máquina.")
+            setTipoMaquina("")
+            setSala("")
             setId("")
         }
     }
 
     // TODO funcion de hacer el update
-    const updateTipoMaquina = async () => {
-        if (!nombre.trim()) {
-            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
+    const updateMaquina = async () => {
+        if (!tipoMaquina.trim()) {
+            Alert.alert("El nombre de Máquina no puede estar vacio.")
             return
         }
 
-        if (!fotoUrl.trim()) {
-            Alert.alert("El URL de la imagen no puede estar vacio.")
+        if (!sala.trim()) {
+            Alert.alert("El número de sala no puede estar vacio.")
             return
         }
         // update
-        const res = await updateUserDB()
+        const res = await updateMaquinaDB()
         console.log("res", res)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
-                "Tipo de Máquina actualizado correctamente.",
+                "Máquina actualizado correctamente.",
                 [
-                    {
-                        text: "OK",
-                        onPress: () => navigation.navigate("TipoMaquina"),
-                    },
+                  {
+                    text: "OK",
+                    onPress: () => navigation.navigate("TipoMaquina"),
+                  },
                 ],
                 {
-                    cancelable: false,
+                  cancelable: false,
                 }
-            );
+              );
         } else {
             Alert.alert("No se pudo actualizar el Tipo de Máquina")
 
@@ -119,18 +119,6 @@ const ActualizarTipoMaquina = ({ navigation }) => {
                                     onChangeText={setFotoUrl}
                                     style={styles.input}
                                     value={fotoUrl}
-                                />
-
-                                <Image
-                                    source={{
-                                        uri: `${fotoUrl}`,
-                                        method: 'POST',
-                                        headers: {
-                                            Pragma: 'no-cache',
-                                        },
-                                        body: 'Your Body goes here',
-                                    }}
-                                    style={{ width: "100%", height: 300 }}
                                 />
 
                                 <MySingleButton
@@ -196,4 +184,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ActualizarTipoMaquina;
+export default EliminarMaquina;

@@ -13,15 +13,16 @@ import MyInputText from "../../components/MyInputText";
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const VerTodosTipoMaquina = () => {
+const VerTodoMaquina = () => {
     // estado
     const [users, setUsers] = useState([]);
+    const [tipoMaquina, setTipoMaquina] = useState([]);
 
-    const getUsersDB = async () => {
+    const getMaquinaDB = async () => {
         const readOnly = false;
         let result = null;
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
+            result = await databaseConection.getAllMaquina(tx);
         }, readOnly);
         // seteara test
         return result;
@@ -29,7 +30,7 @@ const VerTodosTipoMaquina = () => {
 
     useEffect(() => {
         const loadUser = async () => {
-            const res = await getUsersDB()
+            const res = await getMaquinaDB()
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
@@ -43,20 +44,11 @@ const VerTodosTipoMaquina = () => {
 
     const listItemView = (item) => {
         return (
-            <View key={item.id} style={styles.presenterView}>
-                <MyText text={item.nombre} style={styles.presenterText} />
+            <View key={item.id} style={styles.listItemView}>
+                <MyText text={`Tipo: ${item.tipoMaquina}`} style={styles.text_data} />
+                
+                <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
 
-                <Image
-                    source={{
-                        uri: `${item.fotoUrl}`,
-                        method: 'POST',
-                        headers: {
-                            Pragma: 'no-cache',
-                        },
-                        body: 'Your Body goes here',
-                    }}
-                    style={{ width: "100%", height: 300 }}
-                />
 
             </View>
         );
@@ -99,7 +91,6 @@ const styles = StyleSheet.create({
         marginTop: 0,
     },
     listItemView: {
-        alignItems:  "center",
         backgroundColor: "#d9f1d1",
         padding: 30,
         borderColor: "#c6eab9",
@@ -117,23 +108,18 @@ const styles = StyleSheet.create({
         color: "black",
     },
     presenterView: {
-        padding: 1,
-        marginLeft: 30,
-        marginRight: 30,
-        marginTop: 20,
+        // flex: 2,
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 15,
         fontSize: 30,
-        backgroundColor: "#fff",
-        borderColor: "#A9DFBF",
+        height: 100,
+        backgroundColor: "2f2f2f",
+        borderColor: "2f2f2f",
         borderRadius: 5,
-        borderWidth: 1,
-      },
-      presenterText: {
-        textAlign: "center",
-        margin: 5,
-        fontSize: 30,
-        color: "black",
-        backgroundColor: "#A9DFBF"
-      },
+        borderWidth: 0,
+        padding: 20
+    },
     text_data: {
         padding: 5,
         marginLeft: 10,
@@ -148,7 +134,7 @@ const styles = StyleSheet.create({
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 16,
+        fontSize: 24,
     },
     empty: {
         flex: 1,
@@ -164,4 +150,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VerTodosTipoMaquina;
+export default VerTodoMaquina;
