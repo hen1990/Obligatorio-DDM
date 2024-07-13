@@ -108,7 +108,7 @@ const EliminarTipoMaquina = ({navigation}) => {
 
                 </View>
 
-                <MySingleButton title="Eliminar"
+                <MySingleButton title="Eliminar" style={{backgroundColor: 'orange' }}
                   onPress={deleteTipoMaquina} />
               </>}
           </ScrollView>

@@ -104,7 +104,7 @@ const DeleteUser = ({navigation}) => {
                   />
                 </View>
 
-                <MySingleButton title="Eliminar"
+                <MySingleButton title="Eliminar" style={{backgroundColor: 'orange' }}
                   onPress={deleteUser} />
               </>}
           </ScrollView>

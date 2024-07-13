@@ -110,7 +110,7 @@ const databaseConection = {
         return res
     },
     async updateMaquina(tx, tipoMaquina, sala, Id) {
-        const res = await tx.executeSqlAsync("UPDATE maquina SET nombre = ?, fotoUrl = ? WHERE id = ?", [tipoMaquina, sala, Id])
+        const res = await tx.executeSqlAsync("UPDATE maquina SET tipoMaquina = ?, sala = ? WHERE id = ?", [tipoMaquina, sala, Id])
         return res
     },
     async deleteMaquina(tx, Id) {
@@ -118,7 +118,8 @@ const databaseConection = {
         return res
     },
     async getOneMaquina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT * FROM maquina WHERE nombre like ?", [nombre])
+        const res = await tx.executeSqlAsync("SELECT tm.nombre, tm.fotoUrl, m.id, m.sala, m.tipoMaquina FROM maquina m inner join tipoMaquina tm on m.tipoMaquina = tm.id WHERE tm.nombre like ?", [nombre])
+        console.log("una Maquina obtenida")
         return res
     },
     async getAllMaquina(tx) {

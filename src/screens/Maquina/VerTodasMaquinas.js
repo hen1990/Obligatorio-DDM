@@ -97,7 +97,7 @@ const VerTodoMaquina = () => {
                         />
                     ) : (
                         <View style={styles.empty}>
-                            <Text style={styles.emptyText}> No se encuentran usuarios</Text>
+                            <Text style={styles.emptyText}> No se encuentran máquinas</Text>
                         </View>
                     )}
                 </View>

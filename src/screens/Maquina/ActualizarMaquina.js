@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text } from "react-native"
+import { Picker } from '@react-native-picker/picker';
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -7,19 +8,36 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const ActualizarMaquina = ( {navigation}) => {
+const ActualizarMaquina = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
+    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
     const [tipoMaquina, setTipoMaquina] = useState("");
+    const [nombreMaquina, setNombreMaquina] = useState("");
     const [sala, setSala] = useState("");
     const [id, setId] = useState("")
 
-    const updateUserDB = async () => {
+    useEffect(() => {
+        const cargarTiposMaquinas = async () => {
+            const res = await buscarTiposMaquinas()
+            console.log("Resultado de buscarTiposMaquinas:", res);
+            if (res.rows.length > 0) {
+                let elements = []
+                for (let i = 0; i < res.rows.length; i++) {
+                    elements.push(res.rows[i])
+                }
+                setListaTiposMaquinas(elements)
+            }
+        }
+        cargarTiposMaquinas()
+    }, []);
+
+    const buscarTiposMaquinas = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
+            result = await databaseConection.getAllTipoMaquina(tx);
         }, readOnly);
         return result
     }
@@ -34,8 +52,8 @@ const ActualizarMaquina = ( {navigation}) => {
         return result
     }
 
-    // TODO funcion que busque al usuario
-    const searchUser = async () => {
+    // Buscar maquina
+    const buscarMaquina = async () => {
         if (!buscarNombre.trim()) {
             Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
             return
@@ -44,6 +62,7 @@ const ActualizarMaquina = ( {navigation}) => {
         const res = await searchDB()
         if (res && res.rows && res.rows.length > 0) {
             setTipoMaquina(res.rows[0].tipoMaquina)
+            setNombreMaquina(res.rows[0].nombre)
             setSala(res.rows[0].sala)
             setId(res.rows[0].id)
         } else {
@@ -54,39 +73,67 @@ const ActualizarMaquina = ( {navigation}) => {
         }
     }
 
-    // TODO funcion de hacer el update
+    // Actualizar datos
     const updateMaquina = async () => {
-        if (!tipoMaquina.trim()) {
-            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
-            return
+        //Validar Tipo Maquina
+        if (!tipoMaquina.toString().trim()) {
+            Alert.alert("Ingresar Tipo de Máquina.");
+            return false;
+        }
+        //Validar Sala
+        if (!sala.trim()) {
+            Alert.alert("Ingresar número de sala.");
+            return false;
+        } else {
+            for (i = 0; i < sala.length; i++) {
+                var code = sala.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Sala: Ingrese solo números.");
+                    return false;
+                }
+            }
         }
 
-        if (!sala.trim()) {
-            Alert.alert("El Número de sala no puede estar vacio.")
-            return
-        }
         // update
-        const res = await updateUserDB()
+        const res = await updateMaquinaDB()
         console.log("res", res)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
                 "Máquina actualizado correctamente.",
                 [
-                  {
-                    text: "OK",
-                    onPress: () => navigation.navigate("Maquina"),
-                  },
+                    {
+                        text: "OK",
+                        onPress: () => navigation.navigate("Maquina"),
+                    },
                 ],
                 {
-                  cancelable: false,
+                    cancelable: false,
                 }
-              );
+            );
         } else {
             Alert.alert("No se pudo actualizar la Máquina")
 
         }
     }
+
+    const updateMaquinaDB = async () => {
+        const readOnly = false;
+        let result = null
+        
+        console.log(tipoMaquina)
+        await db.transactionAsync(async (tx) => {
+            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
+        }, readOnly);
+        return result
+    }
+
+    const renderizarListaTiposMaquinas = () => {
+        return listaTiposMaquinas.map(tipo => (
+            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
+        ));
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
@@ -100,23 +147,32 @@ const ActualizarMaquina = ( {navigation}) => {
                                 style={{}}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
-                            <MySingleButton title="Buscar" onPress={searchUser} />
+                            <MySingleButton title="Buscar" onPress={buscarMaquina} />
 
 
                             <View style={styles.form}>
-                                <Text style={styles.texto}>Actualizar Datos</Text>
                                 {/* Tipo Maquina */}
-                                <MyInputText
-                                    placeholder="Tipo de Máquina"
-                                    onChangeText={setTipoMaquina}
-                                    style={styles.input}
-                                    value={tipoMaquina}
-                                />
+                                <Text style={styles.texto}>Datos Actuales</Text>
+                                <Text style={styles.texto}>{nombreMaquina}</Text>
+                                <Text style={styles.texto}>Nº de Sala: {sala}</Text>
+                                <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
+                                {/* Tipo Maquina Lista*/}
+                                <View style={styles.picker}>
+                                    <Picker
+                                        selectedValue={tipoMaquina}
+                                        style={{ height: 100, width: "100%" }}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                            setTipoMaquina(itemValue)
+                                        }>
+                                        {renderizarListaTiposMaquinas()}
+                                    </Picker>
+                                </View>
 
                                 {/* Sala*/}
                                 <MyInputText
                                     placeholder="Número de sala"
                                     onChangeText={setSala}
+                                    keyboardType="numeric"
                                     style={styles.input}
                                     value={sala}
                                 />
@@ -182,6 +238,17 @@ const styles = StyleSheet.create({
         marginLeft: 50,
         marginTop: 8
     },
+    picker: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#ecf8e8",
+        borderColor: "#E0E0E0",
+        borderRadius: 0,
+        borderWidth: 1,
+        margin: 30,
+        height: 70,
+    }
 })
 
 export default ActualizarMaquina;

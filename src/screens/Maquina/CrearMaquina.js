@@ -45,34 +45,34 @@ const CrearMaquina = ({ navigation }) => {
         }, readOnly);
         return result
     }
-    
+
     const renderizarListaTiposMaquinas = () => {
         return listaTiposMaquinas.map(tipo => (
             <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
         ));
     };
 
-    // Validar datos
-    //Tipo Maquina
+    // Validar Datos
     const validateData = () => {
+        //Validar Tipo Maquina
         if (!tipoMaquina.toString().trim()) {
             Alert.alert("Ingresar Tipo de Máquina.");
             return false;
         }
-        //Sala
+        //Validar Sala
         if (!sala.trim()) {
             Alert.alert("Ingresar número de sala.");
             return false;
-          } else {
+        } else {
             for (i = 0; i < sala.length; i++) {
-              var code = sala.charCodeAt(i);
-              if (code < 48 || code > 57) {
-                Alert.alert("Sala: Ingrese solo números.");
-                return false;
-              } 
+                var code = sala.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Sala: Ingrese solo números.");
+                    return false;
+                }
             }
-          }
-          return true;
+        }
+        return true;
     }
 
     const guardarMaquina = async () => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, Image } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -7,19 +7,37 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const EliminarMaquina = ( {navigation}) => {
+const EliminarMaquina = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
+    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
     const [tipoMaquina, setTipoMaquina] = useState("");
+    const [nombreMaquina, setNombreMaquina] = useState("");
+    const [fotoUrl, setFotoUrl] = useState("");
     const [sala, setSala] = useState("");
     const [id, setId] = useState("")
 
-    const updateMaquinaDB = async () => {
+    useEffect(() => {
+        const cargarTiposMaquinas = async () => {
+            const res = await buscarTiposMaquinas()
+            console.log("Resultado de buscarTiposMaquinas:", res);
+            if (res.rows.length > 0) {
+                let elements = []
+                for (let i = 0; i < res.rows.length; i++) {
+                    elements.push(res.rows[i])
+                }
+                setListaTiposMaquinas(elements)
+            }
+        }
+        cargarTiposMaquinas()
+    }, []);
+
+    const buscarTiposMaquinas = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
+            result = await databaseConection.getAllTipoMaquina(tx);
         }, readOnly);
         return result
     }
@@ -34,59 +52,59 @@ const EliminarMaquina = ( {navigation}) => {
         return result
     }
 
-    // TODO funcion que busque al usuario
-    const searchUser = async () => {
+    // Buscar maquina
+    const buscarMaquina = async () => {
         if (!buscarNombre.trim()) {
-            Alert.alert("El nombre de Máquina no puede estar vacio.")
+            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
             return
         }
         //  llamar a funcion buscar
         const res = await searchDB()
         if (res && res.rows && res.rows.length > 0) {
-            setTipoMaquina(res.rows[0].nombre)
-            setSala(res.rows[0].fotoUrl)
+            setTipoMaquina(res.rows[0].tipoMaquina)
+            setNombreMaquina(res.rows[0].nombre)
+            setFotoUrl(res.rows[0].fotoUrl)
+            setSala(res.rows[0].sala)
             setId(res.rows[0].id)
         } else {
-            Alert.alert("No se encontró Máquina.")
+            Alert.alert("No se encontró Tipo de Máquina.")
             setTipoMaquina("")
             setSala("")
             setId("")
         }
     }
 
-    // TODO funcion de hacer el update
-    const updateMaquina = async () => {
-        if (!tipoMaquina.trim()) {
-            Alert.alert("El nombre de Máquina no puede estar vacio.")
-            return
-        }
-
-        if (!sala.trim()) {
-            Alert.alert("El número de sala no puede estar vacio.")
-            return
-        }
-        // update
-        const res = await updateMaquinaDB()
-        console.log("res", res)
+    const deleteMaquina = async () => {
+        // Borrar maquina
+        const res = await deleteMaquinaDB()
         if (res.rowsAffected > 0) {
-            Alert.alert(
-                "Exito!",
-                "Máquina actualizado correctamente.",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => navigation.navigate("TipoMaquina"),
-                  },
-                ],
-                {
-                  cancelable: false,
-                }
-              );
+          Alert.alert(
+            "Exito!",
+            "Máquina eliminada.",
+            [
+              {
+                text: "OK",
+                onPress: () => navigation.navigate("Maquina"),
+              },
+            ],
+            {
+              cancelable: false,
+            }
+          );
         } else {
-            Alert.alert("No se pudo actualizar el Tipo de Máquina")
-
+          Alert.alert("La máquina no existe")
         }
-    }
+      }
+
+      const deleteMaquinaDB = async () => {
+        const readOnly = false;
+        let result = null
+        await db.transactionAsync(async (tx) => {
+          result = await databaseConection.deleteMaquina(tx, id);
+        }, readOnly);
+        return result
+      }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
@@ -100,33 +118,35 @@ const EliminarMaquina = ( {navigation}) => {
                                 style={{}}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
-                            <MySingleButton title="Buscar" onPress={searchUser} />
+                            <MySingleButton title="Buscar" onPress={buscarMaquina} />
 
 
-                            <View style={styles.form}>
-                                <Text style={styles.texto}>Actualizar Datos</Text>
-                                {/* Nombre */}
-                                <MyInputText
-                                    placeholder="Tipo de Máquina"
-                                    onChangeText={setNombre}
-                                    style={styles.input}
-                                    value={nombre}
-                                />
+                            <View style={styles.generalView}>
 
-                                {/* URL foto*/}
-                                <MyInputText
-                                    placeholder="URL de la imágen"
-                                    onChangeText={setFotoUrl}
-                                    style={styles.input}
-                                    value={fotoUrl}
-                                />
+                                {nombreMaquina.trim() ? <>
+                                    <View key={id} style={styles.listItemView}>
 
-                                <MySingleButton
-                                    title="Actualizar"
-                                    onPress={updateTipoMaquina}
-                                    style={styles.button}
-                                />
+                                        <View style={styles.textContainer}>
+                                            <MyText text={nombreMaquina} style={styles.text_data} />
+                                            <MyText text={`Nº de Sala: ${sala}`} style={styles.text_data1} />
+                                        </View>
+                                        <View style={styles.imageContainer}>
+                                            <Image
+                                                source={{ uri: fotoUrl }}
+                                                style={styles.image}
+                                            />
+                                        </View>
+
+
+                                    </View>
+                                    <MySingleButton title="Eliminar" style={{backgroundColor: 'orange' }}
+                  onPress={deleteMaquina} />
+                                </> : ""
+                                }
+
+
                             </View>
+
 
                         </KeyboardAvoidingView>
                     </ScrollView>
@@ -152,6 +172,30 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         color: "black",
         fontSize: 20
+    },
+    text_data: {
+        padding: 5,
+        marginLeft: 10,
+        color: "black",
+        alignContent: "center",
+        alignItems: "center",
+        fontSize: 28,
+    },
+    text_data1: {
+        padding: 5,
+        marginLeft: 10,
+        color: "#2f2f2f",
+        alignContent: "center",
+        alignItems: "center",
+        fontSize: 24,
+    },
+    listItemView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        margin: 15,
+        borderBottomWidth: 0,
+        borderBottomColor: '#A9DFBF',
     },
     input: {
         padding: 15
@@ -181,6 +225,18 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginLeft: 50,
         marginTop: 8
+    },
+    textContainer: {
+        flex: 1,
+        marginRight: 10,
+    },
+    imageContainer: {
+        width: 120,
+        height: 120,
+    },
+    image: {
+        flex: 1, // Para que la imagen ocupe todo el espacio disponible
+        resizeMode: 'cover', // Ajustar tamaño de la imagen según el espacio disponible
     },
 })
 
