@@ -17,7 +17,7 @@ const EliminarTodoMaquina = ({ navigation }) => {
                 [
                   {
                     text: "OK",
-                    onPress: () => navigation.navigate("TipoMaquina"),
+                    onPress: () => navigation.navigate("Maquina"),
                   },
                 ],
                 {

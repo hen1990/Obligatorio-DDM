@@ -102,44 +102,50 @@ const ActualizarTipoMaquina = ({ navigation }) => {
                             />
                             <MySingleButton title="Buscar" onPress={searchUser} />
 
+                            {/*Presentacion de la FOTO*/}
+                            {/* Se utiliza fotoUrl para prevenir error al cargar la imagen*/}
+                            {(!fotoUrl) ? "" :
+                                <>
+                                    <View style={styles.form}>
+                                        <Text style={styles.texto}>Actualizar Datos</Text>
 
-                            <View style={styles.form}>
-                                <Text style={styles.texto}>Actualizar Datos</Text>
-                                {/* Nombre */}
-                                <MyInputText
-                                    placeholder="Tipo de Máquina"
-                                    onChangeText={setNombre}
-                                    style={styles.input}
-                                    value={nombre}
-                                />
 
-                                {/* URL foto*/}
-                                <MyInputText
-                                    placeholder="URL de la imágen"
-                                    onChangeText={setFotoUrl}
-                                    style={styles.input}
-                                    value={fotoUrl}
-                                />
+                                        {/* Nombre */}
+                                        <MyInputText
+                                            placeholder="Tipo de Máquina"
+                                            onChangeText={setNombre}
+                                            style={styles.input}
+                                            value={nombre}
+                                        />
 
-                                <Image
-                                    source={{
-                                        uri: `${fotoUrl}`,
-                                        method: 'POST',
-                                        headers: {
-                                            Pragma: 'no-cache',
-                                        },
-                                        body: 'Your Body goes here',
-                                    }}
-                                    style={{ width: "100%", height: 300 }}
-                                />
+                                        {/* URL foto*/}
+                                        <MyInputText
+                                            placeholder="URL de la imágen"
+                                            onChangeText={setFotoUrl}
+                                            style={styles.input}
+                                            value={fotoUrl}
+                                        />
 
-                                <MySingleButton
-                                    title="Actualizar"
-                                    onPress={updateTipoMaquina}
-                                    style={styles.button}
-                                />
-                            </View>
+                                        <Image
+                                            source={{
+                                                uri: `${fotoUrl}`,
+                                                method: 'POST',
+                                                headers: {
+                                                    Pragma: 'no-cache',
+                                                },
+                                                body: 'Your Body goes here',
+                                            }}
+                                            style={{ width: "100%", height: 300 }}
+                                        />
 
+                                        <MySingleButton
+                                            title="Actualizar"
+                                            onPress={updateTipoMaquina}
+                                            style={styles.button}
+                                        />
+                                    </View>
+                                </>
+                            }
                         </KeyboardAvoidingView>
                     </ScrollView>
                 </View>
@@ -167,6 +173,17 @@ const styles = StyleSheet.create({
     },
     input: {
         padding: 15
+    },
+    presenterView: {
+        marginLeft: 30,
+        marginRight: 30,
+        marginTop: 15,
+        padding: 1,
+        fontSize: 30,
+        backgroundColor: "#fff",
+        borderColor: "#A9DFBF",
+        borderRadius: 5,
+        borderWidth: 1,
     },
     keyBoardView: {
         flex: 1,

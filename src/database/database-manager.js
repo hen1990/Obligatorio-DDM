@@ -58,7 +58,7 @@ const databaseConection = {
         return res
     },
     async createTipoMaquina(tx, nombre, fotoUrl) {
-        const res = await tx.executeSqlAsync("INSERT INTO tipoMaquina (nombre, fotoUrl) VALUES (?, ?)", [nombre, fotoUrl])
+        const res = await tx.executeSqlAsync("INSERT INTO tipoMaquina(nombre, fotoUrl) VALUES (?, ?)", [nombre, fotoUrl])
         return res
     },
     async updateTipoMaquina(tx, nombre, fotoUrl, Id) {
@@ -80,6 +80,16 @@ const databaseConection = {
     async deleteAllTipoMaquina(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM tipoMaquina", [])
         return res
+    },
+
+    async agregarTipoMaquina(tx) {
+        const res = await tx.executeSqlAsync("INSERT INTO tipoMaquina(nombre, fotoUrl) VALUES" +
+            "('Polea Doble', 'https://dcdn.mitiendanube.com/stores/001/358/569/products/polea-doble-enfrentada1-40cbf68175faee810116022595090988-640-0.jpg')," +
+            "('Eliptica', 'https://www.suplementos.uy/pub/media/catalog/product/cache/b6cd9ba2ecc3ac531fe12d57b014dcd6/e/l/eliptica_sl.jpg')," +
+            "('Prensa De Pierna', 'https://cdn.etenonfitness.com/assets/products/PL1018/PL1018%20-%20Etenon%20Uni-Bi-Lateral%20Leg%20Press-large.png')," +
+            "('Bicicleta', 'https://www.kangaroofitness.com.au/cdn/shop/files/100_2_2d7a9a63-83df-4d6a-83e6-dff1fe29b518.png?v=1711545867')" , [])
+            console.log("Datos agregados, tipoMaquina")
+            return res
     },
 
     //Maquina

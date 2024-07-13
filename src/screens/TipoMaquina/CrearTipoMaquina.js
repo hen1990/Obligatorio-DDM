@@ -22,15 +22,9 @@ const CrearTipoMaquina = ({ navigation }) => {
     const [nombre, setNombre] = useState("");
     const [fotoUrl, setFotoUrl] = useState("");
 
-    // funcion de borrar los estados
-    const clearData = () => {
-        setNombre("");
-        setFotoUrl("");
-    };
-
     // Validar datos
-    //Nombre
     const validateData = () => {
+        //Nombre
         if (!nombre.trim()) {
             Alert.alert("Ingresr nombre.");
             return false;
@@ -102,18 +96,28 @@ const CrearTipoMaquina = ({ navigation }) => {
                                 style={styles.input}
                                 value={fotoUrl}
                             />
-                            <Image
-                                source={{
-                                    uri: `${fotoUrl}`,
-                                    method: 'POST',
-                                    headers: {
-                                        Pragma: 'no-cache',
-                                    },
-                                    body: 'Your Body goes here',
-                                }}
-                                style={{ width: "100%", height: 300 }}
-                            />
+                            {/*Presentacion de la FOTO*/}
+                            <View style={styles.presenterView}>
+                                {fotoUrl.length == 0 ?
+                                    <Text style={{ fontSize: 20, margin: 20, lineHeight: 40 }}>
+                                        Esperando la imágen... {"\n"}
+                                        Aquí verás la imágen al ser cargada.{"\n"}
+                                        Si no se visualiza correctamente verifiqueque que la URL sea correcta.
+                                    </Text>
 
+                                    :
+                                    <Image
+                                        source={{
+                                            uri: `${fotoUrl}`,
+                                            method: 'POST',
+                                            headers: {
+                                                Pragma: 'no-cache',
+                                            },
+                                            body: 'Your Body goes here',
+                                        }}
+                                        style={{ width: "100%", height: "100%" }}
+                                    />}
+                            </View>
                             {/* button */}
                             <MySingleButton onPress={crearTipoMaquina} title={"Crear"} />
                         </KeyboardAvoidingView>
@@ -144,6 +148,18 @@ const styles = StyleSheet.create({
     input: {
         padding: 5,
         textAlignVertical: "top",
+    },
+    presenterView: {
+        marginLeft: 30,
+        marginRight: 30,
+        marginTop: 15,
+        padding: 1,
+        fontSize: 20,
+        backgroundColor: "#fff",
+        borderColor: "#A9DFBF",
+        borderRadius: 5,
+        borderWidth: 1,
+        height: 300
     },
     texto: {
         fontSize: 20,

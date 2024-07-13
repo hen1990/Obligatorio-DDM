@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     StyleSheet,
     SafeAreaView,
@@ -7,8 +7,8 @@ import {
     Alert,
     View,
     Text,
-    Button,
 } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
@@ -19,27 +19,60 @@ const db = databaseConection.getConnection();
 const CrearMaquina = ({ navigation }) => {
     // Definir los estados.
     const [tipoMaquina, setTipoMaquina] = useState("");
+    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
     const [sala, setSala] = useState("");
 
-    // funcion de borrar los estados
-    const clearData = () => {
-        setTipoMaquina("");
-        setSala("");
+    useEffect(() => {
+        const cargarTiposMaquinas = async () => {
+            const res = await buscarTiposMaquinas()
+            console.log("Resultado de buscarTiposMaquinas:", res);
+            if (res.rows.length > 0) {
+                let elements = []
+                for (let i = 0; i < res.rows.length; i++) {
+                    elements.push(res.rows[i])
+                }
+                setListaTiposMaquinas(elements)
+            }
+        }
+        cargarTiposMaquinas()
+    }, []);
+
+    const buscarTiposMaquinas = async () => {
+        const readOnly = false;
+        let result = null
+        await db.transactionAsync(async (tx) => {
+            result = await databaseConection.getAllTipoMaquina(tx);
+        }, readOnly);
+        return result
+    }
+    
+    const renderizarListaTiposMaquinas = () => {
+        return listaTiposMaquinas.map(tipo => (
+            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
+        ));
     };
 
     // Validar datos
     //Tipo Maquina
     const validateData = () => {
-        if (!tipoMaquina.trim()) {
-            Alert.alert("Ingresr Tipo de Máquina.");
+        if (!tipoMaquina.toString().trim()) {
+            Alert.alert("Ingresar Tipo de Máquina.");
             return false;
         }
         //Sala
         if (!sala.trim()) {
             Alert.alert("Ingresar número de sala.");
             return false;
-        }
-        return true;
+          } else {
+            for (i = 0; i < sala.length; i++) {
+              var code = sala.charCodeAt(i);
+              if (code < 48 || code > 57) {
+                Alert.alert("Sala: Ingrese solo números.");
+                return false;
+              } 
+            }
+          }
+          return true;
     }
 
     const guardarMaquina = async () => {
@@ -57,7 +90,7 @@ const CrearMaquina = ({ navigation }) => {
         if (validateData()) {
             //guardar datos
             const result = await guardarMaquina();
-            
+
             if (result.rowsAffected > 0) {
                 //  validar si se guardar los datos
                 Alert.alert(
@@ -86,19 +119,24 @@ const CrearMaquina = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
 
-                            <Text style={styles.texto}>Máquina</Text>
-                            {/* Tipo Maquina */}
-                            <MyInputText
-                                placeholder="Tipo de Maquina"
-                                onChangeText={setTipoMaquina}
-                                style={styles.input}
-                                value={tipoMaquina}
-                            />
+                            <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
+                            {/* Tipo Maquina Lista*/}
+                            <View style={styles.picker}>
+                                <Picker
+                                    selectedValue={tipoMaquina}
+                                    style={{ height: 100, width: "100%" }}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                        setTipoMaquina(itemValue)
+                                    }>
+                                    {renderizarListaTiposMaquinas()}
+                                </Picker>
+                            </View>
                             <Text style={styles.texto}>Número de Sala</Text>
                             {/* Sala */}
                             <MyInputText
                                 placeholder="Número de Sala"
                                 onChangeText={setSala}
+                                keyboardType="numeric"
                                 style={styles.input}
                                 value={sala}
                             />
@@ -140,6 +178,17 @@ const styles = StyleSheet.create({
         marginLeft: 50,
         marginTop: 8
     },
+    picker: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#ecf8e8",
+        borderColor: "#E0E0E0",
+        borderRadius: 0,
+        borderWidth: 1,
+        margin: 30,
+        height: 70,
+    }
 });
 
 export default CrearMaquina;

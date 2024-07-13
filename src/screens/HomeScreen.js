@@ -11,29 +11,41 @@ const HomeScreen = ({ navigation }) => {
         const init = async () => {
             const readOnly = false;
             await db.transactionAsync(async tx => {
+
+                await databaseConection.dropTableUser(tx)
+                await databaseConection.dropTabletipoMaquina(tx)        
+                await databaseConection.dropTableMaquina(tx)
                 console.log("transaction", tx)
                 //Chequear tabla Usuario
                 const existeTablaUsuario = await databaseConection.checkTableExistUser(tx)
-                console.log("table exists", existeTablaUsuario.rows)
+                console.log("table usuario exists", existeTablaUsuario.rows)
                 if (existeTablaUsuario.rows.length) {
                     // await databaseConection.dropTable(tx)
                 }
                 const crearTablaUsuario = await databaseConection.createUserTable(tx)
-                console.log("### results ####", crearTablaUsuario)
+                console.log("### tabla usuario ####", crearTablaUsuario)
 
-                //Chequear tabla TipoMaquina
+                //Chequear tabla TipoMaquina 
+                const existeTablaTipoMaquina = await databaseConection.checkTableExistTipoMaquina(tx)
+                console.log("table tipoMaquina exists", existeTablaTipoMaquina.rows)
+                if (existeTablaTipoMaquina.rows.length) {
+                    // await databaseConection.dropTable(tx)
+                }
                 const crearTablaTipoMaquina = await databaseConection.crearTablaTipoMaquina(tx)
-
+                console.log("### tabla maquina ####", crearTablaTipoMaquina)
+                
                 //Chequear tabla Maquina
                 const existeTablaMaquina = await databaseConection.checkTableExistMaquina(tx)
-                console.log("table exists", existeTablaMaquina.rows)
+                console.log("table maquina exists", existeTablaMaquina.rows)
                 if (existeTablaMaquina.rows.length) {
                     // await databaseConection.dropTable(tx)
                 }
                 const crearTablaMaquina = await databaseConection.crearTablaMaquina(tx)
-                console.log("### results ####", crearTablaMaquina)
+                console.log("### tabla maquina ####", crearTablaMaquina)
 
-            }, readOnly);
+
+                await databaseConection.agregarTipoMaquina(tx)
+            }, console.log("fin"), readOnly);
         }
 
         init().then(() => console.log("exec"))
