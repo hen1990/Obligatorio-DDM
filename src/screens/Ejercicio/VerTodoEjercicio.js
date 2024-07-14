@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React, {useCallback} from 'react';
 import {
     StyleSheet,
     SafeAreaView,
@@ -6,81 +7,94 @@ import {
     View,
     Text,
     Image,
+    Linking,
+    Button,
+    Platform
 } from "react-native";
+import Video, { VideoRef } from 'react-native';
 import MyText from "../../components/MyText";
 
 import databaseConection from "../../database/database-manager";
+import Maquina from "../Maquina";
 const db = databaseConection.getConnection();
 
 const VerTodoEjercicio = () => {
     // estado
-    const [maquina, setMaquina] = useState([]);
-    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
+    const [ejercicio, setEjercicio] = useState([]);
+    //const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
 
     useEffect(() => {
-        const cargarTiposMaquinas = async () => {
-            console.log("holaaa")
-            const res = await buscarTiposMaquinas();
-            console.log("Resultado de buscarTiposMaquinas:", res);
+        console.log("cargando Ejercicios");
+        const cargarEjercicio = async () => {
+            const res = await buscarEjercicios();
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
                     elements.push(res.rows[i])
                 }
-                setListaTiposMaquinas(elements);
-                console.log("tipoMaquinas", elements);
-                cargarMaquinas();
+                setEjercicio(elements);
+                console.log("Ejercicios", elements);
             }
         }
-        const cargarMaquinas = async () => {
-            const res = await buscarMaquinas();
-            if (res.rows.length > 0) {
-                let elements = []
-                for (let i = 0; i < res.rows.length; i++) {
-                    elements.push(res.rows[i])
-                }
-                setMaquina(elements);
-                console.log("Maquinas", elements);
-            }
-        }
-        cargarTiposMaquinas();
+        cargarEjercicio();
     }, []);
 
-    const buscarMaquinas = async () => {
+    const buscarEjercicios = async () => {
+        console.log("buscando ejercicio")
         const readOnly = false;
         let result = null;
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllMaquina(tx);
+            result = await databaseConection.getAllEjercicio(tx);
+            console.log("resultado", result)
         }, readOnly);
         // seteara test
         return result;
     };
 
-    const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result;
-    }
+    const OpenURLButton = ({url, children}) => {
+        const handlePress = useCallback(async () => {
+          // Checking if the link is supported for links with custom URL scheme.
+          const supported = await Linking.canOpenURL(url);
+      
+          if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
+          } else {
+            Alert.alert(`Don't know how to open this URL: ${url}`);
+          }
+        }, [url]);
+
+          // Define the color based on the platform
+  const buttonColor = Platform.select({
+    ios: '#007AFF',   // Blue color for iOS
+    android: '#3DDC84' // Green color for Android
+  });
+      
+        return <Button title={children} onPress={handlePress}  color={buttonColor}/>;
+      };
+
+ 
 
     const listItemView = (item) => {
-        const tipoMaquina = listaTiposMaquinas.find(tipo => tipo.id == item.tipoMaquina);
-        console.log(tipoMaquina)
+        const supportedURL = 'https://google.com';
+
         return (
             <View key={item.id} style={styles.listItemView}>
-            <View style={styles.textContainer}>
-                <MyText text={tipoMaquina.nombre} style={styles.text_data} />
-                <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
+                <View style={styles.textContainer}>
+                    <MyText text={item.nom_ejercicio} style={styles.text_data} />
+                    <MyText text={`Máquina: ${item.nombre}`} style={styles.text_data1} />
+                </View>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={{ uri: item.fotoUrl }}
+                        style={styles.image}
+                    />
+
+                    <OpenURLButton url={item.videoUrl} style={styles.button}>Ver Video</OpenURLButton>
+
+                </View>
             </View>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={{ uri: tipoMaquina.fotoUrl }}
-                    style={styles.image}
-                />
-            </View>
-        </View>
         );
     };
 
@@ -88,9 +102,9 @@ const VerTodoEjercicio = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
-                    {maquina.length ? (
+                    {ejercicio.length ? (
                         <FlatList
-                            data={maquina}
+                            data={ejercicio}
                             contentContainerStyle={styles.flatContainer}
                             keyExtractor={(index) => index.toString()}
                             renderItem={({ item }) => listItemView(item)}
@@ -156,18 +170,18 @@ const styles = StyleSheet.create({
     },
 
     listItemView: {
-        flexDirection: 'row', 
-        alignItems: 'center', 
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#A9DFBF',
     },
     textContainer: {
-        flex: 1, 
+        flex: 1,
         marginRight: 10,
     },
     imageContainer: {
-        width: 120, 
+        width: 120,
         height: 120,
     },
     image: {

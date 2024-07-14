@@ -6,56 +6,48 @@ import OpenDatabase from "../database/import-database"
 
 const db = databaseConection.getConnection()
 
-const Usuario = ({ navigation }) => {
+const Ejercicio = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
                         <ScrollView style={styles.scollview}>
-                            {/* button add user*/}
+                            {/* Agregar Ejercicio*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("RegisterUser")} 
-                                title="Registrar Usuario 🖋" 
+                                onPress={() => navigation.navigate("CrearEjercicio")} 
+                                title="Agregar Ejercicio 🖋" 
                                 iconName="user-plus" 
-                                btnColor="#AFB42B"
+                                btnColor="#00838F"
                             />
                             
-                            {/* button update user */}
+                            {/* Actualizar Ejercicio */}
                             <MyButton 
-                                onPress={() => navigation.navigate("UpdateUser")} 
-                                title="Actualizar Usuario  ✔✔" 
+                                onPress={() => navigation.navigate("ActualizarEjercicio")} 
+                                title="Actualizar Máquina  ✔✔" 
                                 iconName="user-circle" 
-                                btnColor="#AFB42B"
+                                btnColor="#00838F"
                             />
 
-                              {/* button delete user*/}
+                              {/*Eliminar Ejercicio*/}
                               <MyButton 
-                                onPress={() => navigation.navigate("DeleteUser")} 
-                                title="Borrar Usuario 🚫" 
+                                onPress={() => navigation.navigate("ElimiarEjercicio")} 
+                                title="Borrar Ejercicio 🚫" 
                                 iconName="user-times" 
-                                btnColor="#AFB42B"
+                                btnColor="#00838F"
                             />
 
-                            {/* button Ver user */}
+                            {/* Ver todos Ejercicio*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("ViewUser")} 
-                                title="Buscar Usuario 👁‍🗨" 
+                                onPress={() => navigation.navigate("VerTodoEjercicio")} 
+                                title="Ver Ejercicios 👁‍🗨" 
                                 iconName="user-times" 
-                                btnColor="#AFB42B"
+                                btnColor="#00838F"
                             />
 
-                            {/* button Ver todos los usuarios*/}
-                            <MyButton 
-                                onPress={() => navigation.navigate("ViewAllUsers")} 
-                                title="Ver todos los Usuarios 👁‍🗨" 
-                                iconName="user-times" 
-                                btnColor="#AFB42B"
-                            />
-
-                             {/* button borrar todos los usuarios*/}
+                             {/* borrar todos Ejercicios*/}
                              <MyButton 
-                                onPress={() => navigation.navigate("UsuarioBorrarTodo")} 
+                                onPress={() => navigation.navigate("EliminarTodoEjercicio")} 
                                 title="Borrar todos! ❌" 
                                 iconName="user-times" 
                                 btnColor="red"
@@ -68,7 +60,6 @@ const Usuario = ({ navigation }) => {
         </SafeAreaView>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -97,4 +88,5 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Usuario;
+
+export default Ejercicio;

@@ -13,8 +13,9 @@ const HomeScreen = ({ navigation }) => {
             await db.transactionAsync(async tx => {
 
                 await databaseConection.dropTableUser(tx)
-                await databaseConection.dropTabletipoMaquina(tx)        
+                await databaseConection.dropTabletipoMaquina(tx)
                 await databaseConection.dropTableMaquina(tx)
+                await databaseConection.dropTableEjercicio(tx)
                 console.log("transaction", tx)
                 //Chequear tabla Usuario
                 const existeTablaUsuario = await databaseConection.checkTableExistUser(tx)
@@ -33,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
                 }
                 const crearTablaTipoMaquina = await databaseConection.crearTablaTipoMaquina(tx)
                 console.log("### tabla maquina ####", crearTablaTipoMaquina)
-                
+
                 //Chequear tabla Maquina
                 const existeTablaMaquina = await databaseConection.checkTableExistMaquina(tx)
                 console.log("table maquina exists", existeTablaMaquina.rows)
@@ -43,9 +44,13 @@ const HomeScreen = ({ navigation }) => {
                 const crearTablaMaquina = await databaseConection.crearTablaMaquina(tx)
                 console.log("### tabla maquina ####", crearTablaMaquina)
 
-
+                await databaseConection.crearTablaEjercicio(tx)
+                //Agregar datos de prueba
+                await databaseConection.agregarUsuarios(tx)
                 await databaseConection.agregarTipoMaquina(tx)
-            }, console.log("fin"), readOnly);
+                await databaseConection.agregarMaquinas(tx)
+                await databaseConection.agregarEjercicios(tx)
+            }, readOnly);
         }
 
         init().then(() => console.log("exec"))
@@ -62,14 +67,14 @@ const HomeScreen = ({ navigation }) => {
                                 onPress={() => navigation.navigate("Usuario")}
                                 title="Usuarios"
                                 iconName="user-plus"
-                                btnColor="green"
+                                btnColor="#AFB42B"
                             />
                             {/* button Tipo Maquina*/}
                             <MyButton
                                 onPress={() => navigation.navigate("TipoMaquina")}
                                 title="Tipos de Maquinas"
                                 iconName="user-plus"
-                                btnColor="green"
+                                btnColor="#689F38"
                             />
 
                             {/* button Maquina*/}
@@ -80,13 +85,23 @@ const HomeScreen = ({ navigation }) => {
                                 btnColor="green"
                             />
 
+                            {/* button Rutina*/}
+                            <MyButton
+                                onPress={() => navigation.navigate("Rutina")}
+                                title="Rutinas"
+                                iconName="user-plus"
+                                btnColor="#00838F"
+                            />
+
                             {/* button Ejercicio*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Ejercicio")}
                                 title="Ejercicios"
                                 iconName="user-plus"
-                                btnColor="green"
+                                btnColor="#673AB7"
                             />
+
+
 
                             {/* Importar db */}
                             <MyButton

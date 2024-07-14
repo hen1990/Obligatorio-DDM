@@ -12,20 +12,23 @@ import MyText from "../../components/MyText";
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const VerTodoMaquina = () => {
+const VerTodoEjercicio = () => {
     // estado
     const [maquina, setMaquina] = useState([]);
     const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
 
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
+            console.log("holaaa")
             const res = await buscarTiposMaquinas();
+            console.log("Resultado de buscarTiposMaquinas:", res);
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
                     elements.push(res.rows[i])
                 }
                 setListaTiposMaquinas(elements);
+                console.log("tipoMaquinas", elements);
                 cargarMaquinas();
             }
         }
@@ -37,6 +40,7 @@ const VerTodoMaquina = () => {
                     elements.push(res.rows[i])
                 }
                 setMaquina(elements);
+                console.log("Maquinas", elements);
             }
         }
         cargarTiposMaquinas();
@@ -63,6 +67,7 @@ const VerTodoMaquina = () => {
 
     const listItemView = (item) => {
         const tipoMaquina = listaTiposMaquinas.find(tipo => tipo.id == item.tipoMaquina);
+        console.log(tipoMaquina)
         return (
             <View key={item.id} style={styles.listItemView}>
             <View style={styles.textContainer}>
@@ -171,4 +176,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VerTodoMaquina;
+export default VerTodoEjercicio;

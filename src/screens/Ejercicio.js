@@ -6,48 +6,48 @@ import OpenDatabase from "../database/import-database"
 
 const db = databaseConection.getConnection()
 
-const Maquina = ({ navigation }) => {
+const Ejercicio = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
                         <ScrollView style={styles.scollview}>
-                            {/* Agregar Maquina*/}
+                            {/* Agregar Ejercicio*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("CrearMaquina")} 
-                                title="Agregar Máquina 🖋" 
+                                onPress={() => navigation.navigate("CrearEjercicio")} 
+                                title="Agregar Ejercicio 🖋" 
                                 iconName="user-plus" 
-                                btnColor="green"
+                                btnColor="#673AB7"
                             />
                             
-                            {/* Actualizar Maquina */}
+                            {/* Actualizar Ejercicio */}
                             <MyButton 
-                                onPress={() => navigation.navigate("ActualizarMaquina")} 
+                                onPress={() => navigation.navigate("ActualizarEjercicio")} 
                                 title="Actualizar Máquina  ✔✔" 
                                 iconName="user-circle" 
-                                btnColor="green"
+                                btnColor="#673AB7"
                             />
 
-                              {/*Eliminar maquina*/}
+                              {/*Eliminar Ejercicio*/}
                               <MyButton 
-                                onPress={() => navigation.navigate("ElimiarMaquina")} 
-                                title="Borrar Máquina 🚫" 
+                                onPress={() => navigation.navigate("ElimiarEjercicio")} 
+                                title="Borrar Ejercicio 🚫" 
                                 iconName="user-times" 
-                                btnColor="green"
+                                btnColor="#673AB7"
                             />
 
-                            {/* Ver todos maquina*/}
+                            {/* Ver todos Ejercicio*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("VerTodoMaquina")} 
-                                title="Ver Máquinas 👁‍🗨" 
+                                onPress={() => navigation.navigate("VerTodoEjercicio")} 
+                                title="Ver Ejercicios 👁‍🗨" 
                                 iconName="user-times" 
-                                btnColor="green"
+                                btnColor="#673AB7"
                             />
 
-                             {/* borrar todos maquinas*/}
+                             {/* borrar todos Ejercicios*/}
                              <MyButton 
-                                onPress={() => navigation.navigate("EliminarTodoMaquina")} 
+                                onPress={() => navigation.navigate("EliminarTodoEjercicio")} 
                                 title="Borrar todos! ❌" 
                                 iconName="user-times" 
                                 btnColor="red"
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default Maquina;
+export default Ejercicio;

@@ -28,6 +28,13 @@ import VerTodoMaquina from "../screens/Maquina/VerTodasMaquinas";
 import EliminarTodoMaquina from "../screens/Maquina/EliminarTodasMaquinas";
 import ElimiarMaquina from "../screens/Maquina/EliminarMaquina";
 import EliminarTipoMaquina from "../screens/TipoMaquina/EliminarTipoMaquina";
+import Ejercicio from "../screens/Ejercicio";
+import CrearEjercicio from "../screens/Ejercicio/CrearEjercicio";
+import ActualizarEjercicio from "../screens/Ejercicio/ActualizarEjercicio";
+import EliminarEjercicio from "../screens/Ejercicio/EliminarEjercicio";
+import VerTodoEjercicio from "../screens/Ejercicio/VerTodoEjercicio";
+import EliminarTodoEjercicio from "../screens/Ejercicio/EliminarTodoEjercicio";
+import Rutina from "../screens/Rutina"
 
 const RootStack = () => {
     return (
@@ -57,7 +64,7 @@ const RootStack = () => {
                         options={{
                             title: "Usuario",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -73,7 +80,7 @@ const RootStack = () => {
                         options={{
                             title: "Registrar Usuario",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -89,7 +96,7 @@ const RootStack = () => {
                         options={{
                             title: "Actualizar Usuario",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -105,7 +112,7 @@ const RootStack = () => {
                         options={{
                             title: "Borrar Usuario",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -121,7 +128,7 @@ const RootStack = () => {
                         options={{
                             title: "Ver Usuario",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -137,7 +144,7 @@ const RootStack = () => {
                         options={{
                             title: "Todos los Usuarios",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -146,14 +153,14 @@ const RootStack = () => {
                             }
                         }}
                     />
-                    {/* ver todos los usuario */}
+                    {/* Borrar todos los usuario */}
                     <Stack.Screen
                         name="UsuarioBorrarTodo"
                         component={UsuarioBorrarTodo}
                         options={{
                             title: "Borrar Todos los Usuario",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#C0CA33",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -169,7 +176,7 @@ const RootStack = () => {
                         options={{
                             title: "Tipos de Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -185,7 +192,7 @@ const RootStack = () => {
                         options={{
                             title: "Ingresar Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -201,7 +208,7 @@ const RootStack = () => {
                         options={{
                             title: "Actualizar Tipos de Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -217,7 +224,7 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar Tipo de Maquina",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -233,7 +240,7 @@ const RootStack = () => {
                         options={{
                             title: "Listar Tipos de Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -250,7 +257,7 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar todos los Tipos de Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -267,7 +274,7 @@ const RootStack = () => {
                         options={{
                             title: "Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#4CAF50",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -283,7 +290,7 @@ const RootStack = () => {
                         options={{
                             title: "Ingresar Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#4CAF50",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -299,7 +306,7 @@ const RootStack = () => {
                         options={{
                             title: "Actualizar Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#4CAF50",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -315,7 +322,7 @@ const RootStack = () => {
                         options={{
                             title: "Listar Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#4CAF50",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -331,7 +338,7 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#4CAF50",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -348,7 +355,122 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar todas las Maquinas",
                             headerStyle: {
-                                backgroundColor: "#b1cb72",
+                                backgroundColor: "#4CAF50",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Ejercicio _____________________________________________________________________________________________________________________*/}
+                    <Stack.Screen
+                        name="Ejercicio"
+                        component={Ejercicio}
+                        options={{
+                            title: "Ejercicios",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Crear Ejercicio */}
+                    <Stack.Screen
+                        name="CrearEjercicio"
+                        component={CrearEjercicio}
+                        options={{
+                            title: "Ingresar Ejercicio",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Actualizar Ejercicio */}
+                    <Stack.Screen
+                        name="ActualizarEjercicio"
+                        component={ActualizarEjercicio}
+                        options={{
+                            title: "Actualizar Ejercicio",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Ver Ejercicio */}
+                    <Stack.Screen
+                        name="VerTodoEjercicio"
+                        component={VerTodoEjercicio}
+                        options={{
+                            title: "Listar Ejercicios",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                     {/* Eliminar Ejercicio */}
+                     <Stack.Screen
+                        name="ElimiarEjercicio"
+                        component={EliminarEjercicio}
+                        options={{
+                            title: "Eliminar Ejercicio",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Eliminar Todo Ejercicios */}
+                    <Stack.Screen
+                        name="EliminarTodoEjercicio"
+                        component={EliminarTodoEjercicio}
+                        options={{
+                            title: "Eliminar todos los Ejercicios",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Rutina _____________________________________________________________________________________________________________________*/}
+                    <Stack.Screen
+                        name="Rutina"
+                        component={Rutina}
+                        options={{
+                            title: "Rutinas",
+                            headerStyle: {
+                                backgroundColor: "#00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {

@@ -15,39 +15,39 @@ const Maquina = ({ navigation }) => {
                         <ScrollView style={styles.scollview}>
                             {/* Agregar Maquina*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("CrearEjercicio")} 
-                                title="Agregar Ejercicio 🖋" 
+                                onPress={() => navigation.navigate("CrearMaquina")} 
+                                title="Agregar Máquina 🖋" 
                                 iconName="user-plus" 
                                 btnColor="green"
                             />
                             
-                            {/* Actualizar Ejercicio */}
+                            {/* Actualizar Maquina */}
                             <MyButton 
-                                onPress={() => navigation.navigate("ActualizarEjercicio")} 
+                                onPress={() => navigation.navigate("ActualizarMaquina")} 
                                 title="Actualizar Máquina  ✔✔" 
                                 iconName="user-circle" 
                                 btnColor="green"
                             />
 
-                              {/*Eliminar Ejercicio*/}
+                              {/*Eliminar maquina*/}
                               <MyButton 
-                                onPress={() => navigation.navigate("ElimiarEjercicio")} 
-                                title="Borrar Ejercicio 🚫" 
+                                onPress={() => navigation.navigate("ElimiarMaquina")} 
+                                title="Borrar Máquina 🚫" 
                                 iconName="user-times" 
                                 btnColor="green"
                             />
 
-                            {/* Ver todos Ejercicio*/}
+                            {/* Ver todos maquina*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("VerTodoMaquina")} 
-                                title="Ver Ejercicios 👁‍🗨" 
+                                title="Ver Máquinas 👁‍🗨" 
                                 iconName="user-times" 
                                 btnColor="green"
                             />
 
-                             {/* borrar todos Ejercicios*/}
+                             {/* borrar todos maquinas*/}
                              <MyButton 
-                                onPress={() => navigation.navigate("EliminarTodoEjercicio")} 
+                                onPress={() => navigation.navigate("EliminarTodoMaquina")} 
                                 title="Borrar todos! ❌" 
                                 iconName="user-times" 
                                 btnColor="red"

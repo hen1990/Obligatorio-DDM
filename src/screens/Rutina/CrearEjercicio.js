@@ -18,12 +18,10 @@ const db = databaseConection.getConnection();
 
 const CrearEjercicio = ({ navigation }) => {
     // Definir los estados.
-    const [nombre, setNombre] = useState("");
     const [tipoMaquina, setTipoMaquina] = useState("");
     const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
-    const [videoUrl, setVideoUrl] = useState("");
+    const [sala, setSala] = useState("");
 
-    //Buscar tipoMaquina para Listar
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
             const res = await buscarTiposMaquinas()
@@ -57,39 +55,51 @@ const CrearEjercicio = ({ navigation }) => {
     // Validar Datos
     const validateData = () => {
         //Validar Tipo Maquina
-        if (!nombre.toString().trim()) {
+        if (!tipoMaquina.toString().trim()) {
             Alert.alert("Ingresar Tipo de Máquina.");
             return false;
         }
-
+        //Validar Sala
+        if (!sala.trim()) {
+            Alert.alert("Ingresar número de sala.");
+            return false;
+        } else {
+            for (i = 0; i < sala.length; i++) {
+                var code = sala.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Sala: Ingrese solo números.");
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
-    const guardarEjercicio = async () => {
+    const guardarMaquina = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.createEjercicio(tx, nombre, tipoMaquina, videoUrl);
+            result = await databaseConection.createMaquina(tx, tipoMaquina, sala);
         }, readOnly);
 
         return result
     };
 
     // funcion que se encargue de guardar los datos.
-    const crearEjercicio = async () => {
+    const crearMaquina = async () => {
         if (validateData()) {
             //guardar datos
-            const result = await guardarEjercicio();
+            const result = await guardarMaquina();
 
             if (result.rowsAffected > 0) {
                 //  validar si se guardar los datos
                 Alert.alert(
                     "Exito",
-                    "Ejercicio ingresada correctamente.",
+                    "Máquina ingresada correctamente.",
                     [
                         {
                             text: "OK",
-                            onPress: () => navigation.navigate("Ejercicio"),
+                            onPress: () => navigation.navigate("Maquina"),
                         },
                     ],
                     {
@@ -97,7 +107,7 @@ const CrearEjercicio = ({ navigation }) => {
                     }
                 );
             } else {
-                Alert.alert("Error al ingresar ejercicio.")
+                Alert.alert("Error al ingresar una máquina.")
             }
         }
     };
@@ -108,15 +118,6 @@ const CrearEjercicio = ({ navigation }) => {
                 <View style={styles.generalView}>
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
-
-                        <Text style={styles.texto}>Nombre</Text>
-                            {/* Nombre */}
-                            <MyInputText
-                                placeholder="Nombre"
-                                onChangeText={setNombre}
-                                style={styles.input}
-                                value={nombre}
-                            />
 
                             <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
                             {/* Tipo Maquina Lista*/}
@@ -130,17 +131,18 @@ const CrearEjercicio = ({ navigation }) => {
                                     {renderizarListaTiposMaquinas()}
                                 </Picker>
                             </View>
-                            <Text style={styles.texto}>Video Demostrativo</Text>
+                            <Text style={styles.texto}>Número de Sala</Text>
                             {/* Sala */}
                             <MyInputText
-                                placeholder="URL del video"
-                                onChangeText={setVideoUrl}
+                                placeholder="Número de Sala"
+                                onChangeText={setSala}
+                                keyboardType="numeric"
                                 style={styles.input}
-                                value={videoUrl}
+                                value={sala}
                             />
 
                             {/* button */}
-                            <MySingleButton onPress={crearEjercicio} title={"Ingresar"} />
+                            <MySingleButton onPress={crearMaquina} title={"Ingresar"} />
                         </KeyboardAvoidingView>
                     </ScrollView>
                 </View>

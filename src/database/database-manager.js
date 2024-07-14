@@ -44,6 +44,16 @@ const databaseConection = {
         return res
     },
 
+    async agregarUsuarios(tx) {
+        const res = await tx.executeSqlAsync("INSERT INTO users(nombre, apellido, ci, fechaNac) VALUES" +
+            "('Henry', 'González', '12345678', '26/09/2001')," +
+            "('Juan', 'Pedro', '23232378', '21/02/1998'),"  +
+            "('Pepe', 'Garciaz', '87654321', '12/03/1995')," +
+            "('Maria', 'Martinez', '1121321', '05/11/1986')" , [])
+            console.log("Datos agregados, Usuarios")
+            return res
+    },
+
     //Tipo de Maquina
     async checkTableExistTipoMaquina(tx) {
         const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='tipoMaquina'", [])
@@ -131,6 +141,19 @@ const databaseConection = {
         return res
     },
 
+    async agregarMaquinas(tx) {
+        const res = await tx.executeSqlAsync("INSERT INTO maquina(tipoMaquina, sala) VALUES" +
+            "(1, 1)," +
+            "(2, 3),"  +
+            "(3, 2)," +
+            "(1, 2)," +
+            "(1, 3),"  +
+            "(3, 2)," +
+            "(4, 3)" , [])
+            console.log("Datos agregados, Maquinas")
+            return res
+    },
+
 
 //Ejercicio
     async checkTableExistEjercicio(tx) {
@@ -142,34 +165,46 @@ const databaseConection = {
         return res
     },
     async crearTablaEjercicio(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS ejercicio(id INTEGER PRIMARY KEY AUTOINCREMENT, tipoMaquina INTEGER, sala INTEGER, FOREIGN KEY (tipoMaquina) REFERENCES tipoMaquina(id))", [])
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS ejercicio(id INTEGER PRIMARY KEY AUTOINCREMENT, nom_ejercicio VARCHAR(50), id_tipoMaquina INTEGER, videoUrl VARCHAR(200), FOREIGN KEY (id_tipoMaquina) REFERENCES tipoMaquina(id))", [])
         return res
     },
-    async createEjercicio(tx, tipoMaquina, sala) {
-        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(tipoMaquina, sala) VALUES (?, ?)", [tipoMaquina, sala])
+    async createEjercicio(tx, nombre, id_tipoMaquina, videoUrl) {
+        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(nom_ejercicio, id_tipoMaquina, videoUrl) VALUES (?, ?, ?)", [nombre, id_tipoMaquina, videoUrl])
         return res
     },
-    async updateEjercicio(tx, tipoMaquina, sala, Id) {
-        const res = await tx.executeSqlAsync("UPDATE ejercicio SET tipoMaquina = ?, sala = ? WHERE id = ?", [tipoMaquina, sala, Id])
+    async updateEjercicio(tx, nombre, id_tipoMaquina, videoUrl, Id) {
+        const res = await tx.executeSqlAsync("UPDATE ejercicio SET nom_ejercicio = ? id_tipoMaquina = ?, video = ? WHERE id = ?", [nombre, id_tipoMaquina, videoUrl, Id])
         return res
     },
     async deleteEjercicio(tx, Id) {
         const res = await tx.executeSqlAsync("DELETE FROM ejercicio WHERE id = ?", [Id])
         return res
     },
-    async getOneEjercicio(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT id from ejercicio", [nombre])
+    async getOneEjercicio(tx, nombre, id) {
+        const res = await tx.executeSqlAsync("SELECT * from ejercicio WHERE id = ?", [nombre, id])
         console.log("una Maquina obtenida")
         return res
     },
     async getAllEjercicio(tx) {
-        const res = await tx.executeSqlAsync("SELECT * FROM ejercicio", [])
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.* FROM ejercicio e inner join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
         return res
     },
-    async deleteAllTipoEjercicio
-(tx) {
+    async deleteAllTipoEjercicio(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM ejercicio", [])
         return res
+    },
+
+    async agregarEjercicios(tx) {
+        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(nom_ejercicio, id_tipoMaquina, videoUrl) VALUES" +
+            "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
+            "('Calentamiento en Bici', 2, 'https://www.youtube.com/watch?v=Sbv44Rf-5U0'),"  +
+            "('Cuádriceps en Prensa', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
+            "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
+            "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
+            "('Cuádriceps en Prensa', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
+            "('Calentamiento en Bici', 4, 'https://www.youtube.com/watch?v=em-NSkZVjkA')" , [])
+            console.log("Datos agregados, Ejercicios")
+            return res
     },
 }
 

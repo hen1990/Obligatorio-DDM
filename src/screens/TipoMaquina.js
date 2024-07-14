@@ -18,7 +18,7 @@ const TipoMaquina = ({ navigation }) => {
                                 onPress={() => navigation.navigate("CrearTipoMaquina")} 
                                 title="Agregar Tipo de Máquina 🖋" 
                                 iconName="user-plus" 
-                                btnColor="green"
+                                btnColor="#689F38"
                             />
                             
                             {/* Actualizar tipo Maquina */}
@@ -26,7 +26,7 @@ const TipoMaquina = ({ navigation }) => {
                                 onPress={() => navigation.navigate("ActualizarTipoMaquina")} 
                                 title="Actualizar Tipo de Máq  ✔✔" 
                                 iconName="user-circle" 
-                                btnColor="green"
+                                btnColor="#689F38"
                             />
 
                               {/*Eliminar tipo de maquina*/}
@@ -34,7 +34,7 @@ const TipoMaquina = ({ navigation }) => {
                                 onPress={() => navigation.navigate("EliminarTipoMaquina")} 
                                 title="Borrar Tipo de Máquina 🚫" 
                                 iconName="user-times" 
-                                btnColor="green"
+                                btnColor="#689F38"
                             />
 
                             {/* Ver todos tipos de maquina*/}
@@ -42,7 +42,7 @@ const TipoMaquina = ({ navigation }) => {
                                 onPress={() => navigation.navigate("VerTodosTipoMaquina")} 
                                 title="Ver Tipos de Máquinas 👁‍🗨" 
                                 iconName="user-times" 
-                                btnColor="green"
+                                btnColor="#689F38"
                             />
 
                              {/* borrar todos tipos de maquinas*/}
