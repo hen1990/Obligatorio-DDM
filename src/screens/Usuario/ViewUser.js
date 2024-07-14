@@ -14,7 +14,7 @@ import MySingleButton from "../../components/MySingleButton";
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const ViewUser = ({navigation}) => {
+const ViewUser = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [userData, setUserData] = useState(null);
 
@@ -78,6 +78,24 @@ const ViewUser = ({navigation}) => {
     }
   }
 
+  //Confirmar Eliminar
+  const confirmarEliminar = async () => {
+    Alert.alert(
+      "Se eliminará un usuario de la base de datos.",
+      "¿Seguro desea eliminar?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancelado"),
+        },
+        {
+          text: "Aceptar",
+          onPress: () => deleteUser(),
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewContainer}>
@@ -112,7 +130,7 @@ const ViewUser = ({navigation}) => {
                 </View>
 
                 <MySingleButton title="Eliminar"
-                  onPress={deleteUser} />
+                  onPress={confirmarEliminar} />
               </>}
           </ScrollView>
         </View>

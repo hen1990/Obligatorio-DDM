@@ -7,8 +7,8 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const EliminarTipoMaquina = ({navigation}) => {
-    const [nombre, setNombre] = useState("");
+const EliminarTipoMaquina = ({ navigation }) => {
+  const [nombre, setNombre] = useState("");
   const [tipoMaquinaDatos, setTipoMaquinaDatos] = useState(null);
 
   const getUserDB = async () => {
@@ -45,7 +45,7 @@ const EliminarTipoMaquina = ({navigation}) => {
       result = await databaseConection.deleteTipoMaquina(tx, tipoMaquinaDatos.id);
     }, readOnly);
     return result
-  }
+  };
 
   const deleteTipoMaquina = async () => {
     // TODO hacer funcionalidad de borrado
@@ -69,7 +69,25 @@ const EliminarTipoMaquina = ({navigation}) => {
       Alert.alert("El Tipo de máquina no existe")
       setTipoMaquinaDatos(null)
     }
-  }
+  };
+
+  //Confirmar Eliminar
+  const confirmarEliminar = async () => {
+    Alert.alert(
+      "Se eliminará un tipo de máquina de la base de datos.",
+      "¿Seguro desea eliminar?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancelado"),
+        },
+        {
+          text: "Aceptar",
+          onPress: () => deleteTipoMaquina(),
+        },
+      ],
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -83,7 +101,7 @@ const EliminarTipoMaquina = ({navigation}) => {
                 placeholder="Tipo de máquina"
                 onChangeText={(text) => setNombre(text)}
               />
-            
+
               <MySingleButton title="Buscar" onPress={getUserData} />
             </KeyboardAvoidingView>
 
@@ -94,22 +112,22 @@ const EliminarTipoMaquina = ({navigation}) => {
                     text={`${tipoMaquinaDatos == null ? "" : tipoMaquinaDatos.nombre}`}
                     style={styles.presenterText}
                   />
-                 <Image
+                  <Image
                     source={{
-                        uri: `${tipoMaquinaDatos.fotoUrl}`,
-                        method: 'POST',
-                        headers: {
-                            Pragma: 'no-cache',
-                        },
-                        body: 'Your Body goes here',
+                      uri: `${tipoMaquinaDatos.fotoUrl}`,
+                      method: 'POST',
+                      headers: {
+                        Pragma: 'no-cache',
+                      },
+                      body: 'Your Body goes here',
                     }}
                     style={{ width: "100%", height: 300 }}
-                />
+                  />
 
                 </View>
 
-                <MySingleButton title="Eliminar" style={{backgroundColor: 'orange' }}
-                  onPress={deleteTipoMaquina} />
+                <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
+                  onPress={confirmarEliminar} />
               </>}
           </ScrollView>
         </View>

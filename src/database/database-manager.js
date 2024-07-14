@@ -130,6 +130,47 @@ const databaseConection = {
         const res = await tx.executeSqlAsync("DELETE FROM maquina", [])
         return res
     },
+
+
+//Ejercicio
+    async checkTableExistEjercicio(tx) {
+        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='ejercicio'", [])
+        return res
+    },
+    async dropTableEjercicio(tx) {
+        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS ejercicio", [])
+        return res
+    },
+    async crearTablaEjercicio(tx) {
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS ejercicio(id INTEGER PRIMARY KEY AUTOINCREMENT, tipoMaquina INTEGER, sala INTEGER, FOREIGN KEY (tipoMaquina) REFERENCES tipoMaquina(id))", [])
+        return res
+    },
+    async createEjercicio(tx, tipoMaquina, sala) {
+        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(tipoMaquina, sala) VALUES (?, ?)", [tipoMaquina, sala])
+        return res
+    },
+    async updateEjercicio(tx, tipoMaquina, sala, Id) {
+        const res = await tx.executeSqlAsync("UPDATE ejercicio SET tipoMaquina = ?, sala = ? WHERE id = ?", [tipoMaquina, sala, Id])
+        return res
+    },
+    async deleteEjercicio(tx, Id) {
+        const res = await tx.executeSqlAsync("DELETE FROM ejercicio WHERE id = ?", [Id])
+        return res
+    },
+    async getOneEjercicio(tx, nombre) {
+        const res = await tx.executeSqlAsync("SELECT id from ejercicio", [nombre])
+        console.log("una Maquina obtenida")
+        return res
+    },
+    async getAllEjercicio(tx) {
+        const res = await tx.executeSqlAsync("SELECT * FROM ejercicio", [])
+        return res
+    },
+    async deleteAllTipoEjercicio
+(tx) {
+        const res = await tx.executeSqlAsync("DELETE FROM ejercicio", [])
+        return res
+    },
 }
 
 export default databaseConection

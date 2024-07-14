@@ -71,6 +71,24 @@ const DeleteUser = ({navigation}) => {
     }
   }
 
+    //Confirmar Eliminar
+    const confirmarEliminar = async () => {
+      Alert.alert(
+        "Se eliminará un usuario de la base de datos.",
+        "¿Seguro desea eliminar?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => console.log("Cancelado"),
+          },
+          {
+            text: "Aceptar",
+            onPress: () => deleteUser(),
+          },
+        ],
+      );
+    };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewContainer}>
@@ -105,7 +123,7 @@ const DeleteUser = ({navigation}) => {
                 </View>
 
                 <MySingleButton title="Eliminar" style={{backgroundColor: 'orange' }}
-                  onPress={deleteUser} />
+                  onPress={confirmarEliminar} />
               </>}
           </ScrollView>
         </View>

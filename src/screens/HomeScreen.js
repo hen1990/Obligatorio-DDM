@@ -80,6 +80,14 @@ const HomeScreen = ({ navigation }) => {
                                 btnColor="green"
                             />
 
+                            {/* button Ejercicio*/}
+                            <MyButton
+                                onPress={() => navigation.navigate("Ejercicio")}
+                                title="Ejercicios"
+                                iconName="user-plus"
+                                btnColor="green"
+                            />
+
                             {/* Importar db */}
                             <MyButton
                                 onPress={() => OpenDatabase("database.db")}

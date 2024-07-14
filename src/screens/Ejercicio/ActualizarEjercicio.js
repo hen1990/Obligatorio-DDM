@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text } from "react-native"
+import { Picker } from '@react-native-picker/picker';
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -7,20 +8,20 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const EliminarMaquina = ({ navigation }) => {
+const ActualizarEjercicio = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
     const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
     const [tipoMaquina, setTipoMaquina] = useState("");
     const [nombreMaquina, setNombreMaquina] = useState("");
-    const [fotoUrl, setFotoUrl] = useState("");
     const [sala, setSala] = useState("");
     const [id, setId] = useState("")
 
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
             const res = await buscarTiposMaquinas()
+            console.log("Resultado de buscarTiposMaquinas:", res);
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
@@ -47,6 +48,7 @@ const EliminarMaquina = ({ navigation }) => {
         await db.transactionAsync(async (tx) => {
             result = await databaseConection.getOneMaquina(tx, buscarNombre + "%");
         }, readOnly);
+        console.log(result)
         return result
     }
 
@@ -61,7 +63,6 @@ const EliminarMaquina = ({ navigation }) => {
         if (res && res.rows && res.rows.length > 0) {
             setTipoMaquina(res.rows[0].tipoMaquina)
             setNombreMaquina(res.rows[0].nombre)
-            setFotoUrl(res.rows[0].fotoUrl)
             setSala(res.rows[0].sala)
             setId(res.rows[0].id)
         } else {
@@ -72,56 +73,66 @@ const EliminarMaquina = ({ navigation }) => {
         }
     }
 
-    //Confirmar Eliminar
-    const confirmarEliminar = async () => {
-        Alert.alert(
-            "Se eliminará una máquina de la base de datos.",
-            "¿Seguro desea eliminar?",
-            [
-                {
-                    text: "Cancelar",
-                    onPress: () => console.log("Cancelado"),
-                },
-                {
-                    text: "Aceptar",
-                    onPress: () => deleteMaquina(),
-                },
-            ],
-        );
-    };
+    // Actualizar datos
+    const updateMaquina = async () => {
+        //Validar Tipo Maquina
+        if (!tipoMaquina.toString().trim()) {
+            Alert.alert("Ingresar Tipo de Máquina.");
+            return false;
+        }
+        //Validar Sala
+        if (!sala.trim()) {
+            Alert.alert("Ingresar número de sala.");
+            return false;
+        } else {
+            for (i = 0; i < sala.length; i++) {
+                var code = sala.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Sala: Ingrese solo números.");
+                    return false;
+                }
+            }
+        }
 
-    const deleteMaquina = async () => {
-        // Borrar maquina
-        const res = await deleteMaquinaDB()
+        // update
+        const res = await updateMaquinaDB()
+        console.log("res", res)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
-                "Máquina eliminada.",
+                "Máquina actualizado correctamente.",
                 [
                     {
-                        text: "Aceptar",
+                        text: "OK",
                         onPress: () => navigation.navigate("Maquina"),
                     },
-
                 ],
                 {
-
                     cancelable: false,
                 }
             );
         } else {
-            Alert.alert("La máquina no existe")
+            Alert.alert("No se pudo actualizar la Máquina")
+
         }
     }
 
-    const deleteMaquinaDB = async () => {
+    const updateMaquinaDB = async () => {
         const readOnly = false;
         let result = null
+        
+        console.log(tipoMaquina)
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.deleteMaquina(tx, id);
+            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
         }, readOnly);
         return result
     }
+
+    const renderizarListaTiposMaquinas = () => {
+        return listaTiposMaquinas.map(tipo => (
+            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
+        ));
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -130,41 +141,48 @@ const EliminarMaquina = ({ navigation }) => {
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
-                            <MyText text="Buscar Tipo de Máquina" style={styles.text} />
+                            <MyText text="Buscar Máquina" style={styles.text} />
                             <MyInputText
-                                placeholder="Ingrese nombre de Tipo de Máquina"
+                                placeholder="Ingrese nombre de Máquina"
                                 style={{}}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarMaquina} />
 
 
-                            <View style={styles.generalView}>
+                            <View style={styles.form}>
+                                {/* Tipo Maquina */}
+                                <Text style={styles.texto}>Datos Actuales</Text>
+                                <Text style={styles.texto}>{nombreMaquina}</Text>
+                                <Text style={styles.texto}>Nº de Sala: {sala}</Text>
+                                <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
+                                {/* Tipo Maquina Lista*/}
+                                <View style={styles.picker}>
+                                    <Picker
+                                        selectedValue={tipoMaquina}
+                                        style={{ height: 100, width: "100%" }}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                            setTipoMaquina(itemValue)
+                                        }>
+                                        {renderizarListaTiposMaquinas()}
+                                    </Picker>
+                                </View>
 
-                                {nombreMaquina.trim() ? <>
-                                    <View key={id} style={styles.listItemView}>
+                                {/* Sala*/}
+                                <MyInputText
+                                    placeholder="Número de sala"
+                                    onChangeText={setSala}
+                                    keyboardType="numeric"
+                                    style={styles.input}
+                                    value={sala}
+                                />
 
-                                        <View style={styles.textContainer}>
-                                            <MyText text={nombreMaquina} style={styles.text_data} />
-                                            <MyText text={`Nº de Sala: ${sala}`} style={styles.text_data1} />
-                                        </View>
-                                        <View style={styles.imageContainer}>
-                                            <Image
-                                                source={{ uri: fotoUrl }}
-                                                style={styles.image}
-                                            />
-                                        </View>
-
-
-                                    </View>
-                                    <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
-                                        onPress={confirmarEliminar} />
-                                </> : ""
-                                }
-
-
+                                <MySingleButton
+                                    title="Actualizar"
+                                    onPress={updateMaquina}
+                                    style={styles.button}
+                                />
                             </View>
-
 
                         </KeyboardAvoidingView>
                     </ScrollView>
@@ -190,30 +208,6 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         color: "black",
         fontSize: 20
-    },
-    text_data: {
-        padding: 5,
-        marginLeft: 10,
-        color: "black",
-        alignContent: "center",
-        alignItems: "center",
-        fontSize: 28,
-    },
-    text_data1: {
-        padding: 5,
-        marginLeft: 10,
-        color: "#2f2f2f",
-        alignContent: "center",
-        alignItems: "center",
-        fontSize: 24,
-    },
-    listItemView: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        margin: 15,
-        borderBottomWidth: 0,
-        borderBottomColor: '#A9DFBF',
     },
     input: {
         padding: 15
@@ -244,18 +238,17 @@ const styles = StyleSheet.create({
         marginLeft: 50,
         marginTop: 8
     },
-    textContainer: {
+    picker: {
         flex: 1,
-        marginRight: 10,
-    },
-    imageContainer: {
-        width: 120,
-        height: 120,
-    },
-    image: {
-        flex: 1, // Para que la imagen ocupe todo el espacio disponible
-        resizeMode: 'cover', // Ajustar tamaño de la imagen según el espacio disponible
-    },
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#ecf8e8",
+        borderColor: "#E0E0E0",
+        borderRadius: 0,
+        borderWidth: 1,
+        margin: 30,
+        height: 70,
+    }
 })
 
-export default EliminarMaquina;
+export default ActualizarEjercicio;
