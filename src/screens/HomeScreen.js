@@ -55,6 +55,7 @@ const HomeScreen = ({ navigation }) => {
                 await databaseConection.agregarTipoMaquina(tx)
                 await databaseConection.agregarMaquinas(tx)
                 await databaseConection.agregarEjercicios(tx)
+                await databaseConection.agregarRutinas(tx)
             }, readOnly);
         }
 

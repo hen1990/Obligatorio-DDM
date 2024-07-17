@@ -237,7 +237,7 @@ const databaseConection = {
         return res
     },
     async getAllRutinas(tx) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.* FROM rutina e left join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
+        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id", [])
         return res
     },
     async deleteAllTipoRutina(tx) {
@@ -246,14 +246,9 @@ const databaseConection = {
     },
 
     async agregarRutinas(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(nom_ejercicio, id_tipoMaquina, videoUrl) VALUES" +
-            "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
-            "('Calentamiento en Bici', 2, 'https://www.youtube.com/watch?v=Sbv44Rf-5U0'),"  +
-            "('Cuádriceps en Prensa', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
-            "('Pecho Paloma', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
-            "('Serratos', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
-            "('Estiramiento Estrecho', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
-            "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')" , [])
+        const res = await tx.executeSqlAsync("INSERT INTO rutina(dia_rutina, id_usuario, id_ejercicio, series, repeticiones) VALUES" +
+            "('Lunes', 1, 1, 4, 12)," +
+            "('Lunes', 1, 4, 4, 10)" , [])
             console.log("Datos agregados, Ejercicios")
             return res
     },

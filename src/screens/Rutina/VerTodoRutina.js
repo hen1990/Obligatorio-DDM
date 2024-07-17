@@ -12,168 +12,163 @@ import MyText from "../../components/MyText";
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const VerTodoEjercicio = () => {
+const VerTodoRutina = () => {
     // estado
-    const [maquina, setMaquina] = useState([]);
+    const [rutinas, setRutinas] = useState([]);
     const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
 
     useEffect(() => {
-        const cargarTiposMaquinas = async () => {
-            console.log("holaaa")
-            const res = await buscarTiposMaquinas();
-            console.log("Resultado de buscarTiposMaquinas:", res);
+        const cargarRutinas = async () => {
+            const res = await buscarRutinas();
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
                     elements.push(res.rows[i])
                 }
-                setListaTiposMaquinas(elements);
-                console.log("tipoMaquinas", elements);
-                cargarMaquinas();
+                setRutinas(elements);
+                console.log("Rutinas", elements);
+               
             }
         }
-        const cargarMaquinas = async () => {
-            const res = await buscarMaquinas();
-            if (res.rows.length > 0) {
-                let elements = []
-                for (let i = 0; i < res.rows.length; i++) {
-                    elements.push(res.rows[i])
-                }
-                setMaquina(elements);
-                console.log("Maquinas", elements);
-            }
-        }
-        cargarTiposMaquinas();
+        cargarRutinas();
     }, []);
 
-    const buscarMaquinas = async () => {
-        const readOnly = false;
-        let result = null;
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllMaquina(tx);
-        }, readOnly);
-        // seteara test
-        return result;
-    };
-
-    const buscarTiposMaquinas = async () => {
+    
+    const buscarRutinas = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
+            result = await databaseConection.getAllRutinas(tx);
         }, readOnly);
         return result;
     }
 
-    const listItemView = (item) => {
-        const tipoMaquina = listaTiposMaquinas.find(tipo => tipo.id == item.tipoMaquina);
-        console.log(tipoMaquina)
+  
+        const agruparRutinas = () => {
+          const grupos = {};
+          rutinas.forEach(item => {
+            const { nom_usuario, dia_rutina, nom_ejercicio, series, repeticiones } = item;
+            if (!grupos[nom_usuario]) {
+              grupos[nom_usuario] = {};
+            }
+            if (!grupos[nom_usuario][dia_rutina]) {
+              grupos[nom_usuario][dia_rutina] = [];
+            }
+            grupos[nom_usuario][dia_rutina].push({ nom_ejercicio, series, repeticiones });
+          });
+          return grupos;
+        };
+      
+        // Función para renderizar cada elemento de la lista
+        const listItemView = (usuario, diaRutina, ejercicios) => {
+          return (
+            <View key={`${usuario}-${diaRutina}`} style={styles.listItemView}>
+              <View style={styles.textContainer}>
+                <Text style={styles.text_data}>{usuario}</Text>
+                <Text style={styles.text_data1}>{diaRutina}</Text>
+                {ejercicios.map((ejercicio, index) => (
+                  <View key={index} style={styles.ejercicioContainer}>
+                    <Text style={styles.text_data1}>{ejercicio.nom_ejercicio}</Text>
+                    <View style={styles.series}>
+                    <Text style={styles.text_data1}>Series: {ejercicio.series}</Text>
+                    <Text style={styles.text_data1}>Repeticiones: {ejercicio.repeticiones}</Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </View>
+          );
+        };
+      
         return (
-            <View key={item.id} style={styles.listItemView}>
-            <View style={styles.textContainer}>
-                <MyText text={tipoMaquina.nombre} style={styles.text_data} />
-                <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
-            </View>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={{ uri: tipoMaquina.fotoUrl }}
-                    style={styles.image}
-                />
-            </View>
-        </View>
-        );
-    };
-
-    return (
-        <SafeAreaView style={styles.container}>
+          <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
-                <View style={styles.generalView}>
-                    {maquina.length ? (
-                        <FlatList
-                            data={maquina}
-                            contentContainerStyle={styles.flatContainer}
-                            keyExtractor={(index) => index.toString()}
-                            renderItem={({ item }) => listItemView(item)}
-                        />
-                    ) : (
-                        <View style={styles.empty}>
-                            <Text style={styles.emptyText}> No se encuentran máquinas</Text>
-                        </View>
-                    )}
-                </View>
+              <View style={styles.generalView}>
+                {rutinas.length ? (
+                  <FlatList
+                    data={Object.keys(agruparRutinas())}
+                    contentContainerStyle={styles.flatContainer}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => {
+                      const grupos = agruparRutinas();
+                      const usuario = item;
+                      return (
+                        <>
+                          {Object.keys(grupos[usuario]).map(diaRutina => (
+                            listItemView(usuario, diaRutina, grupos[usuario][diaRutina])
+                          ))}
+                        </>
+                      );
+                    }}
+                  />
+                ) : (
+                  <View style={styles.empty}>
+                    <Text style={styles.emptyText}> No se encuentran rutinas</Text>
+                  </View>
+                )}
+              </View>
             </View>
-        </SafeAreaView>
-    );
+          </SafeAreaView>
+        );
+      
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    viewContainer: {
+        backgroundColor: '#fff',
+      },
+      viewContainer: {
         flex: 1,
-        backgroundColor: "#fff",
-    },
-    generalView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+      },
+      generalView: {
         flex: 1,
-    },
-    listView: {
-        marginTop: 0,
-    },
-    listItemView: {
-        backgroundColor: "#d9f1d1",
-        padding: 30,
-        borderColor: "#c6eab9",
-        borderWidth: 2,
-    },
-    text_data: {
-        padding: 5,
-        marginLeft: 10,
-        color: "black",
-        alignContent: "center",
-        alignItems: "center",
-        fontSize: 28,
-    },
-    text_data1: {
-        padding: 5,
-        marginLeft: 10,
-        color: "#2f2f2f",
-        alignContent: "center",
-        alignItems: "center",
-        fontSize: 24,
-    },
-    empty: {
+        width: '100%',
+      },
+      flatContainer: {
+        flexGrow: 1,
+      },
+      empty: {
         flex: 1,
-        flexDirection: "row",
-        alignContent: "center",
-        alignItems: "center",
-        alignSelf: "center",
-    },
-    emptyText: {
-        fontSize: 30,
-        alignSelf: "center",
-        alignContent: "center",
-    },
-
-    listItemView: {
-        flexDirection: 'row', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      emptyText: {
+        fontSize: 18,
+        textAlign: 'center',
+      },
+      listItemView: {
+        marginVertical: 10,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#00838F"
+      },
+      textContainer: {
+        flexDirection: 'column',
+      },
+      text_data: {
+        fontSize: 26,
+        marginBottom: 5,
+      },
+      text_data1: {
+        fontSize: 20,
+        marginBottom: 3,
+        marginLeft: 20,
+      },
+      series: {
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#A9DFBF',
+        borderBottomColor: "#673AB7",
     },
-    textContainer: {
-        flex: 1, 
-        marginRight: 10,
-    },
-    imageContainer: {
-        width: 120, 
-        height: 120,
-    },
-    image: {
-        flex: 1, // Para que la imagen ocupe todo el espacio disponible
-        resizeMode: 'cover', // Ajustar tamaño de la imagen según el espacio disponible
-    },
+      ejercicioContainer: {
+        marginLeft: 20,
+        padding: 10,
+      },
 });
 
-export default VerTodoEjercicio;
+export default VerTodoRutina;

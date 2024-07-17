@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-    StyleSheet,
-    SafeAreaView,
-    FlatList,
-    View,
-    Text,
-    Image,
-} from "react-native";
+import { StyleSheet, SafeAreaView, FlatList, View, Text, Image,} from "react-native";
 import MyText from "../../components/MyText";
-import MyInputText from "../../components/MyInputText";
 
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();

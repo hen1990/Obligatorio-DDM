@@ -5,7 +5,7 @@ import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const EliminarTodoEjercicio = ({ navigation }) => {
+const EliminarTodoRutina = ({ navigation }) => {
 
     const borrarTiposDeMaquinas = async () => {
         const readOnly = false;
@@ -100,4 +100,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default EliminarTodoEjercicio;
+export default EliminarTodoRutina;

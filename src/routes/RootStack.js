@@ -36,6 +36,10 @@ import VerTodoEjercicio from "../screens/Ejercicio/VerTodoEjercicio";
 import EliminarTodoEjercicio from "../screens/Ejercicio/EliminarTodoEjercicio";
 import Rutina from "../screens/Rutina";
 import CrearRutina from "../screens/Rutina/CrearRutina";
+import ActualizarRutina from "../screens/Rutina/ActualizarRutina";
+import VerTodoRutina from "../screens/Rutina/VerTodoRutina";
+import EliminarRutina from "../screens/Rutina/EliminarRutina";
+import EliminarTodoRutina from "../screens/Rutina/EliminarTodoRutina";
 
 const RootStack = () => {
     return (
@@ -487,7 +491,7 @@ const RootStack = () => {
                         options={{
                             title: "Ingresar Rutina",
                             headerStyle: {
-                                backgroundColor: "#9575CD",
+                                backgroundColor: "#00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -503,7 +507,7 @@ const RootStack = () => {
                         options={{
                             title: "Actualizar Rutina",
                             headerStyle: {
-                                backgroundColor: "#9575CD",
+                                backgroundColor: "#00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -519,7 +523,7 @@ const RootStack = () => {
                         options={{
                             title: "Listar Rutinas",
                             headerStyle: {
-                                backgroundColor: "#9575CD",
+                                backgroundColor: "#00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -535,7 +539,7 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar Rutina",
                             headerStyle: {
-                                backgroundColor: "#9575CD",
+                                backgroundColor: "##00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
@@ -552,7 +556,7 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar todas las Rutinas",
                             headerStyle: {
-                                backgroundColor: "#9575CD",
+                                backgroundColor: "#00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {

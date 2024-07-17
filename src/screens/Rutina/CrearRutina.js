@@ -28,6 +28,7 @@ const CrearRutina = ({ navigation }) => {
                 }
                 setUsuarios(elements)
             }
+            cargarEjercicios()
         }
         cargarUsuarios()
 
@@ -41,7 +42,7 @@ const CrearRutina = ({ navigation }) => {
                 setEjercicios(elements)
             }
         }
-        cargarEjercicios()
+        
     }, []);
 
     const buscarUsuarios = async () => {
@@ -70,13 +71,13 @@ const CrearRutina = ({ navigation }) => {
             return false;
         }
         //Validar ejercicio
-        if (!ejercicioId, toString().trim()) {
+        if (!ejercicioId.toString().trim()) {
             Alert.alert("Ingresar ejercicio.");
             return false;
         }
         //Validar dia
         if (!dia.trim()) {
-            Alert.alert("Ingresar ejercicio.");
+            Alert.alert("Ingresar día.");
             return false;
         }
         //Validar series
@@ -85,7 +86,7 @@ const CrearRutina = ({ navigation }) => {
             return false;
         }
         //Validar repeticiones
-        if (!series.toString().trim()) {
+        if (!repeticiones.toString().trim()) {
             Alert.alert("Ingresar cantidad de repeticiones.");
             return false;
         }
@@ -178,10 +179,10 @@ const CrearRutina = ({ navigation }) => {
                             <Text style={styles.texto}>Seleccionar Día</Text>
                             <View style={styles.picker}>
                                 <Picker
-                                    selectedValue={ejercicioId}
+                                    selectedValue={dia}
                                     style={{ height: 100, width: "100%" }}
                                     onValueChange={(itemValue, itemIndex) =>
-                                        setEjercicioId(itemValue)
+                                        setDia(itemValue)
                                     }>
                                     <Picker.Item key={"Lunes"} label="Lunes" value="Lunes" />
                                     <Picker.Item key={"Martes"} label="Martes" value="Martes" />
@@ -262,4 +263,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CrearEjercicio;
+export default CrearRutina;

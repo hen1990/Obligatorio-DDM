@@ -8,7 +8,7 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const ActualizarEjercicio = ({ navigation }) => {
+const ActualizarRutina = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
@@ -251,4 +251,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ActualizarEjercicio;
+export default ActualizarRutina;
