@@ -43,7 +43,7 @@ const ViewAllUsers = () => {
   const listItemView = (item) => {
     return (
       <View key={item.user_id} style={styles.listItemView}>
-        <MyText text= {item.nombre + " " + item.apellido}   style={styles.text_data} />
+        <MyText text= {item.nom_usuario + " " + item.apellido}   style={styles.text_data} />
         <MyText text={item.fechaNac} style={styles.text_data1} />
       </View>
     );
@@ -86,9 +86,9 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   listItemView: {
-    backgroundColor: "#d9f1d1",
+    backgroundColor: "#feffe3",
     padding: 20,
-    borderColor: "#c6eab9",
+    borderColor: "#AFB42B",
     borderWidth: 1,
   },
   text: {
@@ -116,21 +116,21 @@ const styles = StyleSheet.create({
     padding: 20
   },
   text_data: {
-    padding: 5,
-    marginLeft: 10,
+    padding: 3,
+    marginLeft: 5,
     color: "black",
     alignContent: "center",
     alignItems: "center",
     fontSize: 28,
-  },
-  text_data1: {
-    padding: 5,
-    marginLeft: 10,
+},
+text_data1: {
+    padding: 3,
+    marginLeft: 5,
     color: "#2f2f2f",
     alignContent: "center",
     alignItems: "center",
-    fontSize: 16,
-  },
+    fontSize: 20,
+},
   empty: {
     flex: 1,
     flexDirection: "row",

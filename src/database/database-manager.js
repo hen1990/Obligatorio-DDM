@@ -16,15 +16,15 @@ const databaseConection = {
         return res
     },
     async createUserTable(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(50), apellido VARCHAR(50), ci VARCHAR(8), fechaNac date)", [])
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, nom_usuario VARCHAR(50), apellido VARCHAR(50), ci VARCHAR(8), fechaNac date)", [])
         return res
     },
     async createUser(tx, nombre, apellido, ci, fechaNac) {
-        const res = await tx.executeSqlAsync("INSERT INTO users (nombre, apellido, ci, fechaNac) VALUES (?, ?, ?, ?)", [nombre, apellido, ci, fechaNac])
+        const res = await tx.executeSqlAsync("INSERT INTO users (nom_usuario, apellido, ci, fechaNac) VALUES (?, ?, ?, ?)", [nombre, apellido, ci, fechaNac])
         return res
     },
     async updateUser(tx, nombre, apellido, ci, fechaNac, userId) {
-        const res = await tx.executeSqlAsync("UPDATE users SET nombre = ?, apellido = ?, ci = ?, fechaNac = ? WHERE user_id = ?", [nombre, apellido, ci, fechaNac, userId])
+        const res = await tx.executeSqlAsync("UPDATE users SET nom_usuario = ?, apellido = ?, ci = ?, fechaNac = ? WHERE user_id = ?", [nombre, apellido, ci, fechaNac, userId])
         return res
     },
     async deleteUser(tx, userId) {
@@ -32,7 +32,7 @@ const databaseConection = {
         return res
     },
     async getOneUser(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE nombre like ? or apellido like ?", [nombre, nombre])
+        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE nom_usuario like ? or apellido like ?", [nombre, nombre])
         return res
     },
     async getAllUsers(tx) {
@@ -45,7 +45,7 @@ const databaseConection = {
     },
 
     async agregarUsuarios(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO users(nombre, apellido, ci, fechaNac) VALUES" +
+        const res = await tx.executeSqlAsync("INSERT INTO users(nom_usuario, apellido, ci, fechaNac) VALUES" +
             "('Henry', 'González', '12345678', '26/09/2001')," +
             "('Juan', 'Pedro', '23232378', '21/02/1998'),"  +
             "('Pepe', 'Garciaz', '87654321', '12/03/1995')," +
@@ -129,7 +129,6 @@ const databaseConection = {
     },
     async getOneMaquina(tx, nombre) {
         const res = await tx.executeSqlAsync("SELECT tm.nombre, tm.fotoUrl, m.id, m.sala, m.tipoMaquina FROM maquina m inner join tipoMaquina tm on m.tipoMaquina = tm.id WHERE tm.nombre like ?", [nombre])
-        console.log("una Maquina obtenida")
         return res
     },
     async getAllMaquina(tx) {
@@ -173,20 +172,20 @@ const databaseConection = {
         return res
     },
     async updateEjercicio(tx, nombre, id_tipoMaquina, videoUrl, Id) {
-        const res = await tx.executeSqlAsync("UPDATE ejercicio SET nom_ejercicio = ? id_tipoMaquina = ?, video = ? WHERE id = ?", [nombre, id_tipoMaquina, videoUrl, Id])
+        const res = await tx.executeSqlAsync("UPDATE ejercicio SET nom_ejercicio = ?, id_tipoMaquina = ?, videoUrl = ? WHERE id = ?", [nombre, id_tipoMaquina, videoUrl, Id])
         return res
     },
     async deleteEjercicio(tx, Id) {
         const res = await tx.executeSqlAsync("DELETE FROM ejercicio WHERE id = ?", [Id])
         return res
     },
-    async getOneEjercicio(tx, nombre, id) {
-        const res = await tx.executeSqlAsync("SELECT * from ejercicio WHERE id = ?", [nombre, id])
-        console.log("una Maquina obtenida")
+    async getOneEjercicio(tx, nombre) {
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM ejercicio e inner join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
+        console.log(nombre, ":  un ejercico obtenido")
         return res
     },
     async getAllEjercicio(tx) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.* FROM ejercicio e inner join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.* FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
         return res
     },
     async deleteAllTipoEjercicio(tx) {
@@ -199,13 +198,66 @@ const databaseConection = {
             "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
             "('Calentamiento en Bici', 2, 'https://www.youtube.com/watch?v=Sbv44Rf-5U0'),"  +
             "('Cuádriceps en Prensa', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
+            "('Pecho Paloma', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
+            "('Serratos', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
+            "('Estiramiento Estrecho', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
+            "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')" , [])
+            console.log("Datos agregados, Ejercicios")
+            return res
+    },
+
+    //Ejercicio
+    async checkTableExistRutina(tx) {
+        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='rutina'", [])
+        return res
+    },
+    async dropTableRutina(tx) {
+        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS rutina", [])
+        return res
+    },
+    async crearTablaRutina(tx) {
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, dia_rutina VARCHAR(10), id_usuario INTEGER, id_ejercicio INTEGER, series INTEGER, repeticiones INTEGER, FOREIGN KEY (id_usuario) REFERENCES usuario(user_id), FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id))", [])
+        return res
+    },
+    async createRutina(tx, dia, usuario, ejercicio, series, repeticiones) {
+        const res = await tx.executeSqlAsync("INSERT INTO rutina(dia_rutina, id_usuario, id_ejercicio, series, repeticiones) VALUES (?, ?, ?, ?, ?)", [dia, usuario, ejercicio, series, repeticiones])
+        return res
+    },
+    async updateRutina(tx, dia, usuario, ejercicio, series, repeticiones, Id) {
+        const res = await tx.executeSqlAsync("UPDATE rutina SET dia_rutina = ?, id_usuario = ?, id_ejercicio = ?, series = ?, repeticiones = ? WHERE id = ?", [dia, usuario, ejercicio, series, repeticiones, Id])
+        return res
+    },
+    async deleteRutina(tx, Id) {
+        const res = await tx.executeSqlAsync("DELETE FROM rutina WHERE id = ?", [Id])
+        return res
+    },
+    async getOneRutina(tx, nombre) {
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM rutina r inner join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
+        console.log(nombre, ":  un ejercico obtenido")
+        return res
+    },
+    async getAllRutinas(tx) {
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.* FROM rutina e left join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
+        return res
+    },
+    async deleteAllTipoRutina(tx) {
+        const res = await tx.executeSqlAsync("DELETE FROM rutina", [])
+        return res
+    },
+
+    async agregarRutinas(tx) {
+        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(nom_ejercicio, id_tipoMaquina, videoUrl) VALUES" +
             "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
-            "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
+            "('Calentamiento en Bici', 2, 'https://www.youtube.com/watch?v=Sbv44Rf-5U0'),"  +
             "('Cuádriceps en Prensa', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
-            "('Calentamiento en Bici', 4, 'https://www.youtube.com/watch?v=em-NSkZVjkA')" , [])
+            "('Pecho Paloma', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
+            "('Serratos', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
+            "('Estiramiento Estrecho', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
+            "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')" , [])
             console.log("Datos agregados, Ejercicios")
             return res
     },
 }
+
 
 export default databaseConection

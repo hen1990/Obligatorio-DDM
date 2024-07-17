@@ -116,7 +116,7 @@ const ViewUser = ({ navigation }) => {
               <>
                 <View style={styles.presenterView}>
                   <MyText
-                    text={`Usuario: ${userData == null ? "" : userData.nombre + " " + userData.apellido}`}
+                    text={`Usuario: ${userData == null ? "" : userData.nom_usuario + " " + userData.apellido}`}
                     style={styles.presenterText}
                   />
                   <MyText

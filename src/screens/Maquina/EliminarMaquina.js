@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView,FlatList, Alert, Text, Image } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -10,13 +10,8 @@ const db = databaseConection.getConnection();
 const EliminarMaquina = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
-    // estado para el usuario a hacer update
-    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
-    const [tipoMaquina, setTipoMaquina] = useState("");
-    const [nombreMaquina, setNombreMaquina] = useState("");
-    const [fotoUrl, setFotoUrl] = useState("");
-    const [sala, setSala] = useState("");
-    const [id, setId] = useState("")
+    // estado para almacenar las maquinas
+    const [maquinas, setMaquinas] = useState([]);
 
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
@@ -58,22 +53,19 @@ const EliminarMaquina = ({ navigation }) => {
         }
         //  llamar a funcion buscar
         const res = await searchDB()
-        if (res && res.rows && res.rows.length > 0) {
-            setTipoMaquina(res.rows[0].tipoMaquina)
-            setNombreMaquina(res.rows[0].nombre)
-            setFotoUrl(res.rows[0].fotoUrl)
-            setSala(res.rows[0].sala)
-            setId(res.rows[0].id)
+        if (res.rows.length > 0) {
+            let elements = []
+            for (let i = 0; i < res.rows.length; i++) {
+                elements.push(res.rows[i])
+            }
+            setMaquinas(elements)
         } else {
-            Alert.alert("No se encontró Tipo de Máquina.")
-            setTipoMaquina("")
-            setSala("")
-            setId("")
+            Alert.alert("No se encontró Máquina.")
         }
     }
 
     //Confirmar Eliminar
-    const confirmarEliminar = async () => {
+    const confirmarEliminar = async (id) => {
         Alert.alert(
             "Se eliminará una máquina de la base de datos.",
             "¿Seguro desea eliminar?",
@@ -84,15 +76,15 @@ const EliminarMaquina = ({ navigation }) => {
                 },
                 {
                     text: "Aceptar",
-                    onPress: () => deleteMaquina(),
+                    onPress: () => deleteMaquina(id),
                 },
             ],
         );
     };
 
-    const deleteMaquina = async () => {
+    const deleteMaquina = async (id) => {
         // Borrar maquina
-        const res = await deleteMaquinaDB()
+        const res = await deleteMaquinaDB(id)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
@@ -114,7 +106,7 @@ const EliminarMaquina = ({ navigation }) => {
         }
     }
 
-    const deleteMaquinaDB = async () => {
+    const deleteMaquinaDB = async (id) => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
@@ -122,6 +114,30 @@ const EliminarMaquina = ({ navigation }) => {
         }, readOnly);
         return result
     }
+
+    const listItemView = (item) => {
+        return (
+        <View style={styles.viewContainer}>
+            <View key={item.id} style={styles.listItemView}>
+
+            <View style={styles.textContainer}>
+                <MyText text={item.nombre} style={styles.text_data} />
+                <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
+            </View>
+            <View style={styles.imageContainer}>
+                <Image
+                    source={{ uri: item.fotoUrl }}
+                    style={styles.image}
+                />
+            </View>
+
+
+        </View>
+        <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
+             onPress={() => {confirmarEliminar(item.id)}} />
+</View>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -141,26 +157,18 @@ const EliminarMaquina = ({ navigation }) => {
 
                             <View style={styles.generalView}>
 
-                                {nombreMaquina.trim() ? <>
-                                    <View key={id} style={styles.listItemView}>
-
-                                        <View style={styles.textContainer}>
-                                            <MyText text={nombreMaquina} style={styles.text_data} />
-                                            <MyText text={`Nº de Sala: ${sala}`} style={styles.text_data1} />
-                                        </View>
-                                        <View style={styles.imageContainer}>
-                                            <Image
-                                                source={{ uri: fotoUrl }}
-                                                style={styles.image}
-                                            />
-                                        </View>
-
-
+                            {maquinas ? (
+                                    <FlatList
+                                        data={maquinas}
+                                        contentContainerStyle={styles.flatContainer}
+                                        keyExtractor={(index) => index.toString()}
+                                        renderItem={({ item }) => listItemView(item)}
+                                    />
+                                ) : (
+                                    <View style={styles.empty}>
+                                        <Text style={styles.emptyText}> No se encuentran máquinas</Text>
                                     </View>
-                                    <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
-                                        onPress={confirmarEliminar} />
-                                </> : ""
-                                }
+                                )}
 
 
                             </View>
@@ -180,7 +188,10 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        paddingBottom: 50,
+        backgroundColor: "white",
+        borderBottomWidth: 3,
+        borderBottomColor: '#A9DFBF',
     },
     generalView: {
         flex: 1
@@ -197,7 +208,7 @@ const styles = StyleSheet.create({
         color: "black",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 28,
+        fontSize: 26,
     },
     text_data1: {
         padding: 5,
@@ -205,7 +216,7 @@ const styles = StyleSheet.create({
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 24,
+        fontSize: 20,
     },
     listItemView: {
         flexDirection: 'row',
@@ -233,11 +244,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    inputFecha: {
-        padding: 5,
-        margin: 0,
-        textAlignVertical: "top",
-    },
     texto: {
         fontSize: 20,
         textAlign: 'left',
@@ -249,8 +255,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     imageContainer: {
-        width: 120,
-        height: 120,
+        width: 110,
+        height: 110,
     },
     image: {
         flex: 1, // Para que la imagen ocupe todo el espacio disponible

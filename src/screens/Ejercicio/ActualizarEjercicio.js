@@ -13,10 +13,10 @@ const ActualizarEjercicio = ({ navigation }) => {
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
     const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
+    const [nombre, setNombre] = useState("");
     const [tipoMaquina, setTipoMaquina] = useState("");
-    const [nombreMaquina, setNombreMaquina] = useState("");
-    const [sala, setSala] = useState("");
-    const [id, setId] = useState("")
+    const [videoUrl, setVideoUrl] = useState("");
+    const [id, setId] = useState("");
 
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
@@ -46,65 +46,54 @@ const ActualizarEjercicio = ({ navigation }) => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneMaquina(tx, buscarNombre + "%");
+            result = await databaseConection.getOneEjercicio(tx, buscarNombre + "%");
         }, readOnly);
         console.log(result)
         return result
     }
 
-    // Buscar maquina
-    const buscarMaquina = async () => {
+    // Buscar ejercicio
+    const buscarEjercicio = async () => {
         if (!buscarNombre.trim()) {
-            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
+            Alert.alert("El nombre del ejercicio no puede estar vacio.")
             return
         }
         //  llamar a funcion buscar
         const res = await searchDB()
         if (res && res.rows && res.rows.length > 0) {
-            setTipoMaquina(res.rows[0].tipoMaquina)
-            setNombreMaquina(res.rows[0].nombre)
-            setSala(res.rows[0].sala)
+            setTipoMaquina(res.rows[0].id_tipoMaquina)
+            setNombre(res.rows[0].nom_ejercicio)
+            setVideoUrl(res.rows[0].videoUrl)
             setId(res.rows[0].id)
         } else {
-            Alert.alert("No se encontró Tipo de Máquina.")
+            Alert.alert("No se encontró ejercicio.")
             setTipoMaquina("")
-            setSala("")
+            setNombre("")
+            setVideoUrl("")
             setId("")
         }
     }
 
     // Actualizar datos
-    const updateMaquina = async () => {
-        //Validar Tipo Maquina
-        if (!tipoMaquina.toString().trim()) {
-            Alert.alert("Ingresar Tipo de Máquina.");
+    const updateEjercicio = async () => {
+
+        //Validar Datos
+        if (!nombre.trim()) {
+            Alert.alert("Ingresar nombre.");
             return false;
-        }
-        //Validar Sala
-        if (!sala.trim()) {
-            Alert.alert("Ingresar número de sala.");
-            return false;
-        } else {
-            for (i = 0; i < sala.length; i++) {
-                var code = sala.charCodeAt(i);
-                if (code < 48 || code > 57) {
-                    Alert.alert("Sala: Ingrese solo números.");
-                    return false;
-                }
-            }
         }
 
         // update
-        const res = await updateMaquinaDB()
+        const res = await updateEjercicioDB()
         console.log("res", res)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
-                "Máquina actualizado correctamente.",
+                "Ejercicio actualizado correctamente.",
                 [
                     {
                         text: "OK",
-                        onPress: () => navigation.navigate("Maquina"),
+                        onPress: () => navigation.navigate("Ejercicio"),
                     },
                 ],
                 {
@@ -112,18 +101,17 @@ const ActualizarEjercicio = ({ navigation }) => {
                 }
             );
         } else {
-            Alert.alert("No se pudo actualizar la Máquina")
+            Alert.alert("No se pudo actualizar el Ejercicio")
 
         }
     }
 
-    const updateMaquinaDB = async () => {
+    const updateEjercicioDB = async () => {
+
         const readOnly = false;
         let result = null
-        
-        console.log(tipoMaquina)
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
+            result = await databaseConection.updateEjercicio(tx, nombre, tipoMaquina, videoUrl, id);
         }, readOnly);
         return result
     }
@@ -141,48 +129,54 @@ const ActualizarEjercicio = ({ navigation }) => {
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
-                            <MyText text="Buscar Máquina" style={styles.text} />
+                            <MyText text="Buscar Ejercicio" style={styles.text} />
                             <MyInputText
-                                placeholder="Ingrese nombre de Máquina"
+                                placeholder="Ingrese nombre de ejercicio"
                                 style={{}}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
-                            <MySingleButton title="Buscar" onPress={buscarMaquina} />
+                            <MySingleButton title="Buscar" onPress={buscarEjercicio} />
 
+                           
+                                <View style={styles.form}>
+                                    {/* Ejercicio */}
+                                    <Text style={styles.texto}>Nombre</Text>
 
-                            <View style={styles.form}>
-                                {/* Tipo Maquina */}
-                                <Text style={styles.texto}>Datos Actuales</Text>
-                                <Text style={styles.texto}>{nombreMaquina}</Text>
-                                <Text style={styles.texto}>Nº de Sala: {sala}</Text>
-                                <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
-                                {/* Tipo Maquina Lista*/}
-                                <View style={styles.picker}>
-                                    <Picker
-                                        selectedValue={tipoMaquina}
-                                        style={{ height: 100, width: "100%" }}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                            setTipoMaquina(itemValue)
-                                        }>
-                                        {renderizarListaTiposMaquinas()}
-                                    </Picker>
+                                    {/* Nombre*/}
+                                    <MyInputText
+                                        placeholder="Nombre del ejercicio"
+                                        onChangeText={setNombre}
+                                        style={styles.input}
+                                        value={nombre}
+                                    />
+                                    <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
+                                    {/* Tipo Maquina Lista*/}
+                                    <View style={styles.picker}>
+                                        <Picker
+                                            selectedValue={tipoMaquina}
+                                            style={{ height: 100, width: "100%" }}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                                setTipoMaquina(itemValue)
+                                            }>
+                                            {renderizarListaTiposMaquinas()}
+                                        </Picker>
+                                    </View>
+                                    {/* VideoUrl*/}
+                                    <Text style={styles.texto}>URL del video</Text>
+                                    <MyInputText
+                                        placeholder="URL de video"
+                                        onChangeText={setVideoUrl}
+                                        style={styles.input}
+                                        value={videoUrl}
+                                    />
+                                    <MySingleButton
+                                        title="Actualizar"
+                                        onPress={updateEjercicio}
+                                        style={styles.button}
+                                    />
                                 </View>
+                          
 
-                                {/* Sala*/}
-                                <MyInputText
-                                    placeholder="Número de sala"
-                                    onChangeText={setSala}
-                                    keyboardType="numeric"
-                                    style={styles.input}
-                                    value={sala}
-                                />
-
-                                <MySingleButton
-                                    title="Actualizar"
-                                    onPress={updateMaquina}
-                                    style={styles.button}
-                                />
-                            </View>
 
                         </KeyboardAvoidingView>
                     </ScrollView>

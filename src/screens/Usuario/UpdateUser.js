@@ -47,7 +47,7 @@ const UpdateUser = ( {navigation}) => {
         //  llamar a funcion buscar
         const res = await searchDB()
         if (res && res.rows && res.rows.length > 0) {
-            setNombre(res.rows[0].nombre)
+            setNombre(res.rows[0].nom_usuario)
             setApellido(res.rows[0].apellido)
             setCi(res.rows[0].ci)
             setDia(res.rows[0].fechaNac.slice(0, -8))

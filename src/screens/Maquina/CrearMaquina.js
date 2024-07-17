@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-    StyleSheet,
-    SafeAreaView,
-    ScrollView,
-    KeyboardAvoidingView,
-    Alert,
-    View,
-    Text,
-} from "react-native";
+import {StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, View, Text,} from "react-native";
 import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
@@ -18,14 +10,13 @@ const db = databaseConection.getConnection();
 
 const CrearMaquina = ({ navigation }) => {
     // Definir los estados.
-    const [tipoMaquina, setTipoMaquina] = useState("");
+    const [tipoMaquina, setTipoMaquina] = useState("1");
     const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
     const [sala, setSala] = useState("");
 
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
             const res = await buscarTiposMaquinas()
-            console.log("Resultado de buscarTiposMaquinas:", res);
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
@@ -45,12 +36,6 @@ const CrearMaquina = ({ navigation }) => {
         }, readOnly);
         return result
     }
-
-    const renderizarListaTiposMaquinas = () => {
-        return listaTiposMaquinas.map(tipo => (
-            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
-        ));
-    };
 
     // Validar Datos
     const validateData = () => {
@@ -110,6 +95,12 @@ const CrearMaquina = ({ navigation }) => {
                 Alert.alert("Error al ingresar una máquina.")
             }
         }
+    };
+    
+    const renderizarListaTiposMaquinas = () => {
+        return listaTiposMaquinas.map(tipo => (
+            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
+        ));
     };
 
     return (

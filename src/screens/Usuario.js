@@ -92,8 +92,6 @@ const styles = StyleSheet.create({
     scollview: {
         flex:1,
         flexDirection: "column",
-        padding:10,
-        margin: 0
     }
 })
 

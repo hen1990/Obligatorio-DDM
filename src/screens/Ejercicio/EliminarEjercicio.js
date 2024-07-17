@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Button,Platform, FlatList, Alert, Text, Image } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -10,97 +10,66 @@ const db = databaseConection.getConnection();
 const EliminarEjercicio = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
-    // estado para el usuario a hacer update
-    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
-    const [tipoMaquina, setTipoMaquina] = useState("");
-    const [nombreMaquina, setNombreMaquina] = useState("");
-    const [fotoUrl, setFotoUrl] = useState("");
-    const [sala, setSala] = useState("");
-    const [id, setId] = useState("")
-
-    useEffect(() => {
-        const cargarTiposMaquinas = async () => {
-            const res = await buscarTiposMaquinas()
-            if (res.rows.length > 0) {
-                let elements = []
-                for (let i = 0; i < res.rows.length; i++) {
-                    elements.push(res.rows[i])
-                }
-                setListaTiposMaquinas(elements)
-            }
-        }
-        cargarTiposMaquinas()
-    }, []);
-
-    const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result
-    }
+    // estado para cargar ejercicios
+    const [ejercicio, setEjercicio] = useState([]);
 
     const searchDB = async () => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneMaquina(tx, buscarNombre + "%");
+            result = await databaseConection.getOneEjercicio(tx, buscarNombre + "%");
         }, readOnly);
         return result
     }
 
-    // Buscar maquina
+    // Buscar ejercicio
     const buscarMaquina = async () => {
         if (!buscarNombre.trim()) {
-            Alert.alert("El nombre de Tipo de Máquina no puede estar vacio.")
+            Alert.alert("El nombre del ejercicio no puede estar vacio.")
             return
         }
         //  llamar a funcion buscar
         const res = await searchDB()
-        if (res && res.rows && res.rows.length > 0) {
-            setTipoMaquina(res.rows[0].tipoMaquina)
-            setNombreMaquina(res.rows[0].nombre)
-            setFotoUrl(res.rows[0].fotoUrl)
-            setSala(res.rows[0].sala)
-            setId(res.rows[0].id)
+        if (res.rows.length > 0) {
+            let elements = []
+            for (let i = 0; i < res.rows.length; i++) {
+                elements.push(res.rows[i])
+            }
+            setEjercicio(elements)
         } else {
             Alert.alert("No se encontró Tipo de Máquina.")
-            setTipoMaquina("")
-            setSala("")
-            setId("")
         }
     }
+   
+        const confirmarEliminar = async (id) => {
+            console.log(id)
+            Alert.alert(
+                "Se eliminará un ejercicio de la base de datos.",
+                "¿Seguro desea eliminar?",
+                [
+                    {
+                        text: "Cancelar",
+                        onPress: () => console.log("Cancelado"),
+                    },
+                    {
+                        text: "Aceptar",
+                        onPress: () => deleteEjercicio(id),
+                    },
+                ],
+            );
+        };
 
-    //Confirmar Eliminar
-    const confirmarEliminar = async () => {
-        Alert.alert(
-            "Se eliminará una máquina de la base de datos.",
-            "¿Seguro desea eliminar?",
-            [
-                {
-                    text: "Cancelar",
-                    onPress: () => console.log("Cancelado"),
-                },
-                {
-                    text: "Aceptar",
-                    onPress: () => deleteMaquina(),
-                },
-            ],
-        );
-    };
-
-    const deleteMaquina = async () => {
+    const deleteEjercicio = async (id) => {
         // Borrar maquina
-        const res = await deleteMaquinaDB()
+        const res = await deleteEjercicioDB(id)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
-                "Máquina eliminada.",
+                "Ejercicio eliminada.",
                 [
                     {
                         text: "Aceptar",
-                        onPress: () => navigation.navigate("Maquina"),
+                        onPress: () => navigation.navigate("Ejercicio"),
                     },
 
                 ],
@@ -110,29 +79,65 @@ const EliminarEjercicio = ({ navigation }) => {
                 }
             );
         } else {
-            Alert.alert("La máquina no existe")
+            Alert.alert("Ejercicio no existe")
         }
     }
 
-    const deleteMaquinaDB = async () => {
+    const deleteEjercicioDB = async (id) => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.deleteMaquina(tx, id);
+            result = await databaseConection.deleteEjercicio(tx, id);
         }, readOnly);
         return result
     }
+
+    const buttonColor = Platform.select({
+        ios: 'orange',
+        android: 'orange'
+    });
+
+    const listItemView = (item) => {
+        return (
+                    <View key={item.id} style={styles.listItemView}>
+                        <View style={styles.textContainer}>
+                            <MyText text={item.nom_ejercicio} style={styles.text_data} />
+                            <Button title="Eliminar" color={buttonColor}
+                                onPress={() => {confirmarEliminar(item.id)}} />
+                        </View>
+                        <View style={styles.imageContainer}>
+                            {item.fotoUrl ? (
+                                <Image
+                                    source={{ uri: item.fotoUrl }}
+                                    style={styles.image}
+                                />
+                            ) : (
+                                <Image
+                                    source={{ uri: 'https://img.freepik.com/vector-premium/no-hay-foto-disponible-icono-vector-simbolo-imagen-predeterminado-imagen-proximamente-sitio-web-o-aplicacion-movil_87543-10639.jpg' }}
+                                    style={styles.image}
+                                />
+
+                            )}
+
+
+                        </View>
+
+
+                    </View>
+
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View styles={styles.generalView}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
+                   <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
-                            <MyText text="Buscar Tipo de Máquina" style={styles.text} />
+                            <MyText text="Buscar Ejercicio" style={styles.text} />
                             <MyInputText
-                                placeholder="Ingrese nombre de Tipo de Máquina"
+                                placeholder="Ingrese nombre del ejercicio"
                                 style={{}}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
@@ -141,29 +146,20 @@ const EliminarEjercicio = ({ navigation }) => {
 
                             <View style={styles.generalView}>
 
-                                {nombreMaquina.trim() ? <>
-                                    <View key={id} style={styles.listItemView}>
-
-                                        <View style={styles.textContainer}>
-                                            <MyText text={nombreMaquina} style={styles.text_data} />
-                                            <MyText text={`Nº de Sala: ${sala}`} style={styles.text_data1} />
-                                        </View>
-                                        <View style={styles.imageContainer}>
-                                            <Image
-                                                source={{ uri: fotoUrl }}
-                                                style={styles.image}
-                                            />
-                                        </View>
-
-
+                                {ejercicio.length ? (
+                                    <FlatList
+                                        data={ejercicio}
+                                        contentContainerStyle={styles.flatContainer}
+                                        keyExtractor={(index) => index.toString()}
+                                        renderItem={({ item }) => listItemView(item)}
+                                    />
+                                ) : (
+                                    <View style={styles.empty}>
+                                        <Text style={styles.emptyText}> No se encuentran máquinas</Text>
                                     </View>
-                                    <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
-                                        onPress={confirmarEliminar} />
-                                </> : ""
-                                }
-
-
+                                )}
                             </View>
+
 
 
                         </KeyboardAvoidingView>
@@ -180,7 +176,9 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        paddingBottom: 20,
+        backgroundColor: "white",
+
     },
     generalView: {
         flex: 1
@@ -197,7 +195,7 @@ const styles = StyleSheet.create({
         color: "black",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 28,
+        fontSize: 26,
     },
     text_data1: {
         padding: 5,
@@ -205,15 +203,15 @@ const styles = StyleSheet.create({
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 24,
+        fontSize: 20,
     },
     listItemView: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
         margin: 15,
-        borderBottomWidth: 0,
-        borderBottomColor: '#A9DFBF',
+        borderBottomWidth: 2,
+        borderBottomColor: '#673AB7',
     },
     input: {
         padding: 15

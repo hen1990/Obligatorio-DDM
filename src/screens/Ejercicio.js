@@ -24,7 +24,7 @@ const Ejercicio = ({ navigation }) => {
                             {/* Actualizar Ejercicio */}
                             <MyButton 
                                 onPress={() => navigation.navigate("ActualizarEjercicio")} 
-                                title="Actualizar Máquina  ✔✔" 
+                                title="Actualizar Ejercicio  ✔✔" 
                                 iconName="user-circle" 
                                 btnColor="#673AB7"
                             />

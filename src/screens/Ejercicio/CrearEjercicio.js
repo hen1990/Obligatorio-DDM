@@ -20,8 +20,8 @@ const CrearEjercicio = ({ navigation }) => {
     // Definir los estados.
     const [nombre, setNombre] = useState("");
     const [tipoMaquina, setTipoMaquina] = useState("");
-    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
     const [videoUrl, setVideoUrl] = useState("");
+    const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
 
     //Buscar tipoMaquina para Listar
     useEffect(() => {
@@ -70,6 +70,7 @@ const CrearEjercicio = ({ navigation }) => {
         let result = null
         await db.transactionAsync(async (tx) => {
             result = await databaseConection.createEjercicio(tx, nombre, tipoMaquina, videoUrl);
+        console.log("resultado: ", result)
         }, readOnly);
 
         return result
@@ -80,7 +81,7 @@ const CrearEjercicio = ({ navigation }) => {
         if (validateData()) {
             //guardar datos
             const result = await guardarEjercicio();
-
+            console.log("guardado: ", result)
             if (result.rowsAffected > 0) {
                 //  validar si se guardar los datos
                 Alert.alert(

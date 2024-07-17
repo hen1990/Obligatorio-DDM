@@ -13,41 +13,41 @@ const Ejercicio = ({ navigation }) => {
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
                         <ScrollView style={styles.scollview}>
-                            {/* Agregar Ejercicio*/}
+                            {/* Agregar Rutina*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("CrearEjercicio")} 
-                                title="Agregar Ejercicio 🖋" 
+                                onPress={() => navigation.navigate("CrearRutina")} 
+                                title="Agregar Rutina 🖋" 
                                 iconName="user-plus" 
                                 btnColor="#00838F"
                             />
                             
-                            {/* Actualizar Ejercicio */}
+                            {/* Actualizar Rutina */}
                             <MyButton 
-                                onPress={() => navigation.navigate("ActualizarEjercicio")} 
-                                title="Actualizar Máquina  ✔✔" 
+                                onPress={() => navigation.navigate("ActualizarRutina")} 
+                                title="Actualizar Rutina  ✔✔" 
                                 iconName="user-circle" 
                                 btnColor="#00838F"
                             />
 
-                              {/*Eliminar Ejercicio*/}
+                              {/*Eliminar Rutina*/}
                               <MyButton 
-                                onPress={() => navigation.navigate("ElimiarEjercicio")} 
-                                title="Borrar Ejercicio 🚫" 
+                                onPress={() => navigation.navigate("ElimiarRutina")} 
+                                title="Borrar Rutina 🚫" 
                                 iconName="user-times" 
                                 btnColor="#00838F"
                             />
 
-                            {/* Ver todos Ejercicio*/}
+                            {/* Ver todos Rutinas*/}
                             <MyButton 
-                                onPress={() => navigation.navigate("VerTodoEjercicio")} 
-                                title="Ver Ejercicios 👁‍🗨" 
+                                onPress={() => navigation.navigate("VerTodoRutina")} 
+                                title="Ver Rutinas 👁‍🗨" 
                                 iconName="user-times" 
                                 btnColor="#00838F"
                             />
 
-                             {/* borrar todos Ejercicios*/}
+                             {/* borrar todos Rutinas*/}
                              <MyButton 
-                                onPress={() => navigation.navigate("EliminarTodoEjercicio")} 
+                                onPress={() => navigation.navigate("EliminarTodoRutina")} 
                                 title="Borrar todos! ❌" 
                                 iconName="user-times" 
                                 btnColor="red"

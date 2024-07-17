@@ -16,6 +16,7 @@ const HomeScreen = ({ navigation }) => {
                 await databaseConection.dropTabletipoMaquina(tx)
                 await databaseConection.dropTableMaquina(tx)
                 await databaseConection.dropTableEjercicio(tx)
+                await databaseConection.dropTableRutina(tx)
                 console.log("transaction", tx)
                 //Chequear tabla Usuario
                 const existeTablaUsuario = await databaseConection.checkTableExistUser(tx)
@@ -44,7 +45,11 @@ const HomeScreen = ({ navigation }) => {
                 const crearTablaMaquina = await databaseConection.crearTablaMaquina(tx)
                 console.log("### tabla maquina ####", crearTablaMaquina)
 
+                
+
                 await databaseConection.crearTablaEjercicio(tx)
+                
+                await databaseConection.crearTablaRutina(tx)
                 //Agregar datos de prueba
                 await databaseConection.agregarUsuarios(tx)
                 await databaseConection.agregarTipoMaquina(tx)
@@ -139,7 +144,6 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     scollview: {
-        marginTop: 30,
         flex: 1,
         flexDirection: "column",
 

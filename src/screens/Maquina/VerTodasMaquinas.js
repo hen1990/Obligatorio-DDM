@@ -115,27 +115,21 @@ const styles = StyleSheet.create({
     listView: {
         marginTop: 0,
     },
-    listItemView: {
-        backgroundColor: "#d9f1d1",
-        padding: 30,
-        borderColor: "#c6eab9",
-        borderWidth: 2,
-    },
     text_data: {
-        padding: 5,
-        marginLeft: 10,
+        padding: 3,
+        marginLeft: 5,
         color: "black",
         alignContent: "center",
         alignItems: "center",
         fontSize: 28,
     },
     text_data1: {
-        padding: 5,
-        marginLeft: 10,
+        padding: 3,
+        marginLeft: 5,
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 24,
+        fontSize: 20,
     },
     empty: {
         flex: 1,
@@ -155,7 +149,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#A9DFBF',
+        borderBottomColor: 'green',
     },
     textContainer: {
         flex: 1, 

@@ -25,12 +25,26 @@ const styles = StyleSheet.create({
         flex: 1,
         color: "white",
         padding: 30,
-        marginTop: 10,
-        marginBottom: 50,
+        marginTop: 50,
+        marginBottom: 10,
         marginLeft: 35,
         marginRight: 35,
         borderRadius:5,
     },
+    /*
+    button: {
+        flex: 1,
+        color: "white",
+        paddingLeft: 50,
+        marginTop: 0,
+        marginBottom: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        borderRadius:0,
+        borderBlockColor: "white",
+        borderWidth: 2,
+        height:120
+    },*/
     text: {
         color: "white",
         fontSize: 20,

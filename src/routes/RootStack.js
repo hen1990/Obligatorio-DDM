@@ -34,7 +34,8 @@ import ActualizarEjercicio from "../screens/Ejercicio/ActualizarEjercicio";
 import EliminarEjercicio from "../screens/Ejercicio/EliminarEjercicio";
 import VerTodoEjercicio from "../screens/Ejercicio/VerTodoEjercicio";
 import EliminarTodoEjercicio from "../screens/Ejercicio/EliminarTodoEjercicio";
-import Rutina from "../screens/Rutina"
+import Rutina from "../screens/Rutina";
+import CrearRutina from "../screens/Rutina/CrearRutina";
 
 const RootStack = () => {
     return (
@@ -69,7 +70,7 @@ const RootStack = () => {
                             headerTintColor: "#fff",
                             headerTitleStyle: {
                                 fontWeight: "bold",
-                                fontSize: 26
+                                fontSize: 36
                             }
                         }}
                     />
@@ -174,14 +175,14 @@ const RootStack = () => {
                         name="TipoMaquina"
                         component={TipoMaquina}
                         options={{
-                            title: "Tipos de Maquinas",
+                            title: "Tipos Maquinas",
                             headerStyle: {
                                 backgroundColor: "#8BC34A",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
                                 fontWeight: "bold",
-                                fontSize: 30
+                                fontSize: 36
                             }
                         }}
                     />
@@ -190,7 +191,7 @@ const RootStack = () => {
                         name="CrearTipoMaquina"
                         component={CrearTipoMaquina}
                         options={{
-                            title: "Ingresar Maquinas",
+                            title: "Agregar Máquina",
                             headerStyle: {
                                 backgroundColor: "#8BC34A",
                             },
@@ -279,7 +280,7 @@ const RootStack = () => {
                             headerTintColor: "#fff",
                             headerTitleStyle: {
                                 fontWeight: "bold",
-                                fontSize: 30
+                                fontSize: 36
                             }
                         }}
                     />
@@ -377,7 +378,7 @@ const RootStack = () => {
                             headerTintColor: "#fff",
                             headerTitleStyle: {
                                 fontWeight: "bold",
-                                fontSize: 30
+                                fontSize: 36
                             }
                         }}
                     />
@@ -471,6 +472,87 @@ const RootStack = () => {
                             title: "Rutinas",
                             headerStyle: {
                                 backgroundColor: "#00a1a7",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 36
+                            }
+                        }}
+                    />
+{/* Crear Rutina */}
+<Stack.Screen
+                        name="CrearRutina"
+                        component={CrearRutina}
+                        options={{
+                            title: "Ingresar Rutina",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Actualizar Rutina */}
+                    <Stack.Screen
+                        name="ActualizarRutina"
+                        component={ActualizarRutina}
+                        options={{
+                            title: "Actualizar Rutina",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                    {/* Ver Rutina */}
+                    <Stack.Screen
+                        name="VerTodoRutina"
+                        component={VerTodoRutina}
+                        options={{
+                            title: "Listar Rutinas",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+                     {/* Eliminar Rutina */}
+                     <Stack.Screen
+                        name="ElimiarRutina"
+                        component={EliminarRutina}
+                        options={{
+                            title: "Eliminar Rutina",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 30
+                            }
+                        }}
+                    />
+
+                    {/* Eliminar Todo Rutina */}
+                    <Stack.Screen
+                        name="EliminarTodoRutina"
+                        component={EliminarTodoRutina}
+                        options={{
+                            title: "Eliminar todas las Rutinas",
+                            headerStyle: {
+                                backgroundColor: "#9575CD",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {
