@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Button,Platform, FlatList, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Button, Platform, FlatList, Alert, Text, Image } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -40,24 +40,24 @@ const EliminarEjercicio = ({ navigation }) => {
             Alert.alert("No se encontró Tipo de Máquina.")
         }
     }
-   
-        const confirmarEliminar = async (id) => {
-            console.log(id)
-            Alert.alert(
-                "Se eliminará un ejercicio de la base de datos.",
-                "¿Seguro desea eliminar?",
-                [
-                    {
-                        text: "Cancelar",
-                        onPress: () => console.log("Cancelado"),
-                    },
-                    {
-                        text: "Aceptar",
-                        onPress: () => deleteEjercicio(id),
-                    },
-                ],
-            );
-        };
+
+    const confirmarEliminar = async (id) => {
+        console.log(id)
+        Alert.alert(
+            "Se eliminará un ejercicio de la base de datos.",
+            "¿Seguro desea eliminar?",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancelado"),
+                },
+                {
+                    text: "Aceptar",
+                    onPress: () => deleteEjercicio(id),
+                },
+            ],
+        );
+    };
 
     const deleteEjercicio = async (id) => {
         // Borrar maquina
@@ -99,31 +99,31 @@ const EliminarEjercicio = ({ navigation }) => {
 
     const listItemView = (item) => {
         return (
-                    <View key={item.id} style={styles.listItemView}>
-                        <View style={styles.textContainer}>
-                            <MyText text={item.nom_ejercicio} style={styles.text_data} />
-                            <Button title="Eliminar" color={buttonColor}
-                                onPress={() => {confirmarEliminar(item.id)}} />
-                        </View>
-                        <View style={styles.imageContainer}>
-                            {item.fotoUrl ? (
-                                <Image
-                                    source={{ uri: item.fotoUrl }}
-                                    style={styles.image}
-                                />
-                            ) : (
-                                <Image
-                                    source={{ uri: 'https://img.freepik.com/vector-premium/no-hay-foto-disponible-icono-vector-simbolo-imagen-predeterminado-imagen-proximamente-sitio-web-o-aplicacion-movil_87543-10639.jpg' }}
-                                    style={styles.image}
-                                />
+            <View key={item.id_ejercicio} style={styles.listItemView}>
+                <View style={styles.textContainer}>
+                    <MyText text={item.nom_ejercicio} style={styles.text_data} />
+                    <Button title="Eliminar" color={buttonColor}
+                        onPress={() => { confirmarEliminar(item.id_ejercicio) }} />
+                </View>
+                <View style={styles.imageContainer}>
+                    {item.fotoUrl ? (
+                        <Image
+                            source={{ uri: item.fotoUrl }}
+                            style={styles.image}
+                        />
+                    ) : (
+                        <Image
+                            source={{ uri: 'https://st4.depositphotos.com/3265223/24936/v/450/depositphotos_249366040-stock-illustration-fitness-gym-logo-with-strong.jpg' }}
+                            style={styles.image}
+                        />
 
-                            )}
-
-
-                        </View>
+                    )}
 
 
-                    </View>
+                </View>
+
+
+            </View>
 
         );
     };
@@ -132,7 +132,7 @@ const EliminarEjercicio = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View styles={styles.generalView}>
-                   <ScrollView keyboardShouldPersistTaps="handled">
+                    <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
                             <MyText text="Buscar Ejercicio" style={styles.text} />
@@ -178,7 +178,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: 20,
         backgroundColor: "white",
-
     },
     generalView: {
         flex: 1
@@ -241,6 +240,11 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginLeft: 50,
         marginTop: 8
+    },
+    emptyText: {
+        fontSize: 20,
+        alignSelf: "center",
+        alignContent: "center",
     },
     textContainer: {
         flex: 1,

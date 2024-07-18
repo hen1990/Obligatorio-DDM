@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "#ecf8e8",
+        backgroundColor: "#e3f7dc",
         alignContent: "center"
     },
     generalView: {

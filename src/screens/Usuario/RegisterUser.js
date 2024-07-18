@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: "#ecf8e8",
+    backgroundColor: "#fcfceb",
   },
   generalView: {
     flex: 1,
@@ -246,20 +246,23 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   input: {
-    padding: 5,
+    padding: 0,
     textAlignVertical: "top",
+    height: 20,
   },
   enLinea: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   inputFecha: {
-    padding: 5,
+    padding: 0,
     margin: 0,
-    textAlignVertical: "top",
+    height: 20,
+    textAlign: "center",
+    justifyContent: "center",
   },
   texto: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'left',
     marginLeft: 50,
     marginTop: 8

@@ -135,7 +135,7 @@ const databaseConection = {
         const res = await tx.executeSqlAsync("SELECT * FROM maquina", [])
         return res
     },
-    async deleteAllTipoMaquina(tx) {
+    async deleteAllMaquina(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM maquina", [])
         return res
     },
@@ -164,7 +164,7 @@ const databaseConection = {
         return res
     },
     async crearTablaEjercicio(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS ejercicio(id INTEGER PRIMARY KEY AUTOINCREMENT, nom_ejercicio VARCHAR(50), id_tipoMaquina INTEGER, videoUrl VARCHAR(200), FOREIGN KEY (id_tipoMaquina) REFERENCES tipoMaquina(id))", [])
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS ejercicio(id_ejercicio INTEGER PRIMARY KEY AUTOINCREMENT, nom_ejercicio VARCHAR(50), id_tipoMaquina INTEGER, videoUrl VARCHAR(200), FOREIGN KEY (id_tipoMaquina) REFERENCES tipoMaquina(id))", [])
         return res
     },
     async createEjercicio(tx, nombre, id_tipoMaquina, videoUrl) {
@@ -172,23 +172,23 @@ const databaseConection = {
         return res
     },
     async updateEjercicio(tx, nombre, id_tipoMaquina, videoUrl, Id) {
-        const res = await tx.executeSqlAsync("UPDATE ejercicio SET nom_ejercicio = ?, id_tipoMaquina = ?, videoUrl = ? WHERE id = ?", [nombre, id_tipoMaquina, videoUrl, Id])
+        const res = await tx.executeSqlAsync("UPDATE ejercicio SET nom_ejercicio = ?, id_tipoMaquina = ?, videoUrl = ? WHERE id_ejercicio  = ?", [nombre, id_tipoMaquina, videoUrl, Id])
         return res
     },
     async deleteEjercicio(tx, Id) {
-        const res = await tx.executeSqlAsync("DELETE FROM ejercicio WHERE id = ?", [Id])
+        const res = await tx.executeSqlAsync("DELETE FROM ejercicio WHERE id_ejercicio  = ?", [Id])
         return res
     },
     async getOneEjercicio(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM ejercicio e inner join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
         console.log(nombre, ":  un ejercico obtenido")
         return res
     },
     async getAllEjercicio(tx) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.* FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
+        const res = await tx.executeSqlAsync("SELECT e.*, tm.fotoUrl, tm.nombre FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
         return res
     },
-    async deleteAllTipoEjercicio(tx) {
+    async deleteAllEjercicio(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM ejercicio", [])
         return res
     },
@@ -201,8 +201,10 @@ const databaseConection = {
             "('Pecho Paloma', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
             "('Serratos', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
             "('Estiramiento Estrecho', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
-            "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')" , [])
-            console.log("Datos agregados, Ejercicios")
+            "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')," +
+            "('Estocadas', 2 , 'https://www.youtube.com/watch?v=X61IReICHkA')," +
+            "('Abdominales', 2 , 'https://www.youtube.com/watch?v=2tXQbi16EdI')," +
+            "('Plancha Abdominal', 2  , 'https://www.youtube.com/watch?v=mMieHCr-H0c')" , [])
             return res
     },
 
@@ -216,7 +218,7 @@ const databaseConection = {
         return res
     },
     async crearTablaRutina(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, dia_rutina VARCHAR(10), id_usuario INTEGER, id_ejercicio INTEGER, series INTEGER, repeticiones INTEGER, FOREIGN KEY (id_usuario) REFERENCES usuario(user_id), FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id))", [])
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, dia_rutina VARCHAR(10), id_usuario INTEGER, id_ejercicio INTEGER, series INTEGER, repeticiones INTEGER, FOREIGN KEY (id_usuario) REFERENCES usuario(user_id), FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id_ejercicio))", [])
         return res
     },
     async createRutina(tx, dia, usuario, ejercicio, series, repeticiones) {
@@ -232,15 +234,18 @@ const databaseConection = {
         return res
     },
     async getOneRutina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM rutina r inner join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
-        console.log(nombre, ":  un ejercico obtenido")
+        const res = await tx.executeSqlAsync("SELECT r.id, r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.nom_usuario like ?", [nombre])
+        return res
+    },
+    async getRutinaPorId(tx, id, dia) {
+        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, r.id_usuario, r.id_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.user_id = ? and r.dia_rutina = ?", [id, dia])
         return res
     },
     async getAllRutinas(tx) {
-        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id", [])
+        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio", [])
         return res
     },
-    async deleteAllTipoRutina(tx) {
+    async deleteAllRutina(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM rutina", [])
         return res
     },
@@ -248,7 +253,15 @@ const databaseConection = {
     async agregarRutinas(tx) {
         const res = await tx.executeSqlAsync("INSERT INTO rutina(dia_rutina, id_usuario, id_ejercicio, series, repeticiones) VALUES" +
             "('Lunes', 1, 1, 4, 12)," +
-            "('Lunes', 1, 4, 4, 10)" , [])
+            "('Lunes', 1, 8, 4, 12)," +
+            "('Martes', 1, 2, 4, 12)," +
+            "('Martes', 1, 7, 1, 20)," +
+            "('Lunes', 1, 4, 4, 10)," +
+            "('Lunes', 2, 1, 4, 12)," +
+            "('Lunes', 2, 8, 4, 12)," +
+            "('Martes', 2, 2, 4, 12)," +
+            "('Martes', 3, 7, 1, 20)," +
+            "('Lunes', 3, 4, 4, 10)" , [])
             console.log("Datos agregados, Ejercicios")
             return res
     },

@@ -109,7 +109,7 @@ const DeleteUser = ({navigation}) => {
               <>
                 <View style={styles.presenterView}>
                   <MyText
-                    text={`Usuario: ${userData == null ? "" : userData.nombre + " " + userData.apellido}`}
+                    text={`Usuario: ${userData == null ? "" : userData.nom_usuario + " " + userData.apellido}`}
                     style={styles.presenterText}
                   />
                   <MyText
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: "2f2f2f",
+    backgroundColor: "#fcfceb",
   },
   generalView: {
     flex: 1,
@@ -147,12 +147,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 25,
     color: "black",
-    fontSize: 20,
+    fontSize: 18,
   },
   inputStyle: {
     padding: 1,
     margin: 1,
     color: "black",
+    height: 20,
   },
   presenterView: {
     // flex: 2,
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   },
   presenterText: {
     margin: 5,
-    fontSize: 20,
+    fontSize: 18,
     color: "black"
   },
 });

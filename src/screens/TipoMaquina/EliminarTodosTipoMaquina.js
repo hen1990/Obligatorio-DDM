@@ -37,7 +37,7 @@ const EliminarTodosTipoMaquina = ({ navigation }) => {
  <View style={styles.presenterView}>
                             <MyText text="ADVERTENCIA!!" style={styles.textDanger} />
                            
-                                <MyText text="Estás a punto de eliminar TODOS los Tipos de Máquinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los usiarios existentes?" style={styles.texto} />
+                                <MyText text="Estás a punto de eliminar TODOS los Tipos de Máquinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los datos existentes?" style={styles.texto} />
                             </View>
                             <MySingleButton
                                 title="Borrar TODO"
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#ecf8e8"
     },
     generalView: {
         flex: 1

@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: "#ecf8e8",
+    backgroundColor: "#fcfceb",
   },
   generalView: {
     flex: 1,
@@ -86,34 +86,10 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   listItemView: {
-    backgroundColor: "#feffe3",
+    backgroundColor: "#fcfceb",
     padding: 20,
     borderColor: "#AFB42B",
     borderWidth: 1,
-  },
-  text: {
-    padding: 10,
-    marginLeft: 25,
-    color: "black",
-    fontSize: 20,
-  },
-  inputStyle: {
-    padding: 10,
-    margin: 10,
-    color: "black",
-  },
-  presenterView: {
-    // flex: 2,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 15,
-    fontSize: 30,
-    height: 100,
-    backgroundColor: "2f2f2f",
-    borderColor: "2f2f2f",
-    borderRadius: 5,
-    borderWidth: 0,
-    padding: 20
   },
   text_data: {
     padding: 3,
@@ -121,7 +97,7 @@ const styles = StyleSheet.create({
     color: "black",
     alignContent: "center",
     alignItems: "center",
-    fontSize: 28,
+    fontSize: 20,
 },
 text_data1: {
     padding: 3,
@@ -129,7 +105,7 @@ text_data1: {
     color: "#2f2f2f",
     alignContent: "center",
     alignItems: "center",
-    fontSize: 20,
+    fontSize: 18,
 },
   empty: {
     flex: 1,
@@ -139,7 +115,7 @@ text_data1: {
     alignSelf: "center",
   },
   emptyText: {
-    fontSize: 30,
+    fontSize: 18,
     alignSelf: "center",
     alignContent: "center",
   },

@@ -38,6 +38,7 @@ const CrearRutina = ({ navigation }) => {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
                     elements.push(res.rows[i])
+                    console.log(res.rows[i])
                 }
                 setEjercicios(elements)
             }
@@ -138,7 +139,7 @@ const CrearRutina = ({ navigation }) => {
 
     const renderizarEjercicios = () => {
         return ejercicios.map(tipo => (
-            <Picker.Item key={tipo.id} label={tipo.nom_ejercicio} value={tipo.id} />
+            <Picker.Item key={tipo.id} label={tipo.nom_ejercicio} value={tipo.id_ejercicio } />
         ));
     };
 
@@ -214,7 +215,7 @@ const CrearRutina = ({ navigation }) => {
                             />
 
                             {/* button */}
-                            <MySingleButton onPress={crearRutina} title={"Ingresar"} />
+                            <MySingleButton onPress={crearRutina} title={"Ingresar"} style={styles.boton}/>
                         </KeyboardAvoidingView>
                     </ScrollView>
                 </View>
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "#ecf8e8",
+        backgroundColor: "#e3fafc",
     },
     generalView: {
         flex: 1,
@@ -241,26 +242,32 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     input: {
-        padding: 5,
+        padding: 0,
         textAlignVertical: "top",
+         backgroundColor: "#e3fafc",
+         height: 20,
     },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
-        marginLeft: 50,
+        marginLeft: 40,
         marginTop: 8
     },
     picker: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#ecf8e8",
+        backgroundColor: "#e3fafc",
         borderColor: "#E0E0E0",
         borderRadius: 0,
         borderWidth: 1,
         margin: 30,
-        height: 70,
-    }
+        marginTop: 10,
+        height: 50,
+    },
+    boton: {
+marginBottom: 50,
+    },
 });
 
 export default CrearRutina;

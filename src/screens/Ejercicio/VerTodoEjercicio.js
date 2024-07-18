@@ -8,9 +8,8 @@ import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
 const VerTodoEjercicio = () => {
-    // estado
+    // estados
     const [ejercicio, setEjercicio] = useState([]);
-    //const [listaTiposMaquinas, setListaTiposMaquinas] = useState([]);
 
     useEffect(() => {
         const cargarEjercicio = async () => {
@@ -32,7 +31,6 @@ const VerTodoEjercicio = () => {
         await db.transactionAsync(async (tx) => {
             result = await databaseConection.getAllEjercicio(tx);
         }, readOnly);
-        // seteara test
         return result;
     };
 
@@ -49,7 +47,6 @@ const VerTodoEjercicio = () => {
             } else {
                 Alert.alert(`No hay video para mostrar en este ejericio`);
             }
-
         }, [url]);
 
         const buttonColor = Platform.select({
@@ -81,10 +78,9 @@ const VerTodoEjercicio = () => {
                         />
                     ) : (
                         <Image
-                            source={{ uri: 'https://img.freepik.com/vector-premium/ningun-icono-fitness-prohibicion-ejercicio_485380-2778.jpg' }}
+                            source={{ uri: 'https://st4.depositphotos.com/3265223/24936/v/450/depositphotos_249366040-stock-illustration-fitness-gym-logo-with-strong.jpg' }}
                             style={styles.image}
                         />
-
                     )}
 
                     {item.videoUrl ? (
@@ -92,8 +88,6 @@ const VerTodoEjercicio = () => {
                     ) : (
                         <OpenURLButton url="" style={styles.button}>Sin Video</OpenURLButton>
                     )}
-
-
                 </View>
             </View>
         );
@@ -110,7 +104,7 @@ const VerTodoEjercicio = () => {
                 />
             ) : (
                 <View style={styles.empty}>
-                    <Text style={styles.emptyText}> No se encuentran máquinas</Text>
+                    <Text style={styles.emptyText}> No se encuentran ejercicios</Text>
                 </View>
             )}
 
@@ -138,7 +132,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
     emptyText: {
-        fontSize: 30,
+        fontSize: 20,
         alignSelf: "center",
         alignContent: "center",
     },

@@ -21,7 +21,6 @@ const ActualizarEjercicio = ({ navigation }) => {
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
             const res = await buscarTiposMaquinas()
-            console.log("Resultado de buscarTiposMaquinas:", res);
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
@@ -64,7 +63,7 @@ const ActualizarEjercicio = ({ navigation }) => {
             setTipoMaquina(res.rows[0].id_tipoMaquina)
             setNombre(res.rows[0].nom_ejercicio)
             setVideoUrl(res.rows[0].videoUrl)
-            setId(res.rows[0].id)
+            setId(res.rows[0].id_ejercicio)
         } else {
             Alert.alert("No se encontró ejercicio.")
             setTipoMaquina("")
@@ -107,7 +106,6 @@ const ActualizarEjercicio = ({ navigation }) => {
     }
 
     const updateEjercicioDB = async () => {
-
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
@@ -117,7 +115,11 @@ const ActualizarEjercicio = ({ navigation }) => {
     }
 
     const renderizarListaTiposMaquinas = () => {
-        return listaTiposMaquinas.map(tipo => (
+        //Agrego atributo "Sin Maquina" a la lista
+        let nuevaLista = [...listaTiposMaquinas];
+        nuevaLista.unshift({ id: 0, nombre: "Sin Máquina" });
+    
+        return nuevaLista.map(tipo => (
             <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
         ));
     };

@@ -99,7 +99,7 @@ const CrearTipoMaquina = ({ navigation }) => {
                             {/*Presentacion de la FOTO*/}
                             <View style={styles.presenterView}>
                                 {fotoUrl.length == 0 ?
-                                    <Text style={{ fontSize: 20, margin: 20, lineHeight: 40 }}>
+                                    <Text style={{ fontSize: 18, margin: 20, lineHeight: 36 }}>
                                         Esperando la imágen... {"\n"}
                                         Aquí verás la imágen al ser cargada.{"\n"}
                                         Si no se visualiza correctamente verifiqueque que la URL sea correcta.
@@ -146,15 +146,15 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     input: {
-        padding: 5,
-        textAlignVertical: "top",
+        padding: 0,
+        height: 20,
     },
     presenterView: {
         marginLeft: 30,
         marginRight: 30,
         marginTop: 15,
         padding: 1,
-        fontSize: 20,
+        fontSize: 18,
         backgroundColor: "#fff",
         borderColor: "#A9DFBF",
         borderRadius: 5,
@@ -162,9 +162,9 @@ const styles = StyleSheet.create({
         height: 300
     },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
-        marginLeft: 50,
+        marginLeft: 40,
         marginTop: 8
     },
 });

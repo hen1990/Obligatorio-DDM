@@ -7,13 +7,13 @@ const db = databaseConection.getConnection();
 
 const EliminarTodoMaquina = ({ navigation }) => {
 
-    const borrarTiposDeMaquinas = async () => {
+    const borrarMaquinas = async () => {
         const readOnly = false;
         await db.transactionAsync(async tx => {
-            databaseConection.deleteAllTipoMaquina(tx)
+            databaseConection.deleteAllMaquina(tx)
             Alert.alert(
                 "Exito",
-                "Tipos de Máquinas eliminadas!!!",
+                "Máquinas eliminadas!!!",
                 [
                   {
                     text: "OK",
@@ -37,11 +37,11 @@ const EliminarTodoMaquina = ({ navigation }) => {
  <View style={styles.presenterView}>
                             <MyText text="ADVERTENCIA!!" style={styles.textDanger} />
                            
-                                <MyText text="Estás a punto de eliminar TODOS los Tipos de Máquinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los usiarios existentes?" style={styles.texto} />
+                                <MyText text="Estás a punto de eliminar TODAS las Máquinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los datos existentes?" style={styles.texto} />
                             </View>
                             <MySingleButton
                                 title="Borrar TODO"
-                                onPress={borrarTiposDeMaquinas}
+                                onPress={borrarMaquinas}
                                 style={styles.button}
                             />
                         </KeyboardAvoidingView>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#e3f7dc"
     },
     generalView: {
         flex: 1

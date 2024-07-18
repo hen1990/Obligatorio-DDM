@@ -94,7 +94,7 @@ const ActualizarTipoMaquina = ({ navigation }) => {
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
-                            <MyText text="Buscar Tipo de Máquina" style={styles.text} />
+                            <MyText text="Buscar Tipo de Máquina" style={styles.texto} />
                             <MyInputText
                                 placeholder="Ingrese nombre de Tipo de Máquina"
                                 style={{}}
@@ -125,18 +125,19 @@ const ActualizarTipoMaquina = ({ navigation }) => {
                                             style={styles.input}
                                             value={fotoUrl}
                                         />
-
-                                        <Image
-                                            source={{
-                                                uri: `${fotoUrl}`,
-                                                method: 'POST',
-                                                headers: {
-                                                    Pragma: 'no-cache',
-                                                },
-                                                body: 'Your Body goes here',
-                                            }}
-                                            style={{ width: "100%", height: 300 }}
-                                        />
+                                        <View style={styles.presenterView}>
+                                            <Image
+                                                source={{
+                                                    uri: `${fotoUrl}`,
+                                                    method: 'POST',
+                                                    headers: {
+                                                        Pragma: 'no-cache',
+                                                    },
+                                                    body: 'Your Body goes here',
+                                                }}
+                                                style={{ width: "100%", height: 300 }}
+                                            />
+                                        </View>
 
                                         <MySingleButton
                                             title="Actualizar"
@@ -160,19 +161,21 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#ecf8e8"
     },
     generalView: {
         flex: 1
     },
-    text: {
-        padding: 10,
-        marginLeft: 25,
+    texto: {
+        fontSize: 18,
+        textAlign: 'left',
         color: "black",
-        fontSize: 20
+        marginLeft: 40,
+        marginTop: 20
     },
     input: {
-        padding: 15
+        padding: 0,
+        height: 20,
     },
     presenterView: {
         marginLeft: 30,
@@ -199,17 +202,6 @@ const styles = StyleSheet.create({
     enLinea: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    inputFecha: {
-        padding: 5,
-        margin: 0,
-        textAlignVertical: "top",
-    },
-    texto: {
-        fontSize: 20,
-        textAlign: 'left',
-        marginLeft: 50,
-        marginTop: 8
     },
 })
 

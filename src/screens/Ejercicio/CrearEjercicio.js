@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-    StyleSheet,
-    SafeAreaView,
-    ScrollView,
-    KeyboardAvoidingView,
-    Alert,
-    View,
-    Text,
-} from "react-native";
+import { StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, View, Text,} from "react-native";
 import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
@@ -27,7 +19,6 @@ const CrearEjercicio = ({ navigation }) => {
     useEffect(() => {
         const cargarTiposMaquinas = async () => {
             const res = await buscarTiposMaquinas()
-            console.log("Resultado de buscarTiposMaquinas:", res);
             if (res.rows.length > 0) {
                 let elements = []
                 for (let i = 0; i < res.rows.length; i++) {
@@ -48,12 +39,6 @@ const CrearEjercicio = ({ navigation }) => {
         return result
     }
 
-    const renderizarListaTiposMaquinas = () => {
-        return listaTiposMaquinas.map(tipo => (
-            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
-        ));
-    };
-
     // Validar Datos
     const validateData = () => {
         //Validar Tipo Maquina
@@ -70,7 +55,6 @@ const CrearEjercicio = ({ navigation }) => {
         let result = null
         await db.transactionAsync(async (tx) => {
             result = await databaseConection.createEjercicio(tx, nombre, tipoMaquina, videoUrl);
-        console.log("resultado: ", result)
         }, readOnly);
 
         return result
@@ -101,6 +85,16 @@ const CrearEjercicio = ({ navigation }) => {
                 Alert.alert("Error al ingresar ejercicio.")
             }
         }
+    };
+    
+    const renderizarListaTiposMaquinas = () => {
+        //Agrego atributo "Sin Maquina" a la lista
+        let nuevaLista = [...listaTiposMaquinas];
+        nuevaLista.unshift({ id: 0, nombre: "Sin Máquina" });
+    
+        return nuevaLista.map(tipo => (
+            <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
+        ));
     };
 
     return (

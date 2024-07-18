@@ -17,18 +17,19 @@ const styles = StyleSheet.create({
             alignContent: 'center',
             backgroundColor: 'green',
             color: '#ffffff',
-            padding: 15,
+            padding: 5,
             marginTop: 15,
             marginLeft: 30,
             marginRight: 30,
             borderRadius: 5,
             flex: 1,
             alignItems: 'center',
+            justifyContent: 'center',
+            height: 50,
         },
         text: {
             color: "white",
-            fontSize: 20,
-            fontWeight: "500"
+            fontSize: 18,
         },
         view: {
             flex: 1,

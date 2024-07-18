@@ -74,7 +74,6 @@ const UpdateUser = ( {navigation}) => {
         }
         // update
         const res = await updateUserDB()
-        console.log("res", res)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",
@@ -94,6 +93,7 @@ const UpdateUser = ( {navigation}) => {
 
         }
     }
+    
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
@@ -101,10 +101,10 @@ const UpdateUser = ( {navigation}) => {
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
-                            <MyText text="Buscar Usuario" style={styles.text} />
+                            <MyText text="Buscar Usuario" style={styles.texto} />
                             <MyInputText
                                 placeholder="Ingrese el nombre de Usuario"
-                                style={{}}
+                                style={styles.input}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={searchUser} />
@@ -137,7 +137,7 @@ const UpdateUser = ( {navigation}) => {
                                     style={styles.input}
                                     value={ci}
                                 />
-                                <Text style={styles.texto}>Fecha de Nacimiento:</Text>
+                                <Text style={styles.texto}>Fecha de Nacimiento: DD/MM/AAAA</Text>
                                 <View style={styles.enLinea}>
                                     {/* Fecha */}
                                     {/* Dia */}
@@ -188,23 +188,24 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#fcfceb"
     },
     generalView: {
         flex: 1
     },
-    text: {
-        padding: 10,
-        marginLeft: 25,
-        color: "black",
-        fontSize: 20
-    },
     input: {
-        padding: 15
+        height: 20,
+      },
+    texto: {
+        fontSize: 18,
+        textAlign: 'left',
+        marginLeft: 40,
+        marginTop: 8,
+        color: "black",
     },
     keyBoardView: {
         flex: 1,
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     form: {
         flex: 1,
@@ -218,15 +219,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     inputFecha: {
-        padding: 5,
+        padding: 0,
         margin: 0,
-        textAlignVertical: "top",
-    },
-    texto: {
-        fontSize: 20,
-        textAlign: 'left',
-        marginLeft: 50,
-        marginTop: 8
+        height: 20,
+        textAlign: "center",
+        justifyContent: "center",
+        
     },
 })
 

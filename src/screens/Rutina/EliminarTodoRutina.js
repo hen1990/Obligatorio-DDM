@@ -7,17 +7,17 @@ const db = databaseConection.getConnection();
 
 const EliminarTodoRutina = ({ navigation }) => {
 
-    const borrarTiposDeMaquinas = async () => {
+    const borrarRutinas = async () => {
         const readOnly = false;
         await db.transactionAsync(async tx => {
-            databaseConection.deleteAllTipoMaquina(tx)
+            databaseConection.deleteAllRutina(tx)
             Alert.alert(
                 "Exito",
-                "Tipos de Máquinas eliminadas!!!",
+                "Rutinas eliminadas!!!",
                 [
                   {
                     text: "OK",
-                    onPress: () => navigation.navigate("Maquina"),
+                    onPress: () => navigation.navigate("Rutina"),
                   },
                 ],
                 {
@@ -37,11 +37,11 @@ const EliminarTodoRutina = ({ navigation }) => {
  <View style={styles.presenterView}>
                             <MyText text="ADVERTENCIA!!" style={styles.textDanger} />
                            
-                                <MyText text="Estás a punto de eliminar TODOS los Tipos de Máquinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los usiarios existentes?" style={styles.texto} />
+                                <MyText text="Estás a punto de eliminar TODAS las Rutinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los datos existentes?" style={styles.texto} />
                             </View>
                             <MySingleButton
                                 title="Borrar TODO"
-                                onPress={borrarTiposDeMaquinas}
+                                onPress={borrarRutinas}
                                 style={styles.button}
                             />
                         </KeyboardAvoidingView>

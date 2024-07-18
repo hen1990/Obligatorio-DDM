@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: "2f2f2f",
+    backgroundColor: "#ecf8e8",
   },
   generalView: {
     flex: 1,
@@ -151,12 +151,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 25,
     color: "black",
-    fontSize: 20,
+    fontSize: 18,
   },
   inputStyle: {
-    padding: 1,
+    padding: 0,
     margin: 1,
     color: "black",
+    height: 20,
   },
   presenterView: {
     marginLeft: 30,

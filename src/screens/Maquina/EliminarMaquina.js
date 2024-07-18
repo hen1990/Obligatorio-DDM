@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView,FlatList, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, FlatList, Alert, Text, Image } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -117,25 +117,22 @@ const EliminarMaquina = ({ navigation }) => {
 
     const listItemView = (item) => {
         return (
-        <View style={styles.viewContainer}>
-            <View key={item.id} style={styles.listItemView}>
-
-            <View style={styles.textContainer}>
-                <MyText text={item.nombre} style={styles.text_data} />
-                <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
+            <View style={styles.viewContainer}>
+                <View key={item.id} style={styles.listItemView}>
+                    <View style={styles.textContainer}>
+                        <MyText text={item.nombre} style={styles.text_data} />
+                        <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
+                    </View>
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={{ uri: item.fotoUrl }}
+                            style={styles.image}
+                        />
+                    </View>
+                </View>
+                <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
+                    onPress={() => { confirmarEliminar(item.id) }} />
             </View>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={{ uri: item.fotoUrl }}
-                    style={styles.image}
-                />
-            </View>
-
-
-        </View>
-        <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
-             onPress={() => {confirmarEliminar(item.id)}} />
-</View>
         );
     };
 
@@ -149,7 +146,7 @@ const EliminarMaquina = ({ navigation }) => {
                             <MyText text="Buscar Tipo de Máquina" style={styles.text} />
                             <MyInputText
                                 placeholder="Ingrese nombre de Tipo de Máquina"
-                                style={{}}
+                                style={styles.input}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarMaquina} />
@@ -157,7 +154,7 @@ const EliminarMaquina = ({ navigation }) => {
 
                             <View style={styles.generalView}>
 
-                            {maquinas ? (
+                                {maquinas ? (
                                     <FlatList
                                         data={maquinas}
                                         contentContainerStyle={styles.flatContainer}
@@ -189,8 +186,8 @@ const styles = StyleSheet.create({
     viewContainer: {
         flex: 1,
         paddingBottom: 50,
-        backgroundColor: "white",
-        borderBottomWidth: 3,
+        backgroundColor: "#e3f7dc",
+        borderBottomWidth: 2,
         borderBottomColor: '#A9DFBF',
     },
     generalView: {
@@ -200,7 +197,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginLeft: 25,
         color: "black",
-        fontSize: 20
+        fontSize: 18
     },
     text_data: {
         padding: 5,
@@ -208,7 +205,7 @@ const styles = StyleSheet.create({
         color: "black",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 26,
+        fontSize: 20,
     },
     text_data1: {
         padding: 5,
@@ -216,18 +213,17 @@ const styles = StyleSheet.create({
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 20,
+        fontSize: 18,
     },
     listItemView: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
         margin: 15,
-        borderBottomWidth: 0,
-        borderBottomColor: '#A9DFBF',
     },
     input: {
-        padding: 15
+        padding: 0,
+        height: 20,
     },
     keyBoardView: {
         flex: 1,
@@ -243,12 +239,6 @@ const styles = StyleSheet.create({
     enLinea: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    texto: {
-        fontSize: 20,
-        textAlign: 'left',
-        marginLeft: 50,
-        marginTop: 8
     },
     textContainer: {
         flex: 1,

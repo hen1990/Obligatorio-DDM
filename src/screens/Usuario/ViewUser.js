@@ -4,7 +4,7 @@ import {
   SafeAreaView,
   Alert,
   KeyboardAvoidingView,
-  ScrollView,
+  ScrollView, FlatList, Text,
   View,
 } from "react-native";
 import MyText from "../../components/MyText";
@@ -17,6 +17,7 @@ const db = databaseConection.getConnection();
 const ViewUser = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [userData, setUserData] = useState(null);
+  const [rutinas, setRutinas] = useState([]);
 
   const getUserDB = async () => {
     const readOnly = false;
@@ -38,6 +39,7 @@ const ViewUser = ({ navigation }) => {
 
     if (res.rows.length > 0) {
       setUserData(res.rows[0])
+      setRutinas([]);
 
     } else {
       Alert.alert("Usuario no encontrado")
@@ -45,54 +47,60 @@ const ViewUser = ({ navigation }) => {
     }
   };
 
-  const deleteUserDB = async () => {
-    const readOnly = false;
-    let result = null
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.deleteUser(tx, userData.user_id);
-    }, readOnly);
-    return result
-  }
+  const cargarRutinas = async () => {
+    const res = await buscarRutinas();
+    if (res.rows.length > 0) {
+      let elements = []
+      for (let i = 0; i < res.rows.length; i++) {
+        elements.push(res.rows[i])
+      }
+      setRutinas(elements);
 
-  const deleteUser = async () => {
-    // TODO hacer funcionalidad de borrado
-    const res = await deleteUserDB()
-    if (res.rowsAffected > 0) {
-      Alert.alert(
-        "Exito!",
-        "Usuario eliminado.",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Usuario"),
-          },
-        ],
-        {
-          cancelable: false,
-        }
-      );
-      setUserData(null)
-    } else {
-      Alert.alert("El usuario no existe")
-      setUserData(null)
     }
   }
 
-  //Confirmar Eliminar
-  const confirmarEliminar = async () => {
-    Alert.alert(
-      "Se eliminará un usuario de la base de datos.",
-      "¿Seguro desea eliminar?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => console.log("Cancelado"),
-        },
-        {
-          text: "Aceptar",
-          onPress: () => deleteUser(),
-        },
-      ],
+  const buscarRutinas = async () => {
+    const readOnly = false;
+    let result = null
+    await db.transactionAsync(async (tx) => {
+      result = await databaseConection.getOneRutina(tx, nombre + "%");
+    }, readOnly);
+    return result;
+  }
+
+
+  const agruparRutinas = () => {
+    const grupos = {};
+    rutinas.forEach(item => {
+      const { nom_usuario, dia_rutina, nom_ejercicio, series, repeticiones } = item;
+      if (!grupos[nom_usuario]) {
+        grupos[nom_usuario] = {};
+      }
+      if (!grupos[nom_usuario][dia_rutina]) {
+        grupos[nom_usuario][dia_rutina] = [];
+      }
+      grupos[nom_usuario][dia_rutina].push({ nom_ejercicio, series, repeticiones });
+    });
+    return grupos;
+  };
+
+  // Función para renderizar cada elemento de la lista
+  const listItemView = (usuario, diaRutina, ejercicios) => {
+    return (
+      <View key={`${usuario}-${diaRutina}`} style={styles.listItemView}>
+        <View style={styles.textContainer}>
+          <Text style={styles.text_data1}>{diaRutina}</Text>
+          {ejercicios.map((ejercicio, index) => (
+            <View key={index} style={styles.ejercicioContainer}>
+              <Text style={styles.text_data1}>{ejercicio.nom_ejercicio}</Text>
+              <View style={styles.series}>
+                <Text style={styles.text_data1}>Series: {ejercicio.series}</Text>
+                <Text style={styles.text_data1}>Repeticiones: {ejercicio.repeticiones}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
     );
   };
 
@@ -129,9 +137,31 @@ const ViewUser = ({ navigation }) => {
                   />
                 </View>
 
-                <MySingleButton title="Eliminar"
-                  onPress={confirmarEliminar} />
+                <MySingleButton title="Ver Rutinas"
+                  onPress={cargarRutinas} style={{backgroundColor: 'orange' }} />
               </>}
+              {rutinas.length ? (
+            <FlatList
+              data={Object.keys(agruparRutinas())}
+              contentContainerStyle={styles.flatContainer}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => {
+                const grupos = agruparRutinas();
+                const usuario = item;
+                return (
+                  <>
+                    {Object.keys(grupos[usuario]).map(diaRutina => (
+                      listItemView(usuario, diaRutina, grupos[usuario][diaRutina])
+                    ))}
+                  </>
+                );
+              }}
+            />
+          ) : (
+            <View style={styles.empty}>
+              <Text style={styles.emptyText}>  </Text>
+            </View>
+          )}
           </ScrollView>
         </View>
       </View>
@@ -154,29 +184,59 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 25,
     color: "black",
-    fontSize: 20,
+    fontSize: 18,
+  },
+  presenterText: {
+    margin: 5,
+    fontSize: 18,
+    color: "black"
   },
   inputStyle: {
-    padding: 1,
+    padding: 0,
     margin: 1,
     color: "black",
+    height: 20,
+  },
+  listItemView: {
+    marginVertical: 10,
+    padding: 10,
+    marginBottom: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#AFB42B"
+  },
+  textContainer: {
+    flexDirection: 'column',
+  },
+  text_data: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  text_data1: {
+    fontSize: 16,
+    marginBottom: 3,
+    marginLeft: 20,
+  },
+  series: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#dbdea2",
+  },
+  ejercicioContainer: {
+    marginLeft: 20,
+    padding: 10,
   },
   presenterView: {
     // flex: 2,
     marginLeft: 10,
     marginRight: 10,
     marginTop: 15,
-    fontSize: 30,
     backgroundColor: "2f2f2f",
     borderColor: "2f2f2f",
     borderRadius: 5,
     borderWidth: 0,
     padding: 20
-  },
-  presenterText: {
-    margin: 5,
-    fontSize: 20,
-    color: "black"
   },
 });
 

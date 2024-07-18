@@ -121,10 +121,12 @@ const styles = StyleSheet.create({
       },
       presenterText: {
         textAlign: "center",
+        textAlignVertical: "center",
         margin: 5,
-        fontSize: 30,
+        fontSize: 18,
         color: "black",
-        backgroundColor: "#A9DFBF"
+        backgroundColor: "#A9DFBF",
+        height: 30,
       },
     text_data: {
         padding: 5,
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
     emptyText: {
-        fontSize: 30,
+        fontSize: 20,
         alignSelf: "center",
         alignContent: "center",
     },

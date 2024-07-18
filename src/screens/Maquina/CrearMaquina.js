@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "#ecf8e8",
+        backgroundColor: "#e3f7dc",
     },
     generalView: {
         flex: 1,
@@ -160,11 +160,11 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     input: {
-        padding: 5,
-        textAlignVertical: "top",
+        padding: 0,
+        height: 20,
     },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
         marginLeft: 50,
         marginTop: 8
@@ -173,12 +173,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#ecf8e8",
+        backgroundColor: "#e3f7dc",
         borderColor: "#E0E0E0",
         borderRadius: 0,
         borderWidth: 1,
         margin: 30,
-        height: 70,
+        height: 60,
     }
 });
 

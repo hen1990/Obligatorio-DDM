@@ -144,7 +144,7 @@ const ActualizarMaquina = ({ navigation }) => {
                             <MyText text="Buscar Máquina" style={styles.text} />
                             <MyInputText
                                 placeholder="Ingrese nombre de Máquina"
-                                style={{}}
+                                style={styles.input}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarMaquina} />
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#e3f7dc"
     },
     generalView: {
         flex: 1
@@ -207,10 +207,11 @@ const styles = StyleSheet.create({
         padding: 10,
         marginLeft: 25,
         color: "black",
-        fontSize: 20
+        fontSize: 18
     },
     input: {
-        padding: 15
+        padding: 0,
+        height: 20,
     },
     keyBoardView: {
         flex: 1,
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "top",
     },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
         marginLeft: 50,
         marginTop: 8
@@ -242,12 +243,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#ecf8e8",
+        backgroundColor: "#e3f7dc",
         borderColor: "#E0E0E0",
         borderRadius: 0,
         borderWidth: 1,
         margin: 30,
-        height: 70,
+        height: 60,
     }
 })
 

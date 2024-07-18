@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#e3f7dc",
     },
     generalView: {
         flex: 1,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         color: "black",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 28,
+        fontSize: 20,
     },
     text_data1: {
         padding: 3,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 20,
+        fontSize: 18,
     },
     empty: {
         flex: 1,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
     emptyText: {
-        fontSize: 30,
+        fontSize: 20,
         alignSelf: "center",
         alignContent: "center",
     },
@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     imageContainer: {
-        width: 120, 
-        height: 120,
+        width: 110, 
+        height: 110,
     },
     image: {
         flex: 1, // Para que la imagen ocupe todo el espacio disponible

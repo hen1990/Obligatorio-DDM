@@ -133,7 +133,7 @@ const EliminarRutina = ({ navigation }) => {
                             <MyText text="Buscar Tipo de Máquina" style={styles.text} />
                             <MyInputText
                                 placeholder="Ingrese nombre de Tipo de Máquina"
-                                style={{}}
+                                style={styles.input}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarMaquina} />
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#e3fafc"
     },
     generalView: {
         flex: 1
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginLeft: 25,
         color: "black",
-        fontSize: 20
+        fontSize: 18
     },
     text_data: {
         padding: 5,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         color: "black",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 28,
+        fontSize: 18,
     },
     text_data1: {
         padding: 5,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         color: "#2f2f2f",
         alignContent: "center",
         alignItems: "center",
-        fontSize: 24,
+        fontSize: 16,
     },
     listItemView: {
         flexDirection: 'row',
@@ -216,7 +216,8 @@ const styles = StyleSheet.create({
         borderBottomColor: '#A9DFBF',
     },
     input: {
-        padding: 15
+        padding: 0,
+        height: 20,
     },
     keyBoardView: {
         flex: 1,
@@ -228,6 +229,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: 'orange',
+        marginBottom: 50,
     },
     enLinea: {
         flexDirection: 'row',
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "top",
     },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
         marginLeft: 50,
         marginTop: 8
@@ -249,8 +251,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     imageContainer: {
-        width: 120,
-        height: 120,
+        width: 110,
+        height: 110,
     },
     image: {
         flex: 1, // Para que la imagen ocupe todo el espacio disponible

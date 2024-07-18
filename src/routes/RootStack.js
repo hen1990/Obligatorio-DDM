@@ -222,8 +222,8 @@ const RootStack = () => {
                             }
                         }}
                     />
-                      {/* Eliminar Tipo Maquina */}
-                      <Stack.Screen
+                    {/* Eliminar Tipo Maquina */}
+                    <Stack.Screen
                         name="EliminarTipoMaquina"
                         component={EliminarTipoMaquina}
                         options={{
@@ -336,8 +336,8 @@ const RootStack = () => {
                             }
                         }}
                     />
-                     {/* Eliminar Maquina */}
-                     <Stack.Screen
+                    {/* Eliminar Maquina */}
+                    <Stack.Screen
                         name="ElimiarMaquina"
                         component={ElimiarMaquina}
                         options={{
@@ -434,8 +434,8 @@ const RootStack = () => {
                             }
                         }}
                     />
-                     {/* Eliminar Ejercicio */}
-                     <Stack.Screen
+                    {/* Eliminar Ejercicio */}
+                    <Stack.Screen
                         name="ElimiarEjercicio"
                         component={EliminarEjercicio}
                         options={{
@@ -484,8 +484,8 @@ const RootStack = () => {
                             }
                         }}
                     />
-{/* Crear Rutina */}
-<Stack.Screen
+                    {/* Crear Rutina */}
+                    <Stack.Screen
                         name="CrearRutina"
                         component={CrearRutina}
                         options={{
@@ -532,8 +532,8 @@ const RootStack = () => {
                             }
                         }}
                     />
-                     {/* Eliminar Rutina */}
-                     <Stack.Screen
+                    {/* Eliminar Rutina */}
+                    <Stack.Screen
                         name="ElimiarRutina"
                         component={EliminarRutina}
                         options={{
