@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Button, Platform, FlatList, Alert, Text, Image } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Button, Platform, FlatList, Alert, Text, Image, Dimensions } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -42,7 +42,6 @@ const EliminarEjercicio = ({ navigation }) => {
     }
 
     const confirmarEliminar = async (id) => {
-        console.log(id)
         Alert.alert(
             "Se eliminará un ejercicio de la base de datos.",
             "¿Seguro desea eliminar?",
@@ -99,41 +98,37 @@ const EliminarEjercicio = ({ navigation }) => {
 
     const listItemView = (item) => {
         return (
-            <View key={item.id_ejercicio} style={styles.listItemView}>
-                <View style={styles.textContainer}>
-                    <MyText text={item.nom_ejercicio} style={styles.text_data} />
-                    <Button title="Eliminar" color={buttonColor}
-                        onPress={() => { confirmarEliminar(item.id_ejercicio) }} />
+            <ScrollView styles={styles.generalView}>
+                <View key={item.id_ejercicio} style={styles.listItemView}>
+                    <View style={styles.textContainer}>
+                        <MyText text={item.nom_ejercicio} style={styles.text_data} />
+                        <Button title="Eliminar" color={buttonColor}
+                            onPress={() => { confirmarEliminar(item.id_ejercicio) }} />
+                    </View>
+                    <View style={styles.imageContainer}>
+                        {item.fotoUrl ? (
+                            <Image
+                                source={{ uri: item.fotoUrl }}
+                                style={styles.image}
+                            />
+                        ) : (
+                            <Image
+                                source={{ uri: 'https://st4.depositphotos.com/3265223/24936/v/450/depositphotos_249366040-stock-illustration-fitness-gym-logo-with-strong.jpg' }}
+                                style={styles.image}
+                            />
+                        )}
+                    </View>
                 </View>
-                <View style={styles.imageContainer}>
-                    {item.fotoUrl ? (
-                        <Image
-                            source={{ uri: item.fotoUrl }}
-                            style={styles.image}
-                        />
-                    ) : (
-                        <Image
-                            source={{ uri: 'https://st4.depositphotos.com/3265223/24936/v/450/depositphotos_249366040-stock-illustration-fitness-gym-logo-with-strong.jpg' }}
-                            style={styles.image}
-                        />
-
-                    )}
-
-
-                </View>
-
-
-            </View>
-
+            </ScrollView >
         );
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
-                <View styles={styles.generalView}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
-                        <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
+                <View style={styles.generalView}>
+                    <ScrollView style={styles.generalView}>
+                        <KeyboardAvoidingView style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
                             <MyText text="Buscar Ejercicio" style={styles.text} />
                             <MyInputText
@@ -142,28 +137,22 @@ const EliminarEjercicio = ({ navigation }) => {
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarMaquina} />
-
-
-                            <View style={styles.generalView}>
-
-                                {ejercicio.length ? (
-                                    <FlatList
-                                        data={ejercicio}
-                                        contentContainerStyle={styles.flatContainer}
-                                        keyExtractor={(index) => index.toString()}
-                                        renderItem={({ item }) => listItemView(item)}
-                                    />
-                                ) : (
-                                    <View style={styles.empty}>
-                                        <Text style={styles.emptyText}> No se encuentran máquinas</Text>
-                                    </View>
-                                )}
-                            </View>
-
-
-
                         </KeyboardAvoidingView>
                     </ScrollView>
+
+                    {ejercicio.length ? (
+                        <FlatList style={styles.flatList}
+                            data={ejercicio}
+                            contentContainerStyle={styles.flatContainer}
+                            keyExtractor={(index) => index.toString()}
+                            renderItem={({ item }) => listItemView(item)}
+                        />
+                    ) : (
+                        <View style={styles.empty}>
+                            <Text style={styles.emptyText}> No se encuentran máquinas</Text>
+                        </View>
+                    )}
+
                 </View>
             </View>
         </SafeAreaView>
@@ -176,11 +165,13 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        paddingBottom: 20,
         backgroundColor: "white",
     },
     generalView: {
         flex: 1
+    },
+    flatList: {
+        height: '50%'
     },
     text: {
         padding: 10,

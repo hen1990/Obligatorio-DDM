@@ -19,17 +19,18 @@ const styles = StyleSheet.create({
     view: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        paddingLeft: 30,
     },
     button: {
         flex: 1,
         color: "white",
         padding: 30,
-        marginTop: 50,
-        marginBottom: 10,
-        marginLeft: 35,
-        marginRight: 35,
+        marginTop: 20,
+        marginBottom: 15,
+        marginLeft: 25,
+        marginRight: 25,
         borderRadius:5,
+        height:120
     },
     /*
     button: {
@@ -42,13 +43,14 @@ const styles = StyleSheet.create({
         marginRight: 0,
         borderRadius:0,
         borderBlockColor: "white",
-        borderWidth: 2,
+        borderWidth: 0,
         height:120
     },*/
     text: {
         color: "white",
         fontSize: 20,
-        fontWeight: "500"
+        fontWeight: "500",
+        textAlign: "left",
     },
     icon: {
        paddingBottom: 5,

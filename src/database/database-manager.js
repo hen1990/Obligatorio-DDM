@@ -181,7 +181,6 @@ const databaseConection = {
     },
     async getOneEjercicio(tx, nombre) {
         const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
-        console.log(nombre, ":  un ejercico obtenido")
         return res
     },
     async getAllEjercicio(tx) {
@@ -202,9 +201,10 @@ const databaseConection = {
             "('Serratos', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
             "('Estiramiento Estrecho', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
             "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')," +
-            "('Estocadas', 2 , 'https://www.youtube.com/watch?v=X61IReICHkA')," +
-            "('Abdominales', 2 , 'https://www.youtube.com/watch?v=2tXQbi16EdI')," +
-            "('Plancha Abdominal', 2  , 'https://www.youtube.com/watch?v=mMieHCr-H0c')" , [])
+            "('Estocadas', null , 'https://www.youtube.com/watch?v=X61IReICHkA')," +
+            "('Abdominales', null , 'https://www.youtube.com/watch?v=2tXQbi16EdI')," +
+            "('Plancha Abdominal', null  , 'https://www.youtube.com/watch?v=mMieHCr-H0c')" , [])
+            console.log("Datos agregados, Ejercicios")
             return res
     },
 
@@ -234,15 +234,11 @@ const databaseConection = {
         return res
     },
     async getOneRutina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT r.id, r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.nom_usuario like ?", [nombre])
-        return res
-    },
-    async getRutinaPorId(tx, id, dia) {
-        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, r.id_usuario, r.id_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.user_id = ? and r.dia_rutina = ?", [id, dia])
+        const res = await tx.executeSqlAsync("SELECT r.id, r.dia_rutina, r.series, r.repeticiones, r.id_usuario, r.id_ejercicio, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.nom_usuario like ? order by r.dia_rutina", [nombre])
         return res
     },
     async getAllRutinas(tx) {
-        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio", [])
+        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio order by r.dia_rutina", [])
         return res
     },
     async deleteAllRutina(tx) {
@@ -261,11 +257,13 @@ const databaseConection = {
             "('Lunes', 2, 8, 4, 12)," +
             "('Martes', 2, 2, 4, 12)," +
             "('Martes', 3, 7, 1, 20)," +
+            "('Martes', 1, 2, 4, 30)," +
+            "('Martes', 1, 3, 4, 10)," +
+            "('Martes', 1, 9, 4, 100)," +
+            "('Lunes', 1, 9, 4, 100)," +
             "('Lunes', 3, 4, 4, 10)" , [])
-            console.log("Datos agregados, Ejercicios")
+            console.log("Datos agregados, rutinas")
             return res
     },
 }
-
-
 export default databaseConection

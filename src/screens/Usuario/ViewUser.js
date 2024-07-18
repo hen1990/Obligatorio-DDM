@@ -138,10 +138,11 @@ const ViewUser = ({ navigation }) => {
                 </View>
 
                 <MySingleButton title="Ver Rutinas"
-                  onPress={cargarRutinas} style={{backgroundColor: 'orange' }} />
+                  onPress={() => {cargarRutinas(), setUserData("")}}  style={{backgroundColor: 'orange' }} />
               </>}
-              {rutinas.length ? (
-            <FlatList
+          </ScrollView>
+          {rutinas.length ? (
+            <FlatList style={styles.flatList}
               data={Object.keys(agruparRutinas())}
               contentContainerStyle={styles.flatContainer}
               keyExtractor={(item, index) => index.toString()}
@@ -162,7 +163,6 @@ const ViewUser = ({ navigation }) => {
               <Text style={styles.emptyText}>  </Text>
             </View>
           )}
-          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -180,6 +180,9 @@ const styles = StyleSheet.create({
   generalView: {
     flex: 1,
   },
+  flatList: {
+    height: '70%',
+},
   text: {
     padding: 10,
     marginLeft: 25,
@@ -228,15 +231,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   presenterView: {
-    // flex: 2,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 15,
-    backgroundColor: "2f2f2f",
-    borderColor: "2f2f2f",
-    borderRadius: 5,
-    borderWidth: 0,
-    padding: 20
+      marginLeft: 24,
+      marginRight: 24,
+      marginTop: 5,
+      backgroundColor: "2f2f2f",
+      padding: 5
   },
 });
 

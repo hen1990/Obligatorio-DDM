@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, FlatList } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, FlatList, Dimensions } from "react-native"
 import { Picker } from '@react-native-picker/picker';
 import MyText from "../../components/MyText";
 import MySingleButton from "../../components/MySingleButton"
@@ -10,7 +10,6 @@ const db = databaseConection.getConnection();
 
 const ActualizarRutina = ({ navigation }) => {
     // Definir los estados.
-    const [usuarios, setUsuarios] = useState([]);
     const [ejercicios, setEjercicios] = useState([]);
     const [dia, setDia] = useState("");
     const [usuarioId, setUsuarioId] = useState("");
@@ -24,19 +23,6 @@ const ActualizarRutina = ({ navigation }) => {
     const [rutinas, setRutinas] = useState([]);
 
     useEffect(() => {
-        const cargarUsuarios = async () => {
-            const res = await buscarUsuarios()
-            if (res.rows.length > 0) {
-                let elements = []
-                for (let i = 0; i < res.rows.length; i++) {
-                    elements.push(res.rows[i])
-                }
-                setUsuarios(elements)
-            }
-            cargarEjercicios()
-        }
-        cargarUsuarios()
-
         const cargarEjercicios = async () => {
             const res = await buscarEjercicios()
             if (res.rows.length > 0) {
@@ -47,26 +33,8 @@ const ActualizarRutina = ({ navigation }) => {
                 setEjercicios(elements)
             }
         }
-
+        cargarEjercicios()
     }, []);
-
-    const buscarUsuarios = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllUsers(tx);
-        }, readOnly);
-        return result
-    }
-
-    const buscarEjercicios = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllEjercicio(tx);
-        }, readOnly);
-        return result
-    }
 
     const getUserDB = async () => {
         const readOnly = false;
@@ -88,6 +56,7 @@ const ActualizarRutina = ({ navigation }) => {
 
         if (res.rows.length > 0) {
             setUserData(res.rows[0])
+            setNombre(res.rows[0].nom_usuario)
             setRutinas([]);
 
         } else {
@@ -96,7 +65,15 @@ const ActualizarRutina = ({ navigation }) => {
         }
     };
 
-    
+    const buscarEjercicios = async () => {
+        const readOnly = false;
+        let result = null
+        await db.transactionAsync(async (tx) => {
+            result = await databaseConection.getAllEjercicio(tx);
+        }, readOnly);
+        return result
+    }
+
     // Validar Datos
     const validateData = () => {
         //Validar ejercicio
@@ -131,7 +108,7 @@ const ActualizarRutina = ({ navigation }) => {
                 //  validar si se guardar los datos
                 Alert.alert(
                     "Exito",
-                    "Rutina ingresada correctamente.",
+                    "Rutina actualizada correctamente.",
                     [
                         {
                             text: "OK",
@@ -143,7 +120,7 @@ const ActualizarRutina = ({ navigation }) => {
                     }
                 );
             } else {
-                Alert.alert("Error al ingresar rutina.")
+                Alert.alert("Error al actualizar rutina.")
             }
         }
     };
@@ -166,7 +143,6 @@ const ActualizarRutina = ({ navigation }) => {
                 elements.push(res.rows[i])
             }
             setRutinas(elements);
-
         }
     }
 
@@ -181,50 +157,32 @@ const ActualizarRutina = ({ navigation }) => {
 
     const renderizarEjercicios = () => {
         return ejercicios.map(tipo => (
-            <Picker.Item key={tipo.id} label={tipo.nom_ejercicio} value={tipo.id_ejercicio} />
+            <Picker.Item key={tipo.nom_ejercicio} label={tipo.nom_ejercicio} value={tipo.id_ejercicio} />
         ));
     };
 
-    const agruparRutinas = () => {
-        const grupos = {};
-        rutinas.forEach(item => {
-            const {id, nom_usuario, dia_rutina, nom_ejercicio, series, repeticiones } = item;
-            if (!grupos[nom_usuario]) {
-                grupos[nom_usuario] = {};
-            }
-            if (!grupos[nom_usuario][dia_rutina]) {
-                grupos[nom_usuario][dia_rutina] = [];
-            }
-            grupos[nom_usuario][dia_rutina].push({id, nom_ejercicio, series, repeticiones });
-        });
-        return grupos;
-    };
-
-    // Función para renderizar cada elemento de la lista
-    const listItemView = ( usuario, diaRutina, ejercicios) => {
+    const listItemView = (item) => {
         return (
-            <View key={`${usuario}-${diaRutina}`} style={styles.listItemView}>
+            <View key={`${item.id}+${item.id_usuario}`} style={styles.listItemView}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.text_data1}>{diaRutina}</Text>
-                    {ejercicios.map((ejercicio, index) => (
-                        <View key={index} style={styles.ejercicioContainer}>
-                            <Text style={styles.text_data1}>{ejercicio.nom_ejercicio}</Text>
-                            <View style={styles.series}>
-                                <Text style={styles.text_data1}>Series: {ejercicio.series}</Text>
-                                <Text style={styles.text_data1}>Repeticiones: {ejercicio.repeticiones}</Text>
-                            </View>
-                            <MySingleButton onPress={() => {
-                                setDia(diaRutina);
-                                setEjercicioId(index);
-                                setSeries(ejercicio.series);
-                                setRepeticiones(ejercicio.repeticiones);
-                                setUsuarioId(usuario.user_id)
-                           
-                          
-                            }
-                            } title={"Editar"} style={styles.boton} />
-                            {ejercicioId == index ? <>
-                                <Text style={styles.texto}>Cambiar Día</Text>
+                    <View style={styles.ejercicioContainer}>
+                        <Text style={styles.text_data}>{item.dia_rutina}</Text>
+                        <Text style={styles.text_data1}>{item.nom_ejercicio}</Text>
+                        <View style={styles.series}>
+                            <Text style={styles.text_data1}>Series: {item.series}</Text>
+                            <Text style={styles.text_data1}>Repeticiones: {item.repeticiones}</Text>
+                        </View>
+                        <MySingleButton onPress={() => {
+                            setDia(item.dia_rutina);
+                            setEjercicioId(item.id_ejercicio);
+                            setSeries(item.series);
+                            setRepeticiones(item.repeticiones);
+                            setUsuarioId(item.id_usuario)
+                            setRutinaId(item.id)
+                        }
+                        } title={"Editar"} style={styles.boton} />
+                        {rutinaId == item.id ? <>
+                            <Text style={styles.texto}>Cambiar Día</Text>
                             <View style={styles.picker}>
                                 <Picker
                                     selectedValue={dia}
@@ -240,49 +198,46 @@ const ActualizarRutina = ({ navigation }) => {
                                     <Picker.Item key={"Sabado"} label="Sabado" value="Sabado" />
                                 </Picker>
                             </View>
-                                <Text style={styles.text}>Nuevo Ejercicio</Text>
-                                <View style={styles.picker}>
-                                    <Picker
-                                        selectedValue={ejercicioId}
-                                        style={{ height: 100, width: "100%" }}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                            setEjercicioId(itemValue)
-                                        }>
-                                        {renderizarEjercicios()}
-                                    </Picker>
-                                </View>
+                            <Text style={styles.text}>Nuevo Ejercicio</Text>
+                            <View style={styles.picker}>
+                                <Picker
+                                    selectedValue={ejercicioId}
+                                    style={{ height: 100, width: "100%" }}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                        setEjercicioId(itemValue)
+                                    }>
+                                    {renderizarEjercicios()}
+                                </Picker>
+                            </View>
 
-                                {/* Series */}
-                                <Text style={styles.texto}>Series</Text>
-                                <MyInputText
-                                    placeholder="Nueva cantidad de series"
-                                    onChangeText={setSeries}
-                                    keyboardType="numeric"
-                                    style={styles.input}
-                                    value={series}
-                                />
+                            {/* Series */}
+                            <Text style={styles.texto}>Series</Text>
+                            <MyInputText
+                                placeholder="Nueva cantidad de series"
+                                onChangeText={setSeries}
+                                keyboardType="numeric"
+                                style={styles.input}
+                                value={series}
+                            />
 
-                                {/* Repeticiones */}
-                                <Text style={styles.texto}>Repeticiones</Text>
-                                <MyInputText
-                                    placeholder="Nueva cantidad de repeticiones"
-                                    onChangeText={setRepeticiones}
-                                    keyboardType="numeric"
-                                    style={styles.input}
-                                    value={repeticiones}
-                                />
+                            {/* Repeticiones */}
+                            <Text style={styles.texto}>Repeticiones</Text>
+                            <MyInputText
+                                placeholder="Nueva cantidad de repeticiones"
+                                onChangeText={setRepeticiones}
+                                keyboardType="numeric"
+                                style={styles.input}
+                                value={repeticiones}
+                            />
 
-                                {/* button */}
-                                <MySingleButton onPress={actualizarRutinas} title={"Buscar Rutinas"} style={styles.boton} />
-                            </> : <></>}
-
-
-                        </View>
-
-                    ))}
+                            {/* button */}
+                            <MySingleButton onPress={actualizarRutinas} title={"Actualizar datos"} style={styles.boton} />
+                            <View style={styles.empty}>
+                         <Text>*Los campos no modificados se mantedrán.</Text>
+                         </View>
+                        </> : <></>}
+                    </View>
                 </View>
-
-
             </View>
         );
     };
@@ -291,7 +246,7 @@ const ActualizarRutina = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
-                    <ScrollView>
+                    <ScrollView style={styles.generalView}>
                         <KeyboardAvoidingView style={styles.keyboardView}>
                             <MyText text="Buscar Usuario" style={styles.text} />
                             <MyInputText
@@ -321,31 +276,27 @@ const ActualizarRutina = ({ navigation }) => {
                                 </View>
 
                                 <MySingleButton title="Ver Rutinas"
-                                    onPress={cargarRutinas} style={{ backgroundColor: 'orange' }} />
+                                    onPress={() => {cargarRutinas(), setUserData("")}} style={{ backgroundColor: 'orange' }} />
                             </>}
-                        {rutinas.length ? (
-                            <FlatList
-                                data={Object.keys(agruparRutinas())}
-                                contentContainerStyle={styles.flatContainer}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => {
-                                    const grupos = agruparRutinas();
-                                    const usuario = item;
-                                    return (
-                                        <>
-                                            {Object.keys(grupos[usuario]).map(diaRutina => (
-                                                listItemView(usuario, diaRutina, grupos[usuario][diaRutina])
-                                            ))}
-                                        </>
-                                    );
-                                }}
-                            />
-                        ) : (
-                            <View style={styles.empty}>
-                                <Text style={styles.emptyText}>  </Text>
-                            </View>
-                        )}
+                         
                     </ScrollView>
+
+                    {rutinas.length ? (
+
+                        <FlatList style={styles.flatList}
+                            data={rutinas}
+                            contentContainerStyle={styles.flatContainer}
+                            keyExtractor={(index) => index.toString()}
+                            renderItem={({ item }) => listItemView(item)}
+                        >
+                            <ScrollView>
+
+                            </ScrollView> </FlatList>
+                    ) : (
+                        <View style={styles.empty}>
+                         
+                        </View>
+                    )}
                 </View>
             </View>
         </SafeAreaView>
@@ -363,6 +314,9 @@ const styles = StyleSheet.create({
     generalView: {
         flex: 1,
     },
+    flatList: {
+        height: '45%',
+    },
     text: {
         padding: 10,
         marginLeft: 25,
@@ -378,21 +332,13 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 1,
         color: "black",
-        height: 20,
-    },
-    listItemView: {
+        height: 15,
+    },    listItemView: {
         marginVertical: 10,
         padding: 10,
         marginBottom: 0,
         borderBottomWidth: 1,
-        borderBottomColor: "#AFB42B"
-    },
-    listItemView2: {
-        marginVertical: 10,
-        padding: 10,
-        marginBottom: 0,
-        borderBottomWidth: 1,
-        borderBottomColor: "#AFB42B"
+        borderBottomColor: "#00838F"
     },
     textContainer: {
         flexDirection: 'column',
@@ -411,19 +357,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: "#dbdea2",
+        borderBottomColor: "#acdee3",
     },
     ejercicioContainer: {
-        margin: 20,
+        margin: 10,
         padding: 10,
         borderWidth: 1,
-        borderColor: "#AFB42B"
+        borderColor: "#00838F"
     },
     input: {
         padding: 0,
         textAlignVertical: "top",
-         backgroundColor: "#e3fafc",
-         height: 15,
+        backgroundColor: "#e3fafc",
+        height: 15,
     },
     texto: {
         fontSize: 16,
@@ -432,15 +378,11 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     presenterView: {
-        // flex: 2,
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 15,
+        marginLeft: 25,
+        marginRight: 25,
+        marginTop: 5,
         backgroundColor: "2f2f2f",
-        borderColor: "2f2f2f",
-        borderRadius: 5,
-        borderWidth: 0,
-        padding: 20
+        padding: 5
     },
     picker: {
         flex: 1,
@@ -456,8 +398,13 @@ const styles = StyleSheet.create({
         height: 40,
     },
     boton: {
-        marginBottom: 50,
-    }
+        marginBottom: 10,
+    },
+    emptyText: {
+        margin: 30,
+        fontSize: 20,
+        textAlign: 'center',
+    },
 });
 
 

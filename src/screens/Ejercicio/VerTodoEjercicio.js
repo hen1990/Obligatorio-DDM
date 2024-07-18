@@ -61,7 +61,7 @@ const VerTodoEjercicio = () => {
 
     const listItemView = (item) => {
         return (
-            <View key={item.id} style={styles.listItemView}>
+            <View key={item.id_ejercicio} style={styles.listItemView}>
                 <View style={styles.textContainer}>
                     <MyText text={item.nom_ejercicio} style={styles.text_data} />
                     {item.nombre ? (
@@ -82,7 +82,6 @@ const VerTodoEjercicio = () => {
                             style={styles.image}
                         />
                     )}
-
                     {item.videoUrl ? (
                         <OpenURLButton url={item.videoUrl} style={styles.button}>Ver Video</OpenURLButton>
                     ) : (
@@ -107,7 +106,6 @@ const VerTodoEjercicio = () => {
                     <Text style={styles.emptyText}> No se encuentran ejercicios</Text>
                 </View>
             )}
-
         </SafeAreaView>
     );
 };

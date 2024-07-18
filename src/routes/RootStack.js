@@ -539,7 +539,7 @@ const RootStack = () => {
                         options={{
                             title: "Eliminar Rutina",
                             headerStyle: {
-                                backgroundColor: "##00a1a7",
+                                backgroundColor: "#00a1a7",
                             },
                             headerTintColor: "#fff",
                             headerTitleStyle: {

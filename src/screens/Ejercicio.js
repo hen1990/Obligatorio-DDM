@@ -16,7 +16,7 @@ const Ejercicio = ({ navigation }) => {
                             {/* Agregar Ejercicio*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("CrearEjercicio")} 
-                                title="Agregar Ejercicio 🖋" 
+                                title="◽ Agregar" 
                                 iconName="user-plus" 
                                 btnColor="#673AB7"
                             />
@@ -24,7 +24,7 @@ const Ejercicio = ({ navigation }) => {
                             {/* Actualizar Ejercicio */}
                             <MyButton 
                                 onPress={() => navigation.navigate("ActualizarEjercicio")} 
-                                title="Actualizar Ejercicio  ✔✔" 
+                                title="◽ Actualizar" 
                                 iconName="user-circle" 
                                 btnColor="#673AB7"
                             />
@@ -32,7 +32,7 @@ const Ejercicio = ({ navigation }) => {
                               {/*Eliminar Ejercicio*/}
                               <MyButton 
                                 onPress={() => navigation.navigate("ElimiarEjercicio")} 
-                                title="Borrar Ejercicio 🚫" 
+                                title="◽ Borrar" 
                                 iconName="user-times" 
                                 btnColor="#673AB7"
                             />
@@ -40,7 +40,7 @@ const Ejercicio = ({ navigation }) => {
                             {/* Ver todos Ejercicio*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("VerTodoEjercicio")} 
-                                title="Ver Ejercicios 👁‍🗨" 
+                                title="◽ Ver" 
                                 iconName="user-times" 
                                 btnColor="#673AB7"
                             />
@@ -48,7 +48,7 @@ const Ejercicio = ({ navigation }) => {
                              {/* borrar todos Ejercicios*/}
                              <MyButton 
                                 onPress={() => navigation.navigate("EliminarTodoEjercicio")} 
-                                title="Borrar todos! ❌" 
+                                title="◽ Borrar todos!" 
                                 iconName="user-times" 
                                 btnColor="red"
                             />

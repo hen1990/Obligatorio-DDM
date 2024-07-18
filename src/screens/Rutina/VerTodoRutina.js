@@ -17,8 +17,6 @@ const VerTodoRutina = () => {
           elements.push(res.rows[i])
         }
         setRutinas(elements);
-        console.log("Rutinas", elements);
-
       }
     }
     cargarRutinas();
@@ -33,7 +31,6 @@ const VerTodoRutina = () => {
     }, readOnly);
     return result;
   }
-
 
   const agruparRutinas = () => {
     const grupos = {};
@@ -127,10 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  emptyText: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
+ 
   listItemView: {
     marginVertical: 10,
     padding: 10,

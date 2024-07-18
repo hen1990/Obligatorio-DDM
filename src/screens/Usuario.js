@@ -16,7 +16,7 @@ const Usuario = ({ navigation }) => {
                             {/* button add user*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("RegisterUser")} 
-                                title="Registrar Usuario 🖋" 
+                                title="◽ Registrar" 
                                 iconName="user-plus" 
                                 btnColor="#AFB42B"
                             />
@@ -24,7 +24,7 @@ const Usuario = ({ navigation }) => {
                             {/* button update user */}
                             <MyButton 
                                 onPress={() => navigation.navigate("UpdateUser")} 
-                                title="Actualizar Usuario  ✔✔" 
+                                title="◽ Actualizar" 
                                 iconName="user-circle" 
                                 btnColor="#AFB42B"
                             />
@@ -32,7 +32,7 @@ const Usuario = ({ navigation }) => {
                               {/* button delete user*/}
                               <MyButton 
                                 onPress={() => navigation.navigate("DeleteUser")} 
-                                title="Borrar Usuario 🚫" 
+                                title="◽ Borrar" 
                                 iconName="user-times" 
                                 btnColor="#AFB42B"
                             />
@@ -40,7 +40,7 @@ const Usuario = ({ navigation }) => {
                             {/* button Ver user */}
                             <MyButton 
                                 onPress={() => navigation.navigate("ViewUser")} 
-                                title="Buscar Usuario 👁‍🗨" 
+                                title="◽ Buscar" 
                                 iconName="user-times" 
                                 btnColor="#AFB42B"
                             />
@@ -48,7 +48,7 @@ const Usuario = ({ navigation }) => {
                             {/* button Ver todos los usuarios*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("ViewAllUsers")} 
-                                title="Ver todos los Usuarios 👁‍🗨" 
+                                title="◽ Ver todo" 
                                 iconName="user-times" 
                                 btnColor="#AFB42B"
                             />
@@ -56,7 +56,7 @@ const Usuario = ({ navigation }) => {
                              {/* button borrar todos los usuarios*/}
                              <MyButton 
                                 onPress={() => navigation.navigate("UsuarioBorrarTodo")} 
-                                title="Borrar todos! ❌" 
+                                title="◽ Borrar todos!" 
                                 iconName="user-times" 
                                 btnColor="red"
                             />

@@ -16,7 +16,7 @@ const TipoMaquina = ({ navigation }) => {
                             {/* Agregar Tipo Maquina*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("CrearTipoMaquina")} 
-                                title="Agregar Tipo de Máquina 🖋" 
+                                title="◽ Agregar" 
                                 iconName="user-plus" 
                                 btnColor="#689F38"
                             />
@@ -24,7 +24,7 @@ const TipoMaquina = ({ navigation }) => {
                             {/* Actualizar tipo Maquina */}
                             <MyButton 
                                 onPress={() => navigation.navigate("ActualizarTipoMaquina")} 
-                                title="Actualizar Tipo de Máq  ✔✔" 
+                                title="◽ Actualizar" 
                                 iconName="user-circle" 
                                 btnColor="#689F38"
                             />
@@ -32,7 +32,7 @@ const TipoMaquina = ({ navigation }) => {
                               {/*Eliminar tipo de maquina*/}
                               <MyButton 
                                 onPress={() => navigation.navigate("EliminarTipoMaquina")} 
-                                title="Borrar Tipo de Máquina 🚫" 
+                                title="◽ Borrar" 
                                 iconName="user-times" 
                                 btnColor="#689F38"
                             />
@@ -40,7 +40,7 @@ const TipoMaquina = ({ navigation }) => {
                             {/* Ver todos tipos de maquina*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("VerTodosTipoMaquina")} 
-                                title="Ver Tipos de Máquinas 👁‍🗨" 
+                                title="◽ Ver" 
                                 iconName="user-times" 
                                 btnColor="#689F38"
                             />
@@ -48,7 +48,7 @@ const TipoMaquina = ({ navigation }) => {
                              {/* borrar todos tipos de maquinas*/}
                              <MyButton 
                                 onPress={() => navigation.navigate("EliminarTodosTipoMaquina")} 
-                                title="Borrar todos! ❌" 
+                                title="◽ Borrar todos!" 
                                 iconName="user-times" 
                                 btnColor="red"
                             />

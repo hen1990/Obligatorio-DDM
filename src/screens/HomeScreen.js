@@ -71,14 +71,14 @@ const HomeScreen = ({ navigation }) => {
                             {/* button Usuario*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Usuario")}
-                                title="Usuarios"
+                                title="◽ Usuarios"
                                 iconName="user-plus"
                                 btnColor="#AFB42B"
                             />
                             {/* button Tipo Maquina*/}
                             <MyButton
                                 onPress={() => navigation.navigate("TipoMaquina")}
-                                title="Tipos de Maquinas"
+                                title="◽ Tipos de Maquinas"
                                 iconName="user-plus"
                                 btnColor="#689F38"
                             />
@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
                             {/* button Maquina*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Maquina")}
-                                title="Maquinas"
+                                title="◽ Maquinas"
                                 iconName="user-plus"
                                 btnColor="green"
                             />
@@ -94,7 +94,7 @@ const HomeScreen = ({ navigation }) => {
                             {/* button Rutina*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Rutina")}
-                                title="Rutinas"
+                                title="◽ Rutinas"
                                 iconName="user-plus"
                                 btnColor="#00838F"
                             />
@@ -102,17 +102,15 @@ const HomeScreen = ({ navigation }) => {
                             {/* button Ejercicio*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Ejercicio")}
-                                title="Ejercicios"
+                                title="◽ Ejercicios"
                                 iconName="user-plus"
                                 btnColor="#673AB7"
                             />
 
-
-
                             {/* Importar db */}
                             <MyButton
                                 onPress={() => OpenDatabase("database.db")}
-                                title="Importar DB"
+                                title="◽ Importar DB"
                                 iconName="add"
                                 btnColor="gray"
                             />
