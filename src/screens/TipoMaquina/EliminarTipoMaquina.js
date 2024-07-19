@@ -38,13 +38,43 @@ const EliminarTipoMaquina = ({ navigation }) => {
     }
   };
 
-  const deleteTipoMaquinaDB = async () => {
+  const maquinaEnUso = async () => {
     const readOnly = false;
     let result = null
     await db.transactionAsync(async (tx) => {
-      result = await databaseConection.deleteTipoMaquina(tx, tipoMaquinaDatos.id);
+      result = await databaseConection.maquinaEnUsoBD(tx, tipoMaquinaDatos.id);
     }, readOnly);
     return result
+  };
+
+  const deleteTipoMaquinaDB = async () => {
+    const readOnly = false;
+    const res = await maquinaEnUso()
+    console.log(res)
+    console.log(res.rows[0])
+    if (!res.rows[0]) {
+      let result = null
+      await db.transactionAsync(async (tx) => {
+        result = await databaseConection.deleteTipoMaquina(tx, tipoMaquinaDatos.id);
+      }, readOnly);
+      return result
+    } else {
+      Alert.alert(
+      "Tipo de Máquina en uso.",
+      "Elimine las máquinas que contengan este tipo de máquina.",
+      [
+          {
+              text: "Aceptar",
+             
+          },
+
+      ],
+      {
+
+          cancelable: false,
+      }
+    )
+    }
   };
 
   const deleteTipoMaquina = async () => {

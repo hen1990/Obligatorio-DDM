@@ -131,6 +131,11 @@ const databaseConection = {
         const res = await tx.executeSqlAsync("SELECT tm.nombre, tm.fotoUrl, m.id, m.sala, m.tipoMaquina FROM maquina m inner join tipoMaquina tm on m.tipoMaquina = tm.id WHERE tm.nombre like ?", [nombre])
         return res
     },
+    async maquinaEnUsoBD(tx, id) {
+        const res = await tx.executeSqlAsync("SELECT * FROM maquina WHERE tipoMaquina = ?", [id])
+        console.log(id)
+        return res
+    },
     async getAllMaquina(tx) {
         const res = await tx.executeSqlAsync("SELECT * FROM maquina", [])
         return res

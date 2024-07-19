@@ -106,14 +106,6 @@ const HomeScreen = ({ navigation }) => {
                                 iconName="user-plus"
                                 btnColor="#673AB7"
                             />
-
-                            {/* Importar db */}
-                            <MyButton
-                                onPress={() => OpenDatabase("database.db")}
-                                title="◽ Importar DB"
-                                iconName="add"
-                                btnColor="gray"
-                            />
                         </ScrollView>
                     </View>
                 </View>

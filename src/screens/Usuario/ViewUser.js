@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: "2f2f2f",
+    backgroundColor: "#fcfceb",
   },
   generalView: {
     flex: 1,
