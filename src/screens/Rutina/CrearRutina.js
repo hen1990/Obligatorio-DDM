@@ -149,7 +149,6 @@ const CrearRutina = ({ navigation }) => {
                 <View style={styles.generalView}>
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
-
                             {/* Usuario Lista*/}
                             <Text style={styles.texto}>Seleccionar Usuario</Text>
                             <View style={styles.picker}>

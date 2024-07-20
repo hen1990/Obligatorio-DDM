@@ -98,7 +98,7 @@ const VerTodoEjercicio = () => {
                 <FlatList
                     data={ejercicio}
                     contentContainerStyle={styles.flatContainer}
-                    keyExtractor={(index) => index.toString()}
+                    keyExtractor={(item) => item.id_ejercicio.toString()}
                     renderItem={({ item }) => listItemView(item)}
                 />
             ) : (
