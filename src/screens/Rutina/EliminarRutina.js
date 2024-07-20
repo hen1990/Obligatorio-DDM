@@ -13,21 +13,6 @@ const EliminarRutina = ({ navigation }) => {
     const [userData, setUserData] = useState(null);
     const [rutinas, setRutinas] = useState([]);
 
-    useEffect(() => {
-        const cargarEjercicios = async () => {
-            const res = await buscarEjercicios()
-            if (res.rows.length > 0) {
-                let elements = []
-                for (let i = 0; i < res.rows.length; i++) {
-                    elements.push(res.rows[i])
-                }
-                setEjercicios(elements)
-            }
-        }
-        cargarEjercicios()
-    }, []);
-
-
     const getUserDB = async () => {
         const readOnly = false;
         let result = null;
@@ -57,14 +42,6 @@ const EliminarRutina = ({ navigation }) => {
         }
     };
 
-    const buscarEjercicios = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllEjercicio(tx);
-        }, readOnly);
-        return result
-    }
 
     const confirmarEliminar = async (id) => {
         Alert.alert(
@@ -197,12 +174,10 @@ const EliminarRutina = ({ navigation }) => {
                         <FlatList style={styles.flatList}
                             data={rutinas}
                             contentContainerStyle={styles.flatContainer}
-                            keyExtractor={(index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => listItemView(item)}
                         >
-                            <ScrollView>
-
-                            </ScrollView>
+                            ""
                         </FlatList>
                     ) : (
                         <View style={styles.empty}></View>

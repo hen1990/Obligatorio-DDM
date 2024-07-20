@@ -47,7 +47,6 @@ const ActualizarEjercicio = ({ navigation }) => {
         await db.transactionAsync(async (tx) => {
             result = await databaseConection.getOneEjercicio(tx, buscarNombre + "%");
         }, readOnly);
-        console.log(result)
         return result
     }
 
@@ -84,7 +83,6 @@ const ActualizarEjercicio = ({ navigation }) => {
 
         // update
         const res = await updateEjercicioDB()
-        console.log("res", res)
         if (res.rowsAffected > 0) {
             Alert.alert(
                 "Exito!",

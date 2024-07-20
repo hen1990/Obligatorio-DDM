@@ -65,7 +65,6 @@ const CrearEjercicio = ({ navigation }) => {
         if (validateData()) {
             //guardar datos
             const result = await guardarEjercicio();
-            console.log("guardado: ", result)
             if (result.rowsAffected > 0) {
                 //  validar si se guardar los datos
                 Alert.alert(

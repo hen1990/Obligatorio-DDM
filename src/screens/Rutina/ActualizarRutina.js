@@ -286,7 +286,7 @@ const ActualizarRutina = ({ navigation }) => {
                         <FlatList style={styles.flatList}
                             data={rutinas}
                             contentContainerStyle={styles.flatContainer}
-                            keyExtractor={(index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => listItemView(item)}
                         >
                             <ScrollView>
