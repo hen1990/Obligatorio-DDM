@@ -50,8 +50,6 @@ const EliminarTipoMaquina = ({ navigation }) => {
   const deleteTipoMaquinaDB = async () => {
     const readOnly = false;
     const res = await maquinaEnUso()
-    console.log(res)
-    console.log(res.rows[0])
     if (!res.rows[0]) {
       let result = null
       await db.transactionAsync(async (tx) => {

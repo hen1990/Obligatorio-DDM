@@ -149,7 +149,7 @@ const EliminarEjercicio = ({ navigation }) => {
                         />
                     ) : (
                         <View style={styles.empty}>
-                            <Text style={styles.emptyText}> No se encuentran máquinas</Text>
+                            <Text style={styles.emptyText}></Text>
                         </View>
                     )}
 
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     flatList: {
-        height: '50%'
+        height: '40%'
     },
     text: {
         padding: 10,

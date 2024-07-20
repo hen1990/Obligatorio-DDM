@@ -147,8 +147,8 @@ const EliminarRutina = ({ navigation }) => {
                             <Text style={styles.text_data1}>Series: {item.series}</Text>
                             <Text style={styles.text_data1}>Repeticiones: {item.repeticiones}</Text>
                         </View>
-                        <MySingleButton onPress={() => {confirmarEliminar(item.id)}} 
-                        title={"Eliminar"} style={styles.boton} />
+                        <MySingleButton onPress={() => { confirmarEliminar(item.id) }}
+                            title={"Eliminar"} style={styles.boton} />
                     </View>
                 </View>
             </View>
@@ -189,13 +189,11 @@ const EliminarRutina = ({ navigation }) => {
                                 </View>
 
                                 <MySingleButton title="Ver Rutinas"
-                                    onPress={() => {cargarRutinas(), setUserData("")}}  style={{ backgroundColor: 'orange' }} />
+                                    onPress={() => { cargarRutinas(), setUserData("") }} style={{ backgroundColor: 'orange' }} />
                             </>}
-
                     </ScrollView>
 
                     {rutinas.length ? (
-
                         <FlatList style={styles.flatList}
                             data={rutinas}
                             contentContainerStyle={styles.flatContainer}
@@ -204,7 +202,8 @@ const EliminarRutina = ({ navigation }) => {
                         >
                             <ScrollView>
 
-                            </ScrollView> </FlatList>
+                            </ScrollView>
+                        </FlatList>
                     ) : (
                         <View style={styles.empty}></View>
                     )}

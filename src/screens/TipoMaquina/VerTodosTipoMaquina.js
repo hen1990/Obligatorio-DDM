@@ -62,7 +62,7 @@ const VerTodosTipoMaquina = () => {
                         <FlatList
                             data={users}
                             contentContainerStyle={styles.flatContainer}
-                            keyExtractor={(index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => listItemView(item)}
                         />
                     ) : (

@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     texto: {
         fontSize: 18,
         textAlign: 'left',
-        marginLeft: 50,
+        marginLeft: 40,
         marginTop: 8
     },
     picker: {

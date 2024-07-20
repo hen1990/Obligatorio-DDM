@@ -145,7 +145,6 @@ const CrearMaquina = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 30,
     },
     viewContainer: {
         flex: 1,

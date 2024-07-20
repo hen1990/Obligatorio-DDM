@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, View, Text,} from "react-native";
+import { StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, View, Text, } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
@@ -86,12 +86,12 @@ const CrearEjercicio = ({ navigation }) => {
             }
         }
     };
-    
+
     const renderizarListaTiposMaquinas = () => {
         //Agrego atributo "Sin Maquina" a la lista
         let nuevaLista = [...listaTiposMaquinas];
         nuevaLista.unshift({ id: 0, nombre: "Sin Máquina" });
-    
+
         return nuevaLista.map(tipo => (
             <Picker.Item key={tipo.id} label={tipo.nombre} value={tipo.id} />
         ));
@@ -104,7 +104,7 @@ const CrearEjercicio = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
 
-                        <Text style={styles.texto}>Nombre</Text>
+                            <Text style={styles.texto}>Nombre</Text>
                             {/* Nombre */}
                             <MyInputText
                                 placeholder="Nombre"
@@ -147,7 +147,6 @@ const CrearEjercicio = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 30,
     },
     viewContainer: {
         flex: 1,
@@ -162,11 +161,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     input: {
-        padding: 5,
+        padding: 0,
         textAlignVertical: "top",
+        height: 20,
     },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
         marginLeft: 50,
         marginTop: 8
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         borderWidth: 1,
         margin: 30,
-        height: 70,
+        height: 60,
     }
 });
 

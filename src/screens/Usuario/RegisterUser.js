@@ -24,6 +24,7 @@ const RegisterUser = ({ navigation }) => {
   const [dia, setDia] = useState("")
   const [mes, setMes] = useState("")
   const [anio, setAnio] = useState("")
+  const anioActual = new Date().getFullYear();
 
   // funcion de borrar los estados
   const clearData = () => {
@@ -77,6 +78,9 @@ const RegisterUser = ({ navigation }) => {
         } else if (dia.length != 2) {
           Alert.alert("Día debe contener 2 dígitos.");
           return false;
+        } else if (dia < 1 || dia > 31) {
+          Alert.alert("Día fuera de rango.");
+          return false;
         }
       }
     }
@@ -92,6 +96,9 @@ const RegisterUser = ({ navigation }) => {
           return false;
         } else if (mes.length != 2) {
           Alert.alert("Mes debe contener 2 dígitos.");
+          return false;
+        } else if (mes < 1 || mes > 12) {
+          Alert.alert("Mes fuera de rango.");
           return false;
         }
       }
@@ -109,10 +116,27 @@ const RegisterUser = ({ navigation }) => {
         } else if (anio.length != 4) {
           Alert.alert("Año debe contener 4 dígitos.");
           return false;
+        } else if (anio < 1900 || anio > anioActual) {
+          Alert.alert("Año fuera de rango.");
+          return false;
         }
       }
     }
+    if (!nombre.trim()) {
+      Alert.alert("Ingresr nombre.");
+      return false;
+    }
     return true;
+  };
+
+  const usuarioExiste = async () => {
+    const readOnly = false;
+    let result = null
+    await db.transactionAsync(async (tx) => {
+      result = await databaseConection.usuarioExisteDB(tx, ci);
+    }, readOnly);
+
+    return result
   };
 
   const saveUser = async () => {
@@ -129,26 +153,46 @@ const RegisterUser = ({ navigation }) => {
   // funcion que se encargue de guardar los datos.
   const registerUser = async () => {
     if (validateData()) {
-      //guardar datos
-      const result = await saveUser();
-      if (result.rowsAffected > 0) {
-        //  validar si se guardar los datos
+      const res = await usuarioExiste()
+      if (!res.rows[0]) {
+        //guardar datos
+        const result = await saveUser();
+        if (result.rowsAffected > 0) {
+          //  validar si se guardar los datos
+          Alert.alert(
+            "Exito",
+            "Usuario registrado correctamente.",
+            [
+              {
+                text: "OK",
+                onPress: () => navigation.navigate("Usuario"),
+              },
+            ],
+            {
+              cancelable: false,
+            }
+          );
+        } else {
+          Alert.alert("Error al registrar usuario.")
+        }
+      } else {
         Alert.alert(
-          "Exito",
-          "Usuario registrado correctamente.",
+          "Usuario existente.",
+          "La cédula ingresada ya se encuentra registrada.",
           [
             {
-              text: "OK",
-              onPress: () => navigation.navigate("Usuario"),
+              text: "Aceptar",
+
             },
+
           ],
           {
+
             cancelable: false,
           }
-        );
-      } else {
-        Alert.alert("Error al registrar usuario.")
+        )
       }
+
     }
   };
 
@@ -247,7 +291,6 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 0,
-    textAlignVertical: "top",
     height: 20,
   },
   enLinea: {

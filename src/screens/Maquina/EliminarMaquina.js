@@ -13,29 +13,6 @@ const EliminarMaquina = ({ navigation }) => {
     // estado para almacenar las maquinas
     const [maquinas, setMaquinas] = useState([]);
 
-    useEffect(() => {
-        const cargarTiposMaquinas = async () => {
-            const res = await buscarTiposMaquinas()
-            if (res.rows.length > 0) {
-                let elements = []
-                for (let i = 0; i < res.rows.length; i++) {
-                    elements.push(res.rows[i])
-                }
-                setListaTiposMaquinas(elements)
-            }
-        }
-        cargarTiposMaquinas()
-    }, []);
-
-    const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result
-    }
-
     const searchDB = async () => {
         const readOnly = false;
         let result = null
@@ -94,10 +71,8 @@ const EliminarMaquina = ({ navigation }) => {
                         text: "Aceptar",
                         onPress: () => navigation.navigate("Maquina"),
                     },
-
                 ],
                 {
-
                     cancelable: false,
                 }
             );
@@ -117,22 +92,24 @@ const EliminarMaquina = ({ navigation }) => {
 
     const listItemView = (item) => {
         return (
-            <View style={styles.viewContainer}>
-                <View key={item.id} style={styles.listItemView}>
-                    <View style={styles.textContainer}>
-                        <MyText text={item.nombre} style={styles.text_data} />
-                        <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
+            <ScrollView styles={styles.generalView}>
+                <View style={styles.viewContainer}>
+                    <View key={item.id} style={styles.listItemView}>
+                        <View style={styles.textContainer}>
+                            <MyText text={item.nombre} style={styles.text_data} />
+                            <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
+                        </View>
+                        <View style={styles.imageContainer}>
+                            <Image
+                                source={{ uri: item.fotoUrl }}
+                                style={styles.image}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.imageContainer}>
-                        <Image
-                            source={{ uri: item.fotoUrl }}
-                            style={styles.image}
-                        />
-                    </View>
+                    <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
+                        onPress={() => { confirmarEliminar(item.id) }} />
                 </View>
-                <MySingleButton title="Eliminar" style={{ backgroundColor: 'orange' }}
-                    onPress={() => { confirmarEliminar(item.id) }} />
-            </View>
+            </ScrollView>
         );
     };
 
@@ -140,8 +117,8 @@ const EliminarMaquina = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View styles={styles.generalView}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
-                        <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
+                    <ScrollView >
+                        <KeyboardAvoidingView style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
                             <MyText text="Buscar Tipo de Máquina" style={styles.text} />
                             <MyInputText
@@ -150,29 +127,21 @@ const EliminarMaquina = ({ navigation }) => {
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarMaquina} />
-
-
-                            <View style={styles.generalView}>
-
-                                {maquinas ? (
-                                    <FlatList
-                                        data={maquinas}
-                                        contentContainerStyle={styles.flatContainer}
-                                        keyExtractor={(index) => index.toString()}
-                                        renderItem={({ item }) => listItemView(item)}
-                                    />
-                                ) : (
-                                    <View style={styles.empty}>
-                                        <Text style={styles.emptyText}> No se encuentran máquinas</Text>
-                                    </View>
-                                )}
-
-
-                            </View>
-
-
                         </KeyboardAvoidingView>
                     </ScrollView>
+
+                    {maquinas.length ? (
+                        <FlatList style={styles.flatList}
+                            data={maquinas}
+                            contentContainerStyle={styles.flatContainer}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => listItemView(item)}
+                        />
+                    ) : (
+                        <View style={styles.empty}>
+                            <Text style={styles.emptyText}></Text>
+                        </View>
+                    )}
                 </View>
             </View>
         </SafeAreaView>
@@ -185,13 +154,13 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flex: 1,
-        paddingBottom: 50,
         backgroundColor: "#e3f7dc",
-        borderBottomWidth: 2,
-        borderBottomColor: '#A9DFBF',
     },
     generalView: {
         flex: 1
+    },
+    flatList: {
+        height: '70%',
     },
     text: {
         padding: 10,
@@ -251,6 +220,11 @@ const styles = StyleSheet.create({
     image: {
         flex: 1, // Para que la imagen ocupe todo el espacio disponible
         resizeMode: 'cover', // Ajustar tamaño de la imagen según el espacio disponible
+    },
+    emptyText: {
+        fontSize: 20,
+        alignSelf: "center",
+        alignContent: "center",
     },
 })
 

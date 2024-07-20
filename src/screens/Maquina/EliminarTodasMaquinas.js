@@ -15,28 +15,27 @@ const EliminarTodoMaquina = ({ navigation }) => {
                 "Exito",
                 "Máquinas eliminadas!!!",
                 [
-                  {
-                    text: "OK",
-                    onPress: () => navigation.navigate("Maquina"),
-                  },
+                    {
+                        text: "OK",
+                        onPress: () => navigation.navigate("Maquina"),
+                    },
                 ],
                 {
-                  cancelable: false,
+                    cancelable: false,
                 }
-              );
+            );
         }, readOnly)
     }
 
     return (
-
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View styles={styles.generalView}>
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
- <View style={styles.presenterView}>
-                            <MyText text="ADVERTENCIA!!" style={styles.textDanger} />
-                           
+                            <View style={styles.presenterView}>
+                                <MyText text="ADVERTENCIA!!" style={styles.textDanger} />
+
                                 <MyText text="Estás a punto de eliminar TODAS las Máquinas. Esta acción no se puede desacer. ¿Seguro desea eliminar Todos los datos existentes?" style={styles.texto} />
                             </View>
                             <MySingleButton

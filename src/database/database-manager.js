@@ -31,8 +31,8 @@ const databaseConection = {
         const res = await tx.executeSqlAsync("DELETE FROM users WHERE user_id = ?", [userId])
         return res
     },
-    async getOneUser(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE nom_usuario like ? or apellido like ?", [nombre, nombre])
+    async getOneUser(tx, usuario) {
+        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE nom_usuario like ? or apellido like ? or ci like ?", [usuario, usuario, usuario])
         return res
     },
     async getAllUsers(tx) {
@@ -41,6 +41,10 @@ const databaseConection = {
     },
     async deleteAllUser(tx) {
         const res = await tx.executeSqlAsync("DELETE FROM users", [])
+        return res
+    },
+    async usuarioExisteDB(tx, ci) {
+        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE ci = ?", [ci])
         return res
     },
 
@@ -133,7 +137,6 @@ const databaseConection = {
     },
     async maquinaEnUsoBD(tx, id) {
         const res = await tx.executeSqlAsync("SELECT * FROM maquina WHERE tipoMaquina = ?", [id])
-        console.log(id)
         return res
     },
     async getAllMaquina(tx) {
@@ -223,7 +226,7 @@ const databaseConection = {
         return res
     },
     async crearTablaRutina(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, dia_rutina VARCHAR(10), id_usuario INTEGER, id_ejercicio INTEGER, series INTEGER, repeticiones INTEGER, FOREIGN KEY (id_usuario) REFERENCES usuario(user_id), FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id_ejercicio))", [])
+        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, dia_rutina VARCHAR(10), id_usuario INTEGER, id_ejercicio INTEGER, series INTEGER, repeticiones INTEGER, FOREIGN KEY (id_usuario) REFERENCES users(ci), FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id_ejercicio))", [])
         return res
     },
     async createRutina(tx, dia, usuario, ejercicio, series, repeticiones) {
@@ -239,11 +242,11 @@ const databaseConection = {
         return res
     },
     async getOneRutina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT r.id, r.dia_rutina, r.series, r.repeticiones, r.id_usuario, r.id_ejercicio, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.nom_usuario like ? order by r.dia_rutina", [nombre])
+        const res = await tx.executeSqlAsync("SELECT r.id, r.dia_rutina, r.series, r.repeticiones, r.id_usuario, r.id_ejercicio, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.ci inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.nom_usuario like ? order by r.dia_rutina", [nombre])
         return res
     },
     async getAllRutinas(tx) {
-        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.user_id inner join ejercicio e on r.id_ejercicio = e.id_ejercicio order by r.dia_rutina", [])
+        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.ci inner join ejercicio e on r.id_ejercicio = e.id_ejercicio order by r.dia_rutina", [])
         return res
     },
     async deleteAllRutina(tx) {
@@ -253,20 +256,20 @@ const databaseConection = {
 
     async agregarRutinas(tx) {
         const res = await tx.executeSqlAsync("INSERT INTO rutina(dia_rutina, id_usuario, id_ejercicio, series, repeticiones) VALUES" +
-            "('Lunes', 1, 1, 4, 12)," +
-            "('Lunes', 1, 8, 4, 12)," +
-            "('Martes', 1, 2, 4, 12)," +
-            "('Martes', 1, 7, 1, 20)," +
-            "('Lunes', 1, 4, 4, 10)," +
-            "('Lunes', 2, 1, 4, 12)," +
-            "('Lunes', 2, 8, 4, 12)," +
-            "('Martes', 2, 2, 4, 12)," +
-            "('Martes', 3, 7, 1, 20)," +
-            "('Martes', 1, 2, 4, 30)," +
-            "('Martes', 1, 3, 4, 10)," +
-            "('Martes', 1, 9, 4, 100)," +
-            "('Lunes', 1, 9, 4, 100)," +
-            "('Lunes', 3, 4, 4, 10)" , [])
+            "('Lunes', 12345678, 1, 4, 12)," +
+            "('Lunes', 12345678, 8, 4, 12)," +
+            "('Martes', 12345678, 2, 4, 12)," +
+            "('Martes', 12345678, 7, 1, 20)," +
+            "('Lunes', 12345678, 4, 4, 10)," +
+            "('Lunes', 23232378, 1, 4, 12)," +
+            "('Lunes', 23232378, 8, 4, 12)," +
+            "('Martes', 23232378, 2, 4, 12)," +
+            "('Martes', 87654321, 7, 1, 20)," +
+            "('Martes', 12345678, 2, 4, 30)," +
+            "('Martes', 12345678, 3, 4, 10)," +
+            "('Martes', 12345678, 9, 4, 100)," +
+            "('Lunes', 12345678, 9, 4, 100)," +
+            "('Lunes', 87654321, 4, 4, 10)" , [])
             console.log("Datos agregados, rutinas")
             return res
     },

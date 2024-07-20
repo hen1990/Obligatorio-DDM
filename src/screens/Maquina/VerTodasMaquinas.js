@@ -64,7 +64,7 @@ const VerTodoMaquina = () => {
     const listItemView = (item) => {
         const tipoMaquina = listaTiposMaquinas.find(tipo => tipo.id == item.tipoMaquina);
         return (
-            <View key={item.id} style={styles.listItemView}>
+            <View key={ `${item.id}-${tipoMaquina.id}` } style={styles.listItemView}>
             <View style={styles.textContainer}>
                 <MyText text={tipoMaquina.nombre} style={styles.text_data} />
                 <MyText text={`Nº de Sala: ${item.sala}`} style={styles.text_data1} />
@@ -87,7 +87,7 @@ const VerTodoMaquina = () => {
                         <FlatList
                             data={maquina}
                             contentContainerStyle={styles.flatContainer}
-                            keyExtractor={(index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => listItemView(item)}
                         />
                     ) : (

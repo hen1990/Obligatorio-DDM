@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text } from "react-native"
+import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert, Text, FlatList } from "react-native"
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
@@ -7,10 +7,11 @@ import MyText from "../../components/MyText"
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
 
-const UpdateUser = ( {navigation}) => {
+const UpdateUser = ({ navigation }) => {
     // estado para busqueda 
     const [buscarNombre, setBuscarNombre] = useState("")
     // estado para el usuario a hacer update
+    const [userData, setUserData] = useState(null);
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [ci, setCi] = useState("");
@@ -29,153 +30,288 @@ const UpdateUser = ( {navigation}) => {
         return result
     }
 
-    const searchDB = async () => {
+    const getUserData = async () => {
+        //  validar username
+        if (!buscarNombre.trim()) {
+            Alert.alert("Campo requerido!", "Ingrese Nombre, Apellido o C.I. para buscar un usuario.");
+            return;
+        }
+        // consultar por los datos del usuario
+        const res = await getUserDB()
+        if (res.rows.length > 0) {
+            let elements = []
+            for (let i = 0; i < res.rows.length; i++) {
+                elements.push(res.rows[i])
+            }
+            setUserData(elements)
+
+        } else {
+            Alert.alert("Usuario no encontrado")
+            setUserData(null)
+        }
+    };
+
+    const getUserDB = async () => {
         const readOnly = false;
-        let result = null
+        let result = null;
         await db.transactionAsync(async (tx) => {
             result = await databaseConection.getOneUser(tx, buscarNombre + "%");
         }, readOnly);
-        return result
-    }
+        return result;
+    };
 
-    // TODO funcion que busque al usuario
-    const searchUser = async () => {
-        if (!buscarNombre.trim()) {
-            Alert.alert("El nombre de usuario no puede estar vacio.")
-            return
-        }
-        //  llamar a funcion buscar
-        const res = await searchDB()
-        if (res && res.rows && res.rows.length > 0) {
-            setNombre(res.rows[0].nom_usuario)
-            setApellido(res.rows[0].apellido)
-            setCi(res.rows[0].ci)
-            setDia(res.rows[0].fechaNac.slice(0, -8))
-            setMes(res.rows[0].fechaNac.slice(3, -5))
-            setAnio(res.rows[0].fechaNac.slice(6))
-            setId(res.rows[0].user_id)
-        } else {
-            Alert.alert("No se encontró usuario.")
-            setNombre("")
-            setApellido("")
-        }
-    }
-
-    // TODO funcion de hacer el update del usuario
-    const updateUser = async () => {
+    // Validar datos
+    //Nombre
+    const validateData = () => {
         if (!nombre.trim()) {
-            Alert.alert("El nombre de usuario no puede estar vacio.")
-            return
+            Alert.alert("Ingresr nombre.");
+            return false;
         }
-
+        //Apellido
         if (!apellido.trim()) {
-            Alert.alert("El email de usuario no puede estar vacio.")
-            return
+            Alert.alert("Ingresar apellido.");
+            return false;
         }
-        // update
-        const res = await updateUserDB()
-        if (res.rowsAffected > 0) {
-            Alert.alert(
-                "Exito!",
-                "Usuario actualizado correctamente.",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => navigation.navigate("Usuario"),
-                  },
-                ],
-                {
-                  cancelable: false,
-                }
-              );
+        //Cedula
+        if (!ci.trim()) {
+            Alert.alert("Ingresar cedula.");
+            return false;
         } else {
-            Alert.alert("No se pudo actualizar el usuario")
+            for (i = 0; i < ci.length; i++) {
+                var code = ci.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Ingrese solo números.");
+                    return false;
+                } else if (ci.length != 8) {
+                    Alert.alert("Cédula debe contener 8 dígitos.");
+                    return false;
+                }
+            }
+        }
+        //Dia
+        if (!dia.trim()) {
+            Alert.alert("Ingresar dia.");
+            return false;
+        } else {
+            for (i = 0; i < dia.length; i++) {
+                var code = dia.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Ingrese solo números.");
+                    return false;
+                } else if (dia.length != 2) {
+                    Alert.alert("Día debe contener 2 dígitos.");
+                    return false;
+                }
+            }
+        }
+        //Mes
+        if (!mes.trim()) {
+            Alert.alert("Ingresar mes.");
+            return false;
+        } else {
+            for (i = 0; i < mes.length; i++) {
+                var code = mes.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Ingrese solo números.");
+                    return false;
+                } else if (mes.length != 2) {
+                    Alert.alert("Mes debe contener 2 dígitos.");
+                    return false;
+                }
+            }
+        }
+        //Año
+        if (!anio.trim()) {
+            Alert.alert("Ingresar año.");
+            return false;
+        } else {
+            for (i = 0; i < anio.length; i++) {
+                var code = anio.charCodeAt(i);
+                if (code < 48 || code > 57) {
+                    Alert.alert("Ingrese solo números.");
+                    return false;
+                } else if (anio.length != 4) {
+                    Alert.alert("Año debe contener 4 dígitos.");
+                    return false;
+                }
+            }
+        }
+        if (!nombre.trim()) {
+            Alert.alert("Ingresr nombre.");
+            return false;
+        }
+        return true;
+    };
+
+    const usuarioExiste = async () => {
+        const readOnly = false;
+        let result = null
+        await db.transactionAsync(async (tx) => {
+            result = await databaseConection.usuarioExisteDB(tx, ci);
+        }, readOnly);
+
+        return result
+    };
+
+    // funcion que se encargue de guardar los datos.
+    const updateUser = async () => {
+        if (validateData()) {
+            const res = await usuarioExiste()
+            if (!res.rows[0]) {
+                // update
+                const res = await updateUserDB()
+                if (res.rowsAffected > 0) {
+                    Alert.alert(
+                        "Exito!",
+                        "Usuario actualizado correctamente.",
+                        [
+                            {
+                                text: "OK",
+                                onPress: () => navigation.navigate("Usuario"),
+                            },
+                        ],
+                        {
+                            cancelable: false,
+                        }
+                    );
+                } else {
+                    Alert.alert("No se pudo actualizar el usuario")
+                }
+            } else {
+                Alert.alert(
+                    "Usuario existente.",
+                    "La cédula ingresada ya se encuentra registrada.",
+                    [
+                        {
+                            text: "Aceptar",
+
+                        },
+                    ],
+                    {
+                        cancelable: false,
+                    }
+                )
+            }
 
         }
-    }
-    
+    };
+
+    const listItemView = (item) => {
+        return (
+            <View style={styles.presenterView2}>
+                <View style={styles.presenterView}>
+                    <MyText
+                        text={`Usuario: ${item.nom_usuario + " " + item.apellido}`}
+                        style={styles.presenterText}
+                    />
+                    <MyText
+                        text={`Cédula: ${item.ci}`}
+                        style={styles.presenterText}
+                    />
+                    <MyText
+                        text={`F. Nacimiento: ${item.fechaNac}`}
+                        style={styles.presenterText}
+                    />
+                </View>
+                <MySingleButton title="Editar" style={{ backgroundColor: 'orange' }}
+                    onPress={() => {
+                        setNombre(item.nom_usuario)
+                        setApellido(item.apellido)
+                        setCi(item.ci)
+                        setDia(item.fechaNac.slice(0, -8))
+                        setMes(item.fechaNac.slice(3, -5))
+                        setAnio(item.fechaNac.slice(6))
+                        setId(item.user_id)
+                    }} />
+                {!(item.user_id == id) ? "" :
+                    <View style={styles.form}>
+                        <Text style={styles.texto}>Actualizar Datos</Text>
+                        {/* Nombre */}
+                        <MyInputText
+                            placeholder="Nombre"
+                            onChangeText={setNombre}
+                            style={styles.input}
+                            value={nombre}
+                        />
+
+                        {/* Apellido */}
+                        <MyInputText
+                            placeholder="Apellido"
+                            onChangeText={setApellido}
+                            style={styles.input}
+                            value={apellido}
+                        />
+
+                        {/* Cedula */}
+                        <MyInputText
+                            placeholder="Cédula (Sin puntos ni guión)"
+                            onChangeText={setCi}
+                            maxLength={8}
+                            style={styles.input}
+                            value={ci}
+                        />
+
+                        <Text style={styles.texto}>Fecha de Nacimiento: DD/MM/AAAA</Text>
+                        <View style={styles.enLinea}>
+                            {/* Fecha */}
+                            {/* Dia */}
+                            <MyInputText
+                                placeholder="Dia"
+                                onChangeText={setDia}
+                                maxLength={2}
+                                style={styles.inputFecha}
+                                value={dia}
+                            />
+                            {/* Mes */}
+                            <MyInputText
+                                placeholder="Mes"
+                                onChangeText={setMes}
+                                maxLength={2}
+                                style={styles.inputFecha}
+                                value={mes}
+                            />
+                            {/* Año */}
+                            <MyInputText
+                                placeholder="Año"
+                                onChangeText={setAnio}
+                                minLength={4}
+                                maxLength={4}
+                                style={styles.inputFecha}
+                                value={anio}
+                            />
+                        </View>
+                        <MySingleButton title="Actualizar Datos" style={styles.button}
+                            onPress={updateUser} />
+                    </View>
+                }
+            </View>
+        );
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View styles={styles.generalView}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
-                        <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
-                            {/* Formulario */}
+                    <ScrollView >
+                        <KeyboardAvoidingView style={styles.keyBoardView}>
                             <MyText text="Buscar Usuario" style={styles.texto} />
                             <MyInputText
-                                placeholder="Ingrese el nombre de Usuario"
+                                placeholder="Ingrese Nombre, Apellido o C.I."
                                 style={styles.input}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
-                            <MySingleButton title="Buscar" onPress={searchUser} />
-
-
-                            <View style={styles.form}>
-                                <Text style={styles.texto}>Actualizar Datos</Text>
-                                {/* Nombre */}
-                                <MyInputText
-                                    placeholder="Nombre"
-                                    onChangeText={setNombre}
-                                    style={styles.input}
-                                    value={nombre}
-                                />
-
-                                {/* Apellido */}
-                                <MyInputText
-                                    placeholder="Apellido"
-                                    onChangeText={setApellido}
-                                    style={styles.input}
-                                    value={apellido}
-                                />
-
-
-                                {/* Cedula */}
-                                <MyInputText
-                                    placeholder="Cédula (Sin puntos ni guión)"
-                                    onChangeText={setCi}
-                                    maxLength={8}
-                                    style={styles.input}
-                                    value={ci}
-                                />
-                                <Text style={styles.texto}>Fecha de Nacimiento: DD/MM/AAAA</Text>
-                                <View style={styles.enLinea}>
-                                    {/* Fecha */}
-                                    {/* Dia */}
-                                    <MyInputText
-                                        placeholder="Dia"
-                                        onChangeText={setDia}
-                                        maxLength={2}
-                                        style={styles.inputFecha}
-                                        value={dia}
-                                    />
-                                    {/* Mes */}
-                                    <MyInputText
-                                        placeholder="Mes"
-                                        onChangeText={setMes}
-                                        maxLength={2}
-                                        style={styles.inputFecha}
-                                        value={mes}
-                                    />
-                                    {/* Año */}
-                                    <MyInputText
-                                        placeholder="Año"
-                                        onChangeText={setAnio}
-                                        minLength={4}
-                                        maxLength={4}
-                                        style={styles.inputFecha}
-                                        value={anio}
-                                    />
-
-                                </View>
-                                <MySingleButton
-                                    title="Actualizar"
-                                    onPress={updateUser}
-                                    style={styles.button}
-                                />
-                            </View>
-
+                            <MySingleButton title="Buscar" onPress={getUserData} />
                         </KeyboardAvoidingView>
                     </ScrollView>
+                    {(!userData) ? "" :
+                        <>
+                            <FlatList style={styles.flatList}
+                                data={userData}
+                                contentContainerStyle={styles.flatContainer}
+                                keyExtractor={(item) => item.user_id.toString()}
+                                renderItem={({ item }) => listItemView(item)}
+                            />
+                        </>}
                 </View>
             </View>
         </SafeAreaView>
@@ -193,19 +329,20 @@ const styles = StyleSheet.create({
     generalView: {
         flex: 1
     },
-    input: {
-        height: 20,
-      },
-    texto: {
-        fontSize: 18,
-        textAlign: 'left',
-        marginLeft: 40,
-        marginTop: 8,
-        color: "black",
+    flatList: {
+        height: '70%',
     },
-    keyBoardView: {
-        flex: 1,
-        justifyContent: "space-between",
+    input: {
+        padding: 1,
+        margin: 1,
+        color: "black",
+        height: 20,
+    },
+    texto: {
+        padding: 10,
+        marginLeft: 25,
+        color: "black",
+        fontSize: 18,
     },
     form: {
         flex: 1,
@@ -224,8 +361,28 @@ const styles = StyleSheet.create({
         height: 20,
         textAlign: "center",
         justifyContent: "center",
-        
+    },
+    presenterView: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 15,
+        fontSize: 30,
+        backgroundColor: "2f2f2f",
+        padding: 20,
+        paddingBottom: 0,
+        paddingTop: 0,
+    },
+    presenterView2: {
+        backgroundColor: "2f2f2f",
+        borderBottomWidth: 1,
+        borderBottomColor: "#AFB42B",
+        paddingBottom: 30
+    },
+    presenterText: {
+        margin: 5,
+        fontSize: 18,
+        color: "black"
     },
 })
 
-export default UpdateUser
+export default UpdateUser;

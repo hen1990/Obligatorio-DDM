@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  View,
-  Text,
-} from "react-native";
+import { StyleSheet, SafeAreaView, FlatList, View, Text } from "react-native";
 import MyText from "../../components/MyText";
-import MyInputText from "../../components/MyInputText";
 
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
@@ -43,8 +36,9 @@ const ViewAllUsers = () => {
   const listItemView = (item) => {
     return (
       <View key={item.user_id} style={styles.listItemView}>
-        <MyText text= {item.nom_usuario + " " + item.apellido}   style={styles.text_data} />
-        <MyText text={item.fechaNac} style={styles.text_data1} />
+        <MyText text= {"Usuario: " + item.nom_usuario + " " + item.apellido}   style={styles.text_data} />
+        <MyText text={"Cédula: " + item.ci} style={styles.text_data1} />
+        <MyText text={"F. Nacimiento: " + item.fechaNac} style={styles.text_data1} />
       </View>
     );
   };
@@ -57,7 +51,7 @@ const ViewAllUsers = () => {
             <FlatList
               data={users}
               contentContainerStyle={styles.flatContainer}
-              keyExtractor={(index) => index.toString()}
+              keyExtractor={(item) => item.user_id.toString()}
               renderItem={({ item }) => listItemView(item)}
             />
           ) : (
@@ -105,7 +99,7 @@ text_data1: {
     color: "#2f2f2f",
     alignContent: "center",
     alignItems: "center",
-    fontSize: 18,
+    fontSize: 16,
 },
   empty: {
     flex: 1,

@@ -13,7 +13,7 @@ const CrearRutina = ({ navigation }) => {
     const [usuarios, setUsuarios] = useState([]);
     const [ejercicios, setEjercicios] = useState([]);
     const [dia, setDia] = useState("");
-    const [usuarioId, setUsuarioId] = useState("");
+    const [usuarioCi, setUsuarioCi] = useState("");
     const [ejercicioId, setEjercicioId] = useState("");
     const [series, setSeries] = useState("");
     const [repeticiones, setRepeticiones] = useState("");
@@ -67,7 +67,7 @@ const CrearRutina = ({ navigation }) => {
     // Validar Datos
     const validateData = () => {
         //Validar usuario
-        if (!usuarioId.toString().trim()) {
+        if (!usuarioCi.toString().trim()) {
             Alert.alert("Ingresar usuario.");
             return false;
         }
@@ -98,7 +98,7 @@ const CrearRutina = ({ navigation }) => {
         const readOnly = false;
         let result = null
         await db.transactionAsync(async (tx) => {
-            result = await databaseConection.createRutina(tx, dia, usuarioId, ejercicioId, series, repeticiones);
+            result = await databaseConection.createRutina(tx, dia, usuarioCi, ejercicioId, series, repeticiones);
         }, readOnly);
 
         return result
@@ -133,7 +133,7 @@ const CrearRutina = ({ navigation }) => {
 
     const renderizarUsuarios = () => {
         return usuarios.map(tipo => (
-            <Picker.Item key={tipo.user_id} label={tipo.nom_usuario} value={tipo.user_id} />
+            <Picker.Item key={tipo.ci} label={tipo.nom_usuario} value={tipo.ci} />
         ));
     };
 
@@ -154,10 +154,10 @@ const CrearRutina = ({ navigation }) => {
                             <Text style={styles.texto}>Seleccionar Usuario</Text>
                             <View style={styles.picker}>
                                 <Picker
-                                    selectedValue={usuarioId}
+                                    selectedValue={usuarioCi}
                                     style={{ height: 100, width: "100%" }}
                                     onValueChange={(itemValue, itemIndex) =>
-                                        setUsuarioId(itemValue)
+                                        setUsuarioCi(itemValue)
                                     }>
                                     {renderizarUsuarios()}
                                 </Picker>

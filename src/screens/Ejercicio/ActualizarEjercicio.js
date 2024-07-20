@@ -128,13 +128,13 @@ const ActualizarEjercicio = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
                 <View styles={styles.generalView}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
-                        <KeyboardAvoidingView behavior="padding" style={styles.KeyboardAvoidingView}>
+                    <ScrollView >
+                        <KeyboardAvoidingView style={styles.KeyboardAvoidingView}>
                             {/* Formulario */}
                             <MyText text="Buscar Ejercicio" style={styles.text} />
                             <MyInputText
                                 placeholder="Ingrese nombre de ejercicio"
-                                style={{}}
+                                style={styles.input}
                                 onChangeText={(text) => setBuscarNombre(text)}
                             />
                             <MySingleButton title="Buscar" onPress={buscarEjercicio} />
@@ -197,16 +197,18 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     generalView: {
-        flex: 1
+        flex: 1,
+        marginTop: 30,
     },
     text: {
         padding: 10,
         marginLeft: 25,
         color: "black",
-        fontSize: 20
+        fontSize: 18
     },
     input: {
-        padding: 15
+        padding: 0,
+        height: 20
     },
     keyBoardView: {
         flex: 1,
@@ -219,21 +221,12 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: 'orange',
     },
-    enLinea: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    inputFecha: {
-        padding: 5,
-        margin: 0,
-        textAlignVertical: "top",
-    },
     texto: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
-        marginLeft: 50,
-        marginTop: 8
-    },
+        marginLeft: 40,
+        marginTop: 20,
+      },
     picker: {
         flex: 1,
         justifyContent: 'center',
@@ -242,8 +235,10 @@ const styles = StyleSheet.create({
         borderColor: "#E0E0E0",
         borderRadius: 0,
         borderWidth: 1,
+        marginTop: 10,
+        marginBottom: 10,
         margin: 30,
-        height: 70,
+        height: 55,
     }
 })
 

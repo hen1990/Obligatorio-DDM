@@ -172,15 +172,15 @@ const ActualizarRutina = ({ navigation }) => {
                             <Text style={styles.text_data1}>Series: {item.series}</Text>
                             <Text style={styles.text_data1}>Repeticiones: {item.repeticiones}</Text>
                         </View>
-                        <MySingleButton onPress={() => {
-                            setDia(item.dia_rutina);
-                            setEjercicioId(item.id_ejercicio);
-                            setSeries(item.series);
-                            setRepeticiones(item.repeticiones);
+                        <MySingleButton  title={"Editar"} style={styles.boton} 
+                        onPress={() => {
+                            setDia(item.dia_rutina)
+                            setEjercicioId(item.id_ejercicio)
+                            setSeries(item.series)
+                            setRepeticiones(item.repeticiones)
                             setUsuarioId(item.id_usuario)
                             setRutinaId(item.id)
-                        }
-                        } title={"Editar"} style={styles.boton} />
+                        }}/>
                         {rutinaId == item.id ? <>
                             <Text style={styles.texto}>Cambiar Día</Text>
                             <View style={styles.picker}>

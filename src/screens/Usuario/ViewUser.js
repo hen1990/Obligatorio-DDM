@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  Alert,
-  KeyboardAvoidingView,
-  ScrollView, FlatList, Text,
-  View,
-} from "react-native";
+import { StyleSheet, SafeAreaView, Alert, KeyboardAvoidingView, ScrollView, FlatList, Text, View } from "react-native";
 import MyText from "../../components/MyText";
 import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
@@ -31,7 +24,7 @@ const ViewUser = ({ navigation }) => {
   const getUserData = async () => {
     //  validar username
     if (!nombre.trim()) {
-      Alert.alert("El nombre de usuario es requerido");
+      Alert.alert("Campo requerido!","Ingrese Nombre, Apellido o C.I. para buscar un usuario.");
       return;
     }
     // consultar por los datos del usuario
@@ -113,7 +106,7 @@ const ViewUser = ({ navigation }) => {
               <MyText text="Buscar Usuario" style={styles.text} />
               <MyInputText
                 style={styles.inputStyle}
-                placeholder="Nombre"
+                placeholder="Ingrese Nombre, Apellido o C.I."
                 onChangeText={(text) => setNombre(text)}
               />
 
@@ -231,11 +224,20 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   presenterView: {
-      marginLeft: 24,
-      marginRight: 24,
-      marginTop: 5,
-      backgroundColor: "2f2f2f",
-      padding: 5
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 15,
+    fontSize: 30,
+    backgroundColor: "2f2f2f",
+    padding: 20,
+    paddingBottom:0,
+    paddingTop: 0,
+  },
+  presenterView2: {
+    backgroundColor: "2f2f2f",
+    borderBottomWidth: 1,
+    borderBottomColor: "#AFB42B",
+    paddingBottom: 30
   },
 });
 
