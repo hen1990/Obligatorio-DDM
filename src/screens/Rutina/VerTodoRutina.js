@@ -29,6 +29,7 @@ const VerTodoRutina = () => {
     await db.transactionAsync(async (tx) => {
       result = await databaseConection.getAllRutinas(tx);
     }, readOnly);
+    console.log(result);
     return result;
   }
 

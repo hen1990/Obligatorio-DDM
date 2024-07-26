@@ -153,236 +153,248 @@ const UpdateUser = ({ navigation }) => {
         return result
     };
 
-    // funcion que se encargue de guardar los datos.
-    const updateUser = async () => {
-        if (validateData()) {
-            const res = await usuarioExiste()
-            if (!res.rows[0]) {
-                // update
-                const res = await updateUserDB()
-                if (res.rowsAffected > 0) {
+    const validarUsuario = async () => {
+        const res = await usuarioExiste()
+        console.log(res.rows[0])
+        if (res.rows[0]) {
+            if (res.rows[0].user_id != id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+        // funcion que se encargue de guardar los datos.
+        const updateUser = async () => {
+            if (validateData()) {
+                let existe = await validarUsuario();
+                if (!existe) {
+                    // update
+                    const res = await updateUserDB()
+                    if (res.rowsAffected > 0) {
+                        Alert.alert(
+                            "Exito!",
+                            "Usuario actualizado correctamente.",
+                            [
+                                {
+                                    text: "OK",
+                                    onPress: () => navigation.navigate("Usuario"),
+                                },
+                            ],
+                            {
+                                cancelable: false,
+                            }
+                        );
+                    } else {
+                        Alert.alert("No se pudo actualizar el usuario")
+                    }
+                } else {
                     Alert.alert(
-                        "Exito!",
-                        "Usuario actualizado correctamente.",
+                        "Usuario existente.",
+                        "La cédula ingresada ya se encuentra registrada.",
                         [
                             {
-                                text: "OK",
-                                onPress: () => navigation.navigate("Usuario"),
+                                text: "Aceptar",
+
                             },
                         ],
                         {
                             cancelable: false,
                         }
-                    );
-                } else {
-                    Alert.alert("No se pudo actualizar el usuario")
+                    )
                 }
-            } else {
-                Alert.alert(
-                    "Usuario existente.",
-                    "La cédula ingresada ya se encuentra registrada.",
-                    [
-                        {
-                            text: "Aceptar",
 
-                        },
-                    ],
-                    {
-                        cancelable: false,
-                    }
-                )
             }
+        };
 
-        }
-    };
-
-    const listItemView = (item) => {
-        return (
-            <View style={styles.presenterView2}>
-                <View style={styles.presenterView}>
-                    <MyText
-                        text={`Usuario: ${item.nom_usuario + " " + item.apellido}`}
-                        style={styles.presenterText}
-                    />
-                    <MyText
-                        text={`Cédula: ${item.ci}`}
-                        style={styles.presenterText}
-                    />
-                    <MyText
-                        text={`F. Nacimiento: ${item.fechaNac}`}
-                        style={styles.presenterText}
-                    />
-                </View>
-                <MySingleButton title="Editar" style={{ backgroundColor: 'orange' }}
-                    onPress={() => {
-                        setNombre(item.nom_usuario)
-                        setApellido(item.apellido)
-                        setCi(item.ci)
-                        setDia(item.fechaNac.slice(0, -8))
-                        setMes(item.fechaNac.slice(3, -5))
-                        setAnio(item.fechaNac.slice(6))
-                        setId(item.user_id)
-                    }} />
-                {!(item.user_id == id) ? "" :
-                    <View style={styles.form}>
-                        <Text style={styles.texto}>Actualizar Datos</Text>
-                        {/* Nombre */}
-                        <MyInputText
-                            placeholder="Nombre"
-                            onChangeText={setNombre}
-                            style={styles.input}
-                            value={nombre}
+        const listItemView = (item) => {
+            return (
+                <View style={styles.presenterView2}>
+                    <View style={styles.presenterView}>
+                        <MyText
+                            text={`Usuario: ${item.nom_usuario + " " + item.apellido}`}
+                            style={styles.presenterText}
                         />
-
-                        {/* Apellido */}
-                        <MyInputText
-                            placeholder="Apellido"
-                            onChangeText={setApellido}
-                            style={styles.input}
-                            value={apellido}
+                        <MyText
+                            text={`Cédula: ${item.ci}`}
+                            style={styles.presenterText}
                         />
-
-                        {/* Cedula */}
-                        <MyInputText
-                            placeholder="Cédula (Sin puntos ni guión)"
-                            onChangeText={setCi}
-                            maxLength={8}
-                            style={styles.input}
-                            value={ci}
+                        <MyText
+                            text={`F. Nacimiento: ${item.fechaNac}`}
+                            style={styles.presenterText}
                         />
-
-                        <Text style={styles.texto}>Fecha de Nacimiento: DD/MM/AAAA</Text>
-                        <View style={styles.enLinea}>
-                            {/* Fecha */}
-                            {/* Dia */}
-                            <MyInputText
-                                placeholder="Dia"
-                                onChangeText={setDia}
-                                maxLength={2}
-                                style={styles.inputFecha}
-                                value={dia}
-                            />
-                            {/* Mes */}
-                            <MyInputText
-                                placeholder="Mes"
-                                onChangeText={setMes}
-                                maxLength={2}
-                                style={styles.inputFecha}
-                                value={mes}
-                            />
-                            {/* Año */}
-                            <MyInputText
-                                placeholder="Año"
-                                onChangeText={setAnio}
-                                minLength={4}
-                                maxLength={4}
-                                style={styles.inputFecha}
-                                value={anio}
-                            />
-                        </View>
-                        <MySingleButton title="Actualizar Datos" style={styles.button}
-                            onPress={updateUser} />
                     </View>
-                }
-            </View>
-        );
-    };
-
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.viewContainer}>
-                <View styles={styles.generalView}>
-                    <ScrollView >
-                        <KeyboardAvoidingView style={styles.keyBoardView}>
-                            <MyText text="Buscar Usuario" style={styles.texto} />
+                    <MySingleButton title="Editar" style={{ backgroundColor: 'orange' }}
+                        onPress={() => {
+                            setNombre(item.nom_usuario)
+                            setApellido(item.apellido)
+                            setCi(item.ci)
+                            setDia(item.fechaNac.slice(0, -8))
+                            setMes(item.fechaNac.slice(3, -5))
+                            setAnio(item.fechaNac.slice(6))
+                            setId(item.user_id)
+                        }} />
+                    {!(item.user_id == id) ? "" :
+                        <View style={styles.form}>
+                            <Text style={styles.texto}>Actualizar Datos</Text>
+                            {/* Nombre */}
                             <MyInputText
-                                placeholder="Ingrese Nombre, Apellido o C.I."
+                                placeholder="Nombre"
+                                onChangeText={setNombre}
                                 style={styles.input}
-                                onChangeText={(text) => setBuscarNombre(text)}
+                                value={nombre}
                             />
-                            <MySingleButton title="Buscar" onPress={getUserData} />
-                        </KeyboardAvoidingView>
-                    </ScrollView>
-                    {(!userData) ? "" :
-                        <>
-                            <FlatList style={styles.flatList}
-                                data={userData}
-                                contentContainerStyle={styles.flatContainer}
-                                keyExtractor={(item) => item.user_id.toString()}
-                                renderItem={({ item }) => listItemView(item)}
+
+                            {/* Apellido */}
+                            <MyInputText
+                                placeholder="Apellido"
+                                onChangeText={setApellido}
+                                style={styles.input}
+                                value={apellido}
                             />
-                        </>}
+
+                            {/* Cedula */}
+                            <MyInputText
+                                placeholder="Cédula (Sin puntos ni guión)"
+                                onChangeText={setCi}
+                                maxLength={8}
+                                style={styles.input}
+                                value={ci}
+                            />
+
+                            <Text style={styles.texto}>Fecha de Nacimiento: DD/MM/AAAA</Text>
+                            <View style={styles.enLinea}>
+                                {/* Fecha */}
+                                {/* Dia */}
+                                <MyInputText
+                                    placeholder="Dia"
+                                    onChangeText={setDia}
+                                    maxLength={2}
+                                    style={styles.inputFecha}
+                                    value={dia}
+                                />
+                                {/* Mes */}
+                                <MyInputText
+                                    placeholder="Mes"
+                                    onChangeText={setMes}
+                                    maxLength={2}
+                                    style={styles.inputFecha}
+                                    value={mes}
+                                />
+                                {/* Año */}
+                                <MyInputText
+                                    placeholder="Año"
+                                    onChangeText={setAnio}
+                                    minLength={4}
+                                    maxLength={4}
+                                    style={styles.inputFecha}
+                                    value={anio}
+                                />
+                            </View>
+                            <MySingleButton title="Actualizar Datos" style={styles.button}
+                                onPress={updateUser} />
+                        </View>
+                    }
                 </View>
-            </View>
-        </SafeAreaView>
-    )
-}
+            );
+        };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    viewContainer: {
-        flex: 1,
-        backgroundColor: "#fcfceb"
-    },
-    generalView: {
-        flex: 1
-    },
-    flatList: {
-        height: '70%',
-    },
-    input: {
-        padding: 1,
-        margin: 1,
-        color: "black",
-        height: 20,
-    },
-    texto: {
-        padding: 10,
-        marginLeft: 25,
-        color: "black",
-        fontSize: 18,
-    },
-    form: {
-        flex: 1,
-        marginTop: 25
-    },
-    button: {
-        backgroundColor: 'orange',
-    },
-    enLinea: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    inputFecha: {
-        padding: 0,
-        margin: 0,
-        height: 20,
-        textAlign: "center",
-        justifyContent: "center",
-    },
-    presenterView: {
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 15,
-        fontSize: 30,
-        backgroundColor: "2f2f2f",
-        padding: 20,
-        paddingBottom: 0,
-        paddingTop: 0,
-    },
-    presenterView2: {
-        backgroundColor: "2f2f2f",
-        borderBottomWidth: 1,
-        borderBottomColor: "#AFB42B",
-        paddingBottom: 30
-    },
-    presenterText: {
-        margin: 5,
-        fontSize: 18,
-        color: "black"
-    },
-})
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.viewContainer}>
+                    <View styles={styles.generalView}>
+                        <ScrollView >
+                            <KeyboardAvoidingView style={styles.keyBoardView}>
+                                <MyText text="Buscar Usuario" style={styles.texto} />
+                                <MyInputText
+                                    placeholder="Ingrese Nombre, Apellido o C.I."
+                                    style={styles.input}
+                                    onChangeText={(text) => setBuscarNombre(text)}
+                                />
+                                <MySingleButton title="Buscar" onPress={getUserData} />
+                            </KeyboardAvoidingView>
+                        </ScrollView>
+                        {(!userData) ? "" :
+                            <>
+                                <FlatList style={styles.flatList}
+                                    data={userData}
+                                    contentContainerStyle={styles.flatContainer}
+                                    keyExtractor={(item) => item.user_id.toString()}
+                                    renderItem={({ item }) => listItemView(item)}
+                                />
+                            </>}
+                    </View>
+                </View>
+            </SafeAreaView>
+        )
+    }
 
-export default UpdateUser;
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1
+        },
+        viewContainer: {
+            flex: 1,
+            backgroundColor: "#fcfceb"
+        },
+        generalView: {
+            flex: 1
+        },
+        flatList: {
+            height: '70%',
+        },
+        input: {
+            padding: 1,
+            margin: 1,
+            color: "black",
+            height: 20,
+        },
+        texto: {
+            padding: 10,
+            marginLeft: 25,
+            color: "black",
+            fontSize: 18,
+        },
+        form: {
+            flex: 1,
+            marginTop: 25
+        },
+        button: {
+            backgroundColor: 'orange',
+        },
+        enLinea: {
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        inputFecha: {
+            padding: 0,
+            margin: 0,
+            height: 20,
+            textAlign: "center",
+            justifyContent: "center",
+        },
+        presenterView: {
+            marginLeft: 10,
+            marginRight: 10,
+            marginTop: 15,
+            fontSize: 30,
+            backgroundColor: "2f2f2f",
+            padding: 20,
+            paddingBottom: 0,
+            paddingTop: 0,
+        },
+        presenterView2: {
+            backgroundColor: "2f2f2f",
+            borderBottomWidth: 1,
+            borderBottomColor: "#AFB42B",
+            paddingBottom: 30
+        },
+        presenterText: {
+            margin: 5,
+            fontSize: 18,
+            color: "black"
+        },
+    })
+
+    export default UpdateUser;
