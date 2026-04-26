@@ -1,17 +1,19 @@
 import * as FileSystem from 'expo-file-system';
-import * as SQLite from 'expo-sqlite/legacy';
+import * as SQLite from 'expo-sqlite';
 import { Asset } from 'expo-asset';
 
 async function OpenDatabase(pathToDatabaseFile) {
-  if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {
-    await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
+  const sqliteDir = FileSystem.Paths.document.uri + '/SQLite';
+  if (!(await FileSystem.Paths.document.exists())) {
+    await FileSystem.Paths.document.create();
   }
   const asset = await Asset.fromModule((pathToDatabaseFile)).downloadAsync();
-  await FileSystem.copyAsync({
+  const targetPath = sqliteDir + '/database.db';
+  await FileSystem.Paths.document.moveAsync({
     from: asset.localUri,
-    to: FileSystem.documentDirectory + 'SQLite/database.db',
+    to: targetPath,
   });
-  return SQLite.openDatabase('database.db');
+  return SQLite.openDatabaseAsync('database.db');
 }
 
 export default OpenDatabase

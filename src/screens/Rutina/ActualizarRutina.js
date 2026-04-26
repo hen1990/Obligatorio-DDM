@@ -6,7 +6,6 @@ import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const ActualizarRutina = ({ navigation }) => {
     // Definir los estados.
@@ -37,12 +36,13 @@ const ActualizarRutina = ({ navigation }) => {
     }, []);
 
     const getUserDB = async () => {
-        const readOnly = false;
-        let result = null;
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneUser(tx, nombre + "%");
-        }, readOnly);
-        return result;
+        try {
+            const result = await databaseConection.getOneUser(nombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     };
 
     const getUserData = async () => {
@@ -66,13 +66,14 @@ const ActualizarRutina = ({ navigation }) => {
     };
 
     const buscarEjercicios = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllEjercicio(tx);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getAllEjercicio();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Validar Datos
     const validateData = () => {
@@ -126,13 +127,14 @@ const ActualizarRutina = ({ navigation }) => {
     };
 
     const actualizarRutinasDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateRutina(tx, dia, usuarioId, ejercicioId, series, repeticiones, rutinaId);
-        }, readOnly);
-
-        return result
+        try {
+            const nombreRutina = `${dia} - ${usuarioId}`;
+            const result = await databaseConection.updateRutina(nombreRutina, ejercicioId, rutinaId);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
     };
 
     const cargarRutinas = async () => {
@@ -147,13 +149,14 @@ const ActualizarRutina = ({ navigation }) => {
     }
 
     const buscarRutinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneRutina(tx, nombre + "%");
-        }, readOnly);
-        return result;
-    }
+        try {
+            const result = await databaseConection.getOneRutina(nombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     const renderizarEjercicios = () => {
         return ejercicios.map(tipo => (

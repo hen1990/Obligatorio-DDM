@@ -6,7 +6,6 @@ import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const CrearMaquina = ({ navigation }) => {
     // Definir los estados.
@@ -29,13 +28,14 @@ const CrearMaquina = ({ navigation }) => {
     }, []);
 
     const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getAllTipoMaquina();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Validar Datos
     const validateData = () => {
@@ -49,8 +49,8 @@ const CrearMaquina = ({ navigation }) => {
             Alert.alert("Ingresar número de sala.");
             return false;
         } else {
-            for (i = 0; i < sala.length; i++) {
-                var code = sala.charCodeAt(i);
+            for (let i = 0; i < sala.length; i++) {
+                const code = sala.charCodeAt(i);
                 if (code < 48 || code > 57) {
                     Alert.alert("Sala: Ingrese solo números.");
                     return false;
@@ -61,13 +61,13 @@ const CrearMaquina = ({ navigation }) => {
     }
 
     const guardarMaquina = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.createMaquina(tx, tipoMaquina, sala);
-        }, readOnly);
-
-        return result
+        try {
+            const result = await databaseConection.createMaquina(tipoMaquina, sala);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
     };
 
     // funcion que se encargue de guardar los datos.

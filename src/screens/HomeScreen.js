@@ -4,67 +4,47 @@ import MyButton from "../components/MyButton"
 import databaseConection from "../database/database-manager"
 import OpenDatabase from "../database/import-database"
 
-const db = databaseConection.getConnection()
-
 const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         const init = async () => {
-            const readOnly = false;
-            await db.transactionAsync(async tx => {
+            try {
+                console.log("Inicializando base de datos...");
+                
+                // Crear tablas
+                await databaseConection.createUserTable();
+                console.log("Tabla usuarios creada");
+                
+                await databaseConection.crearTablaTipoMaquina();
+                console.log("Tabla tipo máquina creada");
+                
+                await databaseConection.crearTablaMaquina();
+                console.log("Tabla máquina creada");
+                
+                await databaseConection.crearTablaEjercicio();
+                console.log("Tabla ejercicio creada");
+                
+                await databaseConection.crearTablaRutina();
+                console.log("Tabla rutina creada");
 
-                //Boorar Tablas
-                /*
-                 await databaseConection.dropTableUser(tx)
-                 await databaseConection.dropTabletipoMaquina(tx)
-                 await databaseConection.dropTableMaquina(tx)
-                 await databaseConection.dropTableEjercicio(tx)
-                 await databaseConection.dropTableRutina(tx)
-                 */
-                console.log("transaction", tx)
-                //Chequear tabla Usuario
-                const existeTablaUsuario = await databaseConection.checkTableExistUser(tx)
-                console.log("table usuario exists", existeTablaUsuario.rows)
-                if (existeTablaUsuario.rows.length) {
-                    // await databaseConection.dropTable(tx)
+                const users = await databaseConection.getAllUsers();
+                if (users.rows.length === 0) {
+                    console.log("Agregando usuarios iniciales...");
+                    await databaseConection.agregarUsuarios();
+                    console.log("Usuarios agregados");
                 }
-                const crearTablaUsuario = await databaseConection.createUserTable(tx)
-                console.log("### tabla usuario ####", crearTablaUsuario)
 
-                //Chequear tabla TipoMaquina 
-                const existeTablaTipoMaquina = await databaseConection.checkTableExistTipoMaquina(tx)
-                console.log("table tipoMaquina exists", existeTablaTipoMaquina.rows)
-                if (existeTablaTipoMaquina.rows.length) {
-                    // await databaseConection.dropTable(tx)
+                const tiposMaquina = await databaseConection.getAllTipoMaquina();
+                if (tiposMaquina.rows.length === 0) {
+                    console.log("Agregando tipos de máquina iniciales...");
+                    await databaseConection.agregarTipoMaquina();
+                    console.log("Tipos de máquina agregados");
                 }
-                const crearTablaTipoMaquina = await databaseConection.crearTablaTipoMaquina(tx)
-                console.log("### tabla maquina ####", crearTablaTipoMaquina)
+            } catch (error) {
+                console.error("Error inicializando BD:", error);
+            }
+        };
 
-                //Chequear tabla Maquina
-                const existeTablaMaquina = await databaseConection.checkTableExistMaquina(tx)
-                console.log("table maquina exists", existeTablaMaquina.rows)
-                if (existeTablaMaquina.rows.length) {
-                    // await databaseConection.dropTable(tx)
-                }
-                const crearTablaMaquina = await databaseConection.crearTablaMaquina(tx)
-                console.log("### tabla maquina ####", crearTablaMaquina)
-
-                await databaseConection.crearTablaEjercicio(tx)
-
-                await databaseConection.crearTablaRutina(tx)
-
-
-                //Agregar datos de prueba
-                /*
-                await databaseConection.agregarUsuarios(tx)
-                await databaseConection.agregarTipoMaquina(tx)
-                await databaseConection.agregarMaquinas(tx)
-                await databaseConection.agregarEjercicios(tx)
-                await databaseConection.agregarRutinas(tx)
-                */
-            }, readOnly);
-        }
-
-        init().then(() => console.log("exec"))
+        init();
     }, [])
 
     return (

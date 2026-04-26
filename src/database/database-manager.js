@@ -1,277 +1,310 @@
-import * as SQLite from 'expo-sqlite/legacy';
+import * as SQLite from 'expo-sqlite';
+
 const dbName = "database.db"
+let db = null;
 
-const databaseConection = {
-    getConnection() {
-        return SQLite.openDatabase(dbName)
-    },
-
-    //Usuario
-    async checkTableExistUser(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", [])
-        return res
-    },
-    async dropTableUser(tx) {
-        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS users", [])
-        return res
-    },
-    async createUserTable(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, nom_usuario VARCHAR(50), apellido VARCHAR(50), ci VARCHAR(8), fechaNac date)", [])
-        return res
-    },
-    async createUser(tx, nombre, apellido, ci, fechaNac) {
-        const res = await tx.executeSqlAsync("INSERT INTO users (nom_usuario, apellido, ci, fechaNac) VALUES (?, ?, ?, ?)", [nombre, apellido, ci, fechaNac])
-        return res
-    },
-    async updateUser(tx, nombre, apellido, ci, fechaNac, userId) {
-        const res = await tx.executeSqlAsync("UPDATE users SET nom_usuario = ?, apellido = ?, ci = ?, fechaNac = ? WHERE user_id = ?", [nombre, apellido, ci, fechaNac, userId])
-        return res
-    },
-    async deleteUser(tx, userId) {
-        const res = await tx.executeSqlAsync("DELETE FROM users WHERE user_id = ?", [userId])
-        return res
-    },
-    async getOneUser(tx, usuario) {
-        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE nom_usuario like ? or apellido like ? or ci like ?", [usuario, usuario, usuario])
-        return res
-    },
-    async getAllUsers(tx) {
-        const res = await tx.executeSqlAsync("SELECT * FROM users", [])
-        return res
-    },
-    async deleteAllUser(tx) {
-        const res = await tx.executeSqlAsync("DELETE FROM users", [])
-        return res
-    },
-    async usuarioExisteDB(tx, ci) {
-        const res = await tx.executeSqlAsync("SELECT * FROM users WHERE ci = ?", [ci])
-        return res
+const databaseConnection = {
+    async getConnection() {
+        if (!db) {
+            db = await SQLite.openDatabaseAsync(dbName);
+        }
+        return db;
     },
 
-    async agregarUsuarios(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO users(nom_usuario, apellido, ci, fechaNac) VALUES" +
-            "('Henry', 'González', '12345678', '26/09/2001')," +
-            "('Juan', 'Pedro', '23232378', '21/02/1998'),"  +
-            "('Pepe', 'Garciaz', '87654321', '12/03/1995')," +
-            "('Maria', 'Martinez', '1121321', '05/11/1986')" , [])
-            console.log("Datos agregados, Usuarios")
-            return res
+    // Usuario
+    async checkTableExistUser() {
+        const database = await this.getConnection();
+        return await database.getFirstAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
     },
 
-    //Tipo de Maquina
-    async checkTableExistTipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='tipoMaquina'", [])
-        return res
-    },
-    async dropTabletipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS tipoMaquina", [])
-        return res
-    },
-    async crearTablaTipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS tipoMaquina(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(50), fotoUrl VARCHAR(200))", [])
-        return res
-    },
-    async createTipoMaquina(tx, nombre, fotoUrl) {
-        const res = await tx.executeSqlAsync("INSERT INTO tipoMaquina(nombre, fotoUrl) VALUES (?, ?)", [nombre, fotoUrl])
-        return res
-    },
-    async updateTipoMaquina(tx, nombre, fotoUrl, Id) {
-        const res = await tx.executeSqlAsync("UPDATE tipoMaquina SET nombre = ?, fotoUrl = ? WHERE id = ?", [nombre, fotoUrl, Id])
-        return res
-    },
-    async deleteTipoMaquina(tx, Id) {
-        const res = await tx.executeSqlAsync("DELETE FROM tipoMaquina WHERE id = ?", [Id])
-        return res
-    },
-    async getOneTipoMaquina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT * FROM tipoMaquina WHERE nombre like ?", [nombre])
-        return res
-    },
-    async getAllTipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("SELECT * FROM tipoMaquina", [])
-        return res
-    },
-    async deleteAllTipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("DELETE FROM tipoMaquina", [])
-        return res
+    async dropTableUser() {
+        const database = await this.getConnection();
+        return await database.runAsync("DROP TABLE IF EXISTS users");
     },
 
-    async agregarTipoMaquina(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO tipoMaquina(nombre, fotoUrl) VALUES" +
-            "('Polea Doble', 'https://dcdn.mitiendanube.com/stores/001/358/569/products/polea-doble-enfrentada1-40cbf68175faee810116022595090988-640-0.jpg')," +
-            "('Eliptica', 'https://www.suplementos.uy/pub/media/catalog/product/cache/b6cd9ba2ecc3ac531fe12d57b014dcd6/e/l/eliptica_sl.jpg')," +
-            "('Prensa De Pierna', 'https://cdn.etenonfitness.com/assets/products/PL1018/PL1018%20-%20Etenon%20Uni-Bi-Lateral%20Leg%20Press-large.png')," +
-            "('Bicicleta', 'https://www.kangaroofitness.com.au/cdn/shop/files/100_2_2d7a9a63-83df-4d6a-83e6-dff1fe29b518.png?v=1711545867')" , [])
-            console.log("Datos agregados, tipoMaquina")
-            return res
+    async createUserTable() {
+        const database = await this.getConnection();
+        return await database.runAsync("CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, nom_usuario VARCHAR(50), apellido VARCHAR(50), ci VARCHAR(8), fechaNac date)");
     },
 
-    //Maquina
-    async checkTableExistMaquina(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='maquina'", [])
-        return res
-    },
-    async dropTableMaquina(tx) {
-        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS maquina", [])
-        return res
-    },
-    async crearTablaMaquina(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS maquina(id INTEGER PRIMARY KEY AUTOINCREMENT, tipoMaquina INTEGER, sala INTEGER, FOREIGN KEY (tipoMaquina) REFERENCES tipoMaquina(id))", [])
-        return res
-    },
-    async createMaquina(tx, tipoMaquina, sala) {
-        const res = await tx.executeSqlAsync("INSERT INTO maquina (tipoMaquina, sala) VALUES (?, ?)", [tipoMaquina, sala])
-        return res
-    },
-    async updateMaquina(tx, tipoMaquina, sala, Id) {
-        const res = await tx.executeSqlAsync("UPDATE maquina SET tipoMaquina = ?, sala = ? WHERE id = ?", [tipoMaquina, sala, Id])
-        return res
-    },
-    async deleteMaquina(tx, Id) {
-        const res = await tx.executeSqlAsync("DELETE FROM maquina WHERE id = ?", [Id])
-        return res
-    },
-    async getOneMaquina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT tm.nombre, tm.fotoUrl, m.id, m.sala, m.tipoMaquina FROM maquina m inner join tipoMaquina tm on m.tipoMaquina = tm.id WHERE tm.nombre like ?", [nombre])
-        return res
-    },
-    async maquinaEnUsoBD(tx, id) {
-        const res = await tx.executeSqlAsync("SELECT * FROM maquina WHERE tipoMaquina = ?", [id])
-        return res
-    },
-    async getAllMaquina(tx) {
-        const res = await tx.executeSqlAsync("SELECT * FROM maquina", [])
-        return res
-    },
-    async deleteAllMaquina(tx) {
-        const res = await tx.executeSqlAsync("DELETE FROM maquina", [])
-        return res
+    async createUser(nombre, apellido, ci, fechaNac) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`INSERT INTO users (nom_usuario, apellido, ci, fechaNac) VALUES (?, ?, ?, ?)`, [nombre, apellido, ci, fechaNac]);
+        return { rowsAffected: result.changes };
     },
 
-    async agregarMaquinas(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO maquina(tipoMaquina, sala) VALUES" +
-            "(1, 1)," +
-            "(2, 3),"  +
-            "(3, 2)," +
-            "(1, 2)," +
-            "(1, 3),"  +
-            "(3, 2)," +
-            "(4, 3)" , [])
-            console.log("Datos agregados, Maquinas")
-            return res
+    async updateUser(nombre, apellido, ci, fechaNac, userId) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`UPDATE users SET nom_usuario = ?, apellido = ?, ci = ?, fechaNac = ? WHERE user_id = ?`, [nombre, apellido, ci, fechaNac, userId]);
+        return { rowsAffected: result.changes };
     },
 
-
-//Ejercicio
-    async checkTableExistEjercicio(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='ejercicio'", [])
-        return res
-    },
-    async dropTableEjercicio(tx) {
-        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS ejercicio", [])
-        return res
-    },
-    async crearTablaEjercicio(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS ejercicio(id_ejercicio INTEGER PRIMARY KEY AUTOINCREMENT, nom_ejercicio VARCHAR(50), id_tipoMaquina INTEGER, videoUrl VARCHAR(200), FOREIGN KEY (id_tipoMaquina) REFERENCES tipoMaquina(id))", [])
-        return res
-    },
-    async createEjercicio(tx, nombre, id_tipoMaquina, videoUrl) {
-        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(nom_ejercicio, id_tipoMaquina, videoUrl) VALUES (?, ?, ?)", [nombre, id_tipoMaquina, videoUrl])
-        return res
-    },
-    async updateEjercicio(tx, nombre, id_tipoMaquina, videoUrl, Id) {
-        const res = await tx.executeSqlAsync("UPDATE ejercicio SET nom_ejercicio = ?, id_tipoMaquina = ?, videoUrl = ? WHERE id_ejercicio  = ?", [nombre, id_tipoMaquina, videoUrl, Id])
-        return res
-    },
-    async deleteEjercicio(tx, Id) {
-        const res = await tx.executeSqlAsync("DELETE FROM ejercicio WHERE id_ejercicio  = ?", [Id])
-        return res
-    },
-    async getOneEjercicio(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.nombre, tm.fotoUrl FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id WHERE nom_ejercicio like ?", [nombre])
-        return res
-    },
-    async getAllEjercicio(tx) {
-        const res = await tx.executeSqlAsync("SELECT e.*, tm.fotoUrl, tm.nombre FROM ejercicio e left join tipoMaquina tm on e.id_tipoMaquina = tm.id", [])
-        return res
-    },
-    async deleteAllEjercicio(tx) {
-        const res = await tx.executeSqlAsync("DELETE FROM ejercicio", [])
-        return res
+    async deleteUser(userId) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`DELETE FROM users WHERE user_id = ?`, [userId]);
+        return { rowsAffected: result.changes };
     },
 
-    async agregarEjercicios(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO ejercicio(nom_ejercicio, id_tipoMaquina, videoUrl) VALUES" +
-            "('Pecho Cruzado', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
-            "('Calentamiento en Bici', 2, 'https://www.youtube.com/watch?v=Sbv44Rf-5U0'),"  +
-            "('Cuádriceps en Prensa', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
-            "('Pecho Paloma', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc')," +
-            "('Serratos', 1, 'https://www.youtube.com/watch?v=lbUogkeItuc'),"  +
-            "('Estiramiento Estrecho', 3, 'https://www.youtube.com/watch?v=D1FvjYNX9QI')," +
-            "('Spinning', 4, 'https://www.youtube.com/watch?v=jlHOotjWK_w')," +
-            "('Estocadas', null , 'https://www.youtube.com/watch?v=X61IReICHkA')," +
-            "('Abdominales', null , 'https://www.youtube.com/watch?v=2tXQbi16EdI')," +
-            "('Plancha Abdominal', null  , 'https://www.youtube.com/watch?v=mMieHCr-H0c')" , [])
-            console.log("Datos agregados, Ejercicios")
-            return res
+    async getOneUser(usuario) {
+        const database = await this.getConnection();
+        const searchTerm = `%${usuario}%`;
+        const rows = await database.getAllAsync(`SELECT * FROM users WHERE nom_usuario like ? or apellido like ? or ci like ?`, [searchTerm, searchTerm, searchTerm]);
+        return { rows };
     },
 
-    //Ejercicio
-    async checkTableExistRutina(tx) {
-        const res = await tx.executeSqlAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='rutina'", [])
-        return res
-    },
-    async dropTableRutina(tx) {
-        const res = await tx.executeSqlAsync("DROP TABLE IF EXISTS rutina", [])
-        return res
-    },
-    async crearTablaRutina(tx) {
-        const res = await tx.executeSqlAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, dia_rutina VARCHAR(10), id_usuario INTEGER, id_ejercicio INTEGER, series INTEGER, repeticiones INTEGER, FOREIGN KEY (id_usuario) REFERENCES users(ci), FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id_ejercicio))", [])
-        return res
-    },
-    async createRutina(tx, dia, usuario, ejercicio, series, repeticiones) {
-        const res = await tx.executeSqlAsync("INSERT INTO rutina(dia_rutina, id_usuario, id_ejercicio, series, repeticiones) VALUES (?, ?, ?, ?, ?)", [dia, usuario, ejercicio, series, repeticiones])
-        return res
-    },
-    async updateRutina(tx, dia, usuario, ejercicio, series, repeticiones, Id) {
-        const res = await tx.executeSqlAsync("UPDATE rutina SET dia_rutina = ?, id_usuario = ?, id_ejercicio = ?, series = ?, repeticiones = ? WHERE id = ?", [dia, usuario, ejercicio, series, repeticiones, Id])
-        return res
-    },
-    async deleteRutina(tx, Id) {
-        const res = await tx.executeSqlAsync("DELETE FROM rutina WHERE id = ?", [Id])
-        return res
-    },
-    async getOneRutina(tx, nombre) {
-        const res = await tx.executeSqlAsync("SELECT r.id, r.dia_rutina, r.series, r.repeticiones, r.id_usuario, r.id_ejercicio, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.ci inner join ejercicio e on r.id_ejercicio = e.id_ejercicio WHERE u.nom_usuario like ? order by r.dia_rutina", [nombre])
-        return res
-    },
-    async getAllRutinas(tx) {
-        const res = await tx.executeSqlAsync("SELECT r.dia_rutina, r.series, r.repeticiones, u.nom_usuario, e.nom_ejercicio FROM rutina r inner join users u on r.id_usuario = u.ci inner join ejercicio e on r.id_ejercicio = e.id_ejercicio order by r.dia_rutina", [])
-        return res
-    },
-    async deleteAllRutina(tx) {
-        const res = await tx.executeSqlAsync("DELETE FROM rutina", [])
-        return res
+    async getAllUsers() {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync("SELECT * FROM users");
+        return { rows };
     },
 
-    async agregarRutinas(tx) {
-        const res = await tx.executeSqlAsync("INSERT INTO rutina(dia_rutina, id_usuario, id_ejercicio, series, repeticiones) VALUES" +
-            "('Lunes', 12345678, 1, 4, 12)," +
-            "('Lunes', 12345678, 8, 4, 12)," +
-            "('Martes', 12345678, 2, 4, 12)," +
-            "('Martes', 12345678, 7, 1, 20)," +
-            "('Lunes', 12345678, 4, 4, 10)," +
-            "('Lunes', 23232378, 1, 4, 12)," +
-            "('Lunes', 23232378, 8, 4, 12)," +
-            "('Martes', 23232378, 2, 4, 12)," +
-            "('Martes', 87654321, 7, 1, 20)," +
-            "('Martes', 12345678, 2, 4, 30)," +
-            "('Martes', 12345678, 3, 4, 10)," +
-            "('Martes', 12345678, 9, 4, 100)," +
-            "('Lunes', 12345678, 9, 4, 100)," +
-            "('Lunes', 87654321, 4, 4, 10)" , [])
-            console.log("Datos agregados, rutinas")
-            return res
+    async deleteAllUser() {
+        const database = await this.getConnection();
+        const result = await database.runAsync("DELETE FROM users");
+        return { rowsAffected: result.changes };
     },
-}
-export default databaseConection
+
+    async usuarioExisteDB(ci) {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync(`SELECT * FROM users WHERE ci = ?`, [ci]);
+        return { rows };
+    },
+
+    async agregarUsuarios() {
+        const database = await this.getConnection();
+        return await database.execAsync(`INSERT INTO users(nom_usuario, apellido, ci, fechaNac) VALUES
+            ('Henry', 'González', '12345678', '26/09/2001'),
+            ('Juan', 'Pedro', '23232378', '21/02/1998'),
+            ('Pepe', 'Garciaz', '87654321', '12/03/1995'),
+            ('Maria', 'Martinez', '1121321', '05/11/1986')`);
+    },
+
+    // Tipo de Maquina
+    async checkTableExistTipoMaquina() {
+        const database = await this.getConnection();
+        return await database.getFirstAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='tipoMaquina'");
+    },
+
+    async dropTabletipoMaquina() {
+        const database = await this.getConnection();
+        return await database.runAsync("DROP TABLE IF EXISTS tipoMaquina");
+    },
+
+    async crearTablaTipoMaquina() {
+        const database = await this.getConnection();
+        return await database.runAsync("CREATE TABLE IF NOT EXISTS tipoMaquina(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(50), fotoUrl VARCHAR(200))");
+    },
+
+    async createTipoMaquina(nombre, fotoUrl) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`INSERT INTO tipoMaquina(nombre, fotoUrl) VALUES (?, ?)`, [nombre, fotoUrl]);
+        return { rowsAffected: result.changes };
+    },
+
+    async updateTipoMaquina(nombre, fotoUrl, Id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`UPDATE tipoMaquina SET nombre = ?, fotoUrl = ? WHERE id = ?`, [nombre, fotoUrl, Id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async deleteTipoMaquina(Id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`DELETE FROM tipoMaquina WHERE id = ?`, [Id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async getOneTipoMaquina(nombre) {
+        const database = await this.getConnection();
+        const searchTerm = `%${nombre}%`;
+        const rows = await database.getAllAsync(`SELECT * FROM tipoMaquina WHERE nombre like ?`, [searchTerm]);
+        return { rows };
+    },
+
+    async getAllTipoMaquina() {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync("SELECT * FROM tipoMaquina");
+        return { rows };
+    },
+
+    async deleteAllTipoMaquina() {
+        const database = await this.getConnection();
+        const result = await database.runAsync("DELETE FROM tipoMaquina");
+        return { rowsAffected: result.changes };
+    },
+
+    async agregarTipoMaquina() {
+        const database = await this.getConnection();
+        return await database.execAsync(`INSERT INTO tipoMaquina(nombre, fotoUrl) VALUES
+            ('Polea Doble', 'https://dcdn.mitiendanube.com/stores/001/358/569/products/polea-doble-enfrentada1-40cbf68175faee810116022595090988-640-0.jpg'),
+            ('Eliptica', 'https://www.suplementos.uy/pub/media/catalog/product/cache/b6cd9ba2ecc3ac531fe12d57b014dcd6/e/l/eliptica_sl.jpg'),
+            ('Prensa De Pierna', 'https://cdn.etenonfitness.com/assets/products/PL1018/PL1018%20-%20Etenon%20Uni-Bi-Lateral%20Leg%20Press-large.png'),
+            ('Bicicleta', 'https://www.kangaroofitness.com.au/cdn/shop/files/100_2_2d7a9a63-83df-4d6a-83e6-dff1fe29b518.png?v=1711545867')`);
+    },
+
+    // Maquina
+    async checkTableExistMaquina() {
+        const database = await this.getConnection();
+        return await database.getFirstAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='maquina'");
+    },
+
+    async dropTableMaquina() {
+        const database = await this.getConnection();
+        return await database.runAsync("DROP TABLE IF EXISTS maquina");
+    },
+
+    async crearTablaMaquina() {
+        const database = await this.getConnection();
+        return await database.runAsync("CREATE TABLE IF NOT EXISTS maquina(id INTEGER PRIMARY KEY AUTOINCREMENT, tipoMaquina INTEGER, sala INTEGER, FOREIGN KEY (tipoMaquina) REFERENCES tipoMaquina(id))");
+    },
+
+    async createMaquina(tipoMaquina, sala) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`INSERT INTO maquina (tipoMaquina, sala) VALUES (?, ?)`, [tipoMaquina, sala]);
+        return { rowsAffected: result.changes };
+    },
+
+    async updateMaquina(tipoMaquina, sala, Id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`UPDATE maquina SET tipoMaquina = ?, sala = ? WHERE id = ?`, [tipoMaquina, sala, Id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async deleteMaquina(Id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`DELETE FROM maquina WHERE id = ?`, [Id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async getOneMaquina(nombre) {
+        const database = await this.getConnection();
+        const searchTerm = `%${nombre}%`;
+        const rows = await database.getAllAsync(`SELECT tm.nombre, tm.fotoUrl, m.id, m.sala, m.tipoMaquina FROM maquina m inner join tipoMaquina tm on m.tipoMaquina = tm.id WHERE tm.nombre like ?`, [searchTerm]);
+        return { rows };
+    },
+
+    async maquinaEnUsoBD(id) {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync(`SELECT * FROM maquina WHERE tipoMaquina = ?`, [id]);
+        return { rows };
+    },
+
+    async getAllMaquina() {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync("SELECT * FROM maquina");
+        return { rows };
+    },
+
+    async deleteAllMaquina() {
+        const database = await this.getConnection();
+        const result = await database.runAsync("DELETE FROM maquina");
+        return { rowsAffected: result.changes };
+    },
+
+    // Ejercicio
+    async checkTableExistEjercicio() {
+        const database = await this.getConnection();
+        return await database.getFirstAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='ejercicio'");
+    },
+
+    async dropTableEjercicio() {
+        const database = await this.getConnection();
+        return await database.runAsync("DROP TABLE IF EXISTS ejercicio");
+    },
+
+    async crearTablaEjercicio() {
+        const database = await this.getConnection();
+        return await database.runAsync("CREATE TABLE IF NOT EXISTS ejercicio(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(50), maquina INTEGER, FOREIGN KEY (maquina) REFERENCES maquina(id))");
+    },
+
+    async createEjercicio(nombre, maquina) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`INSERT INTO ejercicio (nombre, maquina) VALUES (?, ?)`, [nombre, maquina]);
+        return { rowsAffected: result.changes };
+    },
+
+    async updateEjercicio(nombre, maquina, id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`UPDATE ejercicio SET nombre = ?, maquina = ? WHERE id = ?`, [nombre, maquina, id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async deleteEjercicio(id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`DELETE FROM ejercicio WHERE id = ?`, [id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async getOneEjercicio(nombre) {
+        const database = await this.getConnection();
+        const searchTerm = `%${nombre}%`;
+        const rows = await database.getAllAsync(`SELECT * FROM ejercicio WHERE nombre like ?`, [searchTerm]);
+        return { rows };
+    },
+
+    async getAllEjercicio() {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync("SELECT * FROM ejercicio");
+        return { rows };
+    },
+
+    async deleteAllEjercicio() {
+        const database = await this.getConnection();
+        const result = await database.runAsync("DELETE FROM ejercicio");
+        return { rowsAffected: result.changes };
+    },
+
+    // Rutina
+    async checkTableExistRutina() {
+        const database = await this.getConnection();
+        return await database.getFirstAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='rutina'");
+    },
+
+    async dropTableRutina() {
+        const database = await this.getConnection();
+        return await database.runAsync("DROP TABLE IF EXISTS rutina");
+    },
+
+    async crearTablaRutina() {
+        const database = await this.getConnection();
+        return await database.runAsync("CREATE TABLE IF NOT EXISTS rutina(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(50), ejercicio INTEGER, FOREIGN KEY (ejercicio) REFERENCES ejercicio(id))");
+    },
+
+    async createRutina(nombre, ejercicio) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`INSERT INTO rutina (nombre, ejercicio) VALUES (?, ?)`, [nombre, ejercicio]);
+        return { rowsAffected: result.changes };
+    },
+
+    async updateRutina(nombre, ejercicio, id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`UPDATE rutina SET nombre = ?, ejercicio = ? WHERE id = ?`, [nombre, ejercicio, id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async deleteRutina(id) {
+        const database = await this.getConnection();
+        const result = await database.runAsync(`DELETE FROM rutina WHERE id = ?`, [id]);
+        return { rowsAffected: result.changes };
+    },
+
+    async getOneRutina(nombre) {
+        const database = await this.getConnection();
+        const searchTerm = `%${nombre}%`;
+        const rows = await database.getAllAsync(`SELECT * FROM rutina WHERE nombre like ?`, [searchTerm]);
+        return { rows };
+    },
+
+    async getAllRutina() {
+        const database = await this.getConnection();
+        const rows = await database.getAllAsync("SELECT * FROM rutina");
+        return { rows };
+    },
+
+    async deleteAllRutina() {
+        const database = await this.getConnection();
+        const result = await database.runAsync("DELETE FROM rutina");
+        return { rowsAffected: result.changes };
+    },
+};
+
+export default databaseConnection;

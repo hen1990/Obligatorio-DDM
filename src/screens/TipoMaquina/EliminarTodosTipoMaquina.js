@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     textDanger: {
-        textAlign: "Right",
         color: "red",
         fontSize: 40,
         textAlign: 'left',
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     texto: {
-        textAlign: "center",
         color: "black",
         fontSize: 20,
         textAlign: 'left',

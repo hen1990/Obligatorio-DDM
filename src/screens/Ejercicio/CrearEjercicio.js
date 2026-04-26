@@ -6,7 +6,6 @@ import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const CrearEjercicio = ({ navigation }) => {
     // Definir los estados.
@@ -31,13 +30,14 @@ const CrearEjercicio = ({ navigation }) => {
     }, []);
 
     const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getAllTipoMaquina();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Validar Datos
     const validateData = () => {
@@ -51,13 +51,13 @@ const CrearEjercicio = ({ navigation }) => {
     }
 
     const guardarEjercicio = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.createEjercicio(tx, nombre, tipoMaquina, videoUrl);
-        }, readOnly);
-
-        return result
+        try {
+            const result = await databaseConection.createEjercicio(nombre, tipoMaquina);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
     };
 
     // funcion que se encargue de guardar los datos.

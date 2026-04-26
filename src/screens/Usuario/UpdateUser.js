@@ -5,7 +5,6 @@ import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const UpdateUser = ({ navigation }) => {
     // estado para busqueda 
@@ -21,14 +20,15 @@ const UpdateUser = ({ navigation }) => {
     const [id, setId] = useState("")
 
     const updateUserDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
+        try {
             const fechaNac = `${dia}/${mes}/${anio}`;
-            result = await databaseConection.updateUser(tx, nombre, apellido, ci, fechaNac, id);
-        }, readOnly);
-        return result
-    }
+            const result = await databaseConection.updateUser(nombre, apellido, ci, fechaNac, id);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
+    };
 
     const getUserData = async () => {
         //  validar username
@@ -52,12 +52,13 @@ const UpdateUser = ({ navigation }) => {
     };
 
     const getUserDB = async () => {
-        const readOnly = false;
-        let result = null;
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneUser(tx, buscarNombre + "%");
-        }, readOnly);
-        return result;
+        try {
+            const result = await databaseConection.getOneUser(buscarNombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     };
 
     // Validar datos
@@ -77,8 +78,8 @@ const UpdateUser = ({ navigation }) => {
             Alert.alert("Ingresar cedula.");
             return false;
         } else {
-            for (i = 0; i < ci.length; i++) {
-                var code = ci.charCodeAt(i);
+            for (let i = 0; i < ci.length; i++) {
+                const code = ci.charCodeAt(i);
                 if (code < 48 || code > 57) {
                     Alert.alert("Ingrese solo números.");
                     return false;
@@ -93,8 +94,8 @@ const UpdateUser = ({ navigation }) => {
             Alert.alert("Ingresar dia.");
             return false;
         } else {
-            for (i = 0; i < dia.length; i++) {
-                var code = dia.charCodeAt(i);
+            for (let i = 0; i < dia.length; i++) {
+                const code = dia.charCodeAt(i);
                 if (code < 48 || code > 57) {
                     Alert.alert("Ingrese solo números.");
                     return false;
@@ -109,8 +110,8 @@ const UpdateUser = ({ navigation }) => {
             Alert.alert("Ingresar mes.");
             return false;
         } else {
-            for (i = 0; i < mes.length; i++) {
-                var code = mes.charCodeAt(i);
+            for (let i = 0; i < mes.length; i++) {
+                const code = mes.charCodeAt(i);
                 if (code < 48 || code > 57) {
                     Alert.alert("Ingrese solo números.");
                     return false;
@@ -125,8 +126,8 @@ const UpdateUser = ({ navigation }) => {
             Alert.alert("Ingresar año.");
             return false;
         } else {
-            for (i = 0; i < anio.length; i++) {
-                var code = anio.charCodeAt(i);
+            for (let i = 0; i < anio.length; i++) {
+                const code = anio.charCodeAt(i);
                 if (code < 48 || code > 57) {
                     Alert.alert("Ingrese solo números.");
                     return false;
@@ -144,13 +145,13 @@ const UpdateUser = ({ navigation }) => {
     };
 
     const usuarioExiste = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.usuarioExisteDB(tx, ci);
-        }, readOnly);
-
-        return result
+        try {
+            const result = await databaseConection.usuarioExisteDB(ci);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     };
 
     const validarUsuario = async () => {

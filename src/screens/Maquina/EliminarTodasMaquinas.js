@@ -3,14 +3,12 @@ import MyText from "../../components/MyText"
 import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert } from "react-native";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const EliminarTodoMaquina = ({ navigation }) => {
 
     const borrarMaquinas = async () => {
-        const readOnly = false;
-        await db.transactionAsync(async tx => {
-            databaseConection.deleteAllMaquina(tx)
+        try {
+            await databaseConection.deleteAllMaquina();
             Alert.alert(
                 "Exito",
                 "Máquinas eliminadas!!!",
@@ -24,8 +22,11 @@ const EliminarTodoMaquina = ({ navigation }) => {
                     cancelable: false,
                 }
             );
-        }, readOnly)
-    }
+        } catch (error) {
+            console.error("Error:", error);
+            Alert.alert("Error", "Error al eliminar máquinas");
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     textDanger: {
-        textAlign: "Right",
         color: "red",
         fontSize: 40,
         textAlign: 'left',
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     texto: {
-        textAlign: "center",
         color: "black",
         fontSize: 20,
         textAlign: 'left',

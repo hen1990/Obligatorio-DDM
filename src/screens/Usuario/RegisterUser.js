@@ -14,7 +14,6 @@ import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const RegisterUser = ({ navigation }) => {
   // Definir los estados.
@@ -24,6 +23,7 @@ const RegisterUser = ({ navigation }) => {
   const [dia, setDia] = useState("")
   const [mes, setMes] = useState("")
   const [anio, setAnio] = useState("")
+  const [fechaNac, setFechaNac] = useState("")
   const anioActual = new Date().getFullYear();
 
   // funcion de borrar los estados
@@ -54,8 +54,8 @@ const RegisterUser = ({ navigation }) => {
       Alert.alert("Ingresar cedula.");
       return false;
     } else {
-      for (i = 0; i < ci.length; i++) {
-        var code = ci.charCodeAt(i);
+      for (let i = 0; i < ci.length; i++) {
+        const code = ci.charCodeAt(i);
         if (code < 48 || code > 57) {
           Alert.alert("Ingrese solo números.");
           return false;
@@ -70,8 +70,8 @@ const RegisterUser = ({ navigation }) => {
       Alert.alert("Ingresar dia.");
       return false;
     } else {
-      for (i = 0; i < dia.length; i++) {
-        var code = dia.charCodeAt(i);
+      for (let i = 0; i < dia.length; i++) {
+        const code = dia.charCodeAt(i);
         if (code < 48 || code > 57) {
           Alert.alert("Ingrese solo números.");
           return false;
@@ -89,8 +89,8 @@ const RegisterUser = ({ navigation }) => {
       Alert.alert("Ingresar mes.");
       return false;
     } else {
-      for (i = 0; i < mes.length; i++) {
-        var code = mes.charCodeAt(i);
+      for (let i = 0; i < mes.length; i++) {
+        const code = mes.charCodeAt(i);
         if (code < 48 || code > 57) {
           Alert.alert("Ingrese solo números.");
           return false;
@@ -108,8 +108,8 @@ const RegisterUser = ({ navigation }) => {
       Alert.alert("Ingresar año.");
       return false;
     } else {
-      for (i = 0; i < anio.length; i++) {
-        var code = anio.charCodeAt(i);
+      for (let i = 0; i < anio.length; i++) {
+        const code = anio.charCodeAt(i);
         if (code < 48 || code > 57) {
           Alert.alert("Ingrese solo números.");
           return false;
@@ -130,69 +130,67 @@ const RegisterUser = ({ navigation }) => {
   };
 
   const usuarioExiste = async () => {
-    const readOnly = false;
-    let result = null
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.usuarioExisteDB(tx, ci);
-    }, readOnly);
-
-    return result
+    try {
+      const result = await databaseConection.usuarioExisteDB(ci);
+      return result;
+    } catch (error) {
+      Alert.alert("Error al consultar usuario");
+      return null;
+    }
   };
 
   const saveUser = async () => {
-    const readOnly = false;
-    let result = null
-    await db.transactionAsync(async (tx) => {
-      const fechaNac = `${dia}/${mes}/${anio}`;
-      result = await databaseConection.createUser(tx, nombre, apellido, ci, fechaNac);
-    }, readOnly);
-
-    return result
+    try {
+      const fechaNacLocal = `${dia}/${mes}/${anio}`;
+      const result = await databaseConection.createUser(nombre, apellido, ci, fechaNacLocal);
+      return result;
+    } catch (error) {
+      Alert.alert("Error al guardar usuario");
+      return null;
+    }
   };
 
   // funcion que se encargue de guardar los datos.
   const registerUser = async () => {
     if (validateData()) {
-      const res = await usuarioExiste()
-      if (!res.rows[0]) {
-        //guardar datos
-        const result = await saveUser();
-        if (result.rowsAffected > 0) {
-          //  validar si se guardar los datos
+      const res = await usuarioExiste();
+      if (res) {
+        if (!res.rows[0]) {
+          //guardar datos
+          const result = await saveUser();
+          if (result && result.rowsAffected > 0) {
+            //  validar si se guardar los datos
+            Alert.alert(
+              "Exito",
+              "Usuario registrado correctamente.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => navigation.navigate("Usuario"),
+                },
+              ],
+              {
+                cancelable: false,
+              }
+            );
+          } else {
+            Alert.alert("Error al registrar usuario.");
+          }
+        } else {
           Alert.alert(
-            "Exito",
-            "Usuario registrado correctamente.",
+            "Usuario existente.",
+            "La cédula ingresada ya se encuentra registrada.",
             [
               {
-                text: "OK",
-                onPress: () => navigation.navigate("Usuario"),
+                text: "Aceptar",
               },
             ],
             {
               cancelable: false,
             }
           );
-        } else {
-          Alert.alert("Error al registrar usuario.")
         }
-      } else {
-        Alert.alert(
-          "Usuario existente.",
-          "La cédula ingresada ya se encuentra registrada.",
-          [
-            {
-              text: "Aceptar",
-
-            },
-
-          ],
-          {
-
-            cancelable: false,
-          }
-        )
       }
-
     }
   };
 

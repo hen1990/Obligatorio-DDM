@@ -3,15 +3,13 @@ import MyText from "../../components/MyText"
 import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert } from "react-native";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const UsuarioBorrarTodo = ({ navigation }) => {
 
     const borrarUsuarios = async () => {
-        const readOnly = false;
-        await db.transactionAsync(async tx => {
-            databaseConection.deleteAllUser(tx)
-            console.log("borrada")
+        try {
+            await databaseConection.deleteAllUser();
+            console.log("borrada");
             Alert.alert(
                 "Exito",
                 "Usuarios eliminados!!!",
@@ -25,8 +23,11 @@ const UsuarioBorrarTodo = ({ navigation }) => {
                   cancelable: false,
                 }
               );
-        }, readOnly)
-    }
+        } catch (error) {
+            console.error("Error:", error);
+            Alert.alert("Error", "Error al eliminar usuarios");
+        }
+    };
 
     return (
 
@@ -73,7 +74,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     textDanger: {
-        textAlign: "Right",
         color: "red",
         fontSize: 40,
         textAlign: 'left',
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     texto: {
-        textAlign: "center",
         color: "black",
         fontSize: 20,
         textAlign: 'left',

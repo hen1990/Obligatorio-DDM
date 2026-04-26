@@ -5,7 +5,6 @@ import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const ViewUser = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
@@ -13,12 +12,13 @@ const ViewUser = ({ navigation }) => {
   const [rutinas, setRutinas] = useState([]);
 
   const getUserDB = async () => {
-    const readOnly = false;
-    let result = null;
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.getOneUser(tx, nombre + "%");
-    }, readOnly);
-    return result;
+    try {
+      const result = await databaseConection.getOneUser(nombre + "%");
+      return result;
+    } catch (error) {
+      console.error("Error:", error);
+      return { rows: [] };
+    }
   };
 
   const getUserData = async () => {
@@ -53,13 +53,14 @@ const ViewUser = ({ navigation }) => {
   }
 
   const buscarRutinas = async () => {
-    const readOnly = false;
-    let result = null
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.getOneRutina(tx, nombre + "%");
-    }, readOnly);
-    return result;
-  }
+    try {
+      const result = await databaseConection.getOneRutina(nombre + "%");
+      return result;
+    } catch (error) {
+      console.error("Error:", error);
+      return { rows: [] };
+    }
+  };
 
 
   const agruparRutinas = () => {

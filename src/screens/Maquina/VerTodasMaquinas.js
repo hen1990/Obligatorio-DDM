@@ -10,7 +10,6 @@ import {
 import MyText from "../../components/MyText";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const VerTodoMaquina = () => {
     // estado
@@ -43,23 +42,24 @@ const VerTodoMaquina = () => {
     }, []);
 
     const buscarMaquinas = async () => {
-        const readOnly = false;
-        let result = null;
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllMaquina(tx);
-        }, readOnly);
-        // seteara test
-        return result;
+        try {
+            const result = await databaseConection.getAllMaquina();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     };
 
     const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result;
-    }
+        try {
+            const result = await databaseConection.getAllTipoMaquina();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     const listItemView = (item) => {
         const tipoMaquina = listaTiposMaquinas.find(tipo => tipo.id == item.tipoMaquina);

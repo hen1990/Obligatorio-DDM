@@ -6,7 +6,6 @@ import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const ActualizarEjercicio = ({ navigation }) => {
     // estado para busqueda 
@@ -33,22 +32,24 @@ const ActualizarEjercicio = ({ navigation }) => {
     }, []);
 
     const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getAllTipoMaquina();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     const searchDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneEjercicio(tx, buscarNombre + "%");
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getOneEjercicio(buscarNombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Buscar ejercicio
     const buscarEjercicio = async () => {
@@ -104,13 +105,14 @@ const ActualizarEjercicio = ({ navigation }) => {
     }
 
     const updateEjercicioDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateEjercicio(tx, nombre, tipoMaquina, videoUrl, id);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.updateEjercicio(nombre, tipoMaquina, id);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
+    };
 
     const renderizarListaTiposMaquinas = () => {
         //Agrego atributo "Sin Maquina" a la lista

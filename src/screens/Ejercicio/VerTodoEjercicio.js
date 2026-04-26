@@ -5,7 +5,6 @@ import { StyleSheet, SafeAreaView, FlatList, View, Alert, Text, Image, Linking, 
 import MyText from "../../components/MyText";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const VerTodoEjercicio = () => {
     // estados
@@ -26,12 +25,13 @@ const VerTodoEjercicio = () => {
     }, []);
 
     const buscarEjercicios = async () => {
-        const readOnly = false;
-        let result = null;
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllEjercicio(tx);
-        }, readOnly);
-        return result;
+        try {
+            const result = await databaseConection.getAllEjercicio();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     };
 
     const OpenURLButton = ({ url, children }) => {

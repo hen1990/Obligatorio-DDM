@@ -5,7 +5,6 @@ import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const EliminarRutina = ({ navigation }) => {
     // Definir los estados.
@@ -14,12 +13,13 @@ const EliminarRutina = ({ navigation }) => {
     const [rutinas, setRutinas] = useState([]);
 
     const getUserDB = async () => {
-        const readOnly = false;
-        let result = null;
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneUser(tx, nombre + "%");
-        }, readOnly);
-        return result;
+        try {
+            const result = await databaseConection.getOneUser(nombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     };
 
     const getUserData = async () => {
@@ -83,13 +83,13 @@ const EliminarRutina = ({ navigation }) => {
     };
 
     const eliminarRutinasDB = async (id) => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.deleteRutina(tx, id);
-        }, readOnly);
-
-        return result
+        try {
+            const result = await databaseConection.deleteRutina(id);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
     };
 
     const cargarRutinas = async () => {
@@ -104,13 +104,14 @@ const EliminarRutina = ({ navigation }) => {
     }
 
     const buscarRutinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneRutina(tx, nombre + "%");
-        }, readOnly);
-        return result;
-    }
+        try {
+            const result = await databaseConection.getOneRutina(nombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Función para renderizar cada elemento de la lista
     const listItemView = (item) => {
@@ -176,9 +177,7 @@ const EliminarRutina = ({ navigation }) => {
                             contentContainerStyle={styles.flatContainer}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => listItemView(item)}
-                        >
-                            ""
-                        </FlatList>
+                        />
                     ) : (
                         <View style={styles.empty}></View>
                     )}

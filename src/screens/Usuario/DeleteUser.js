@@ -5,7 +5,6 @@ import MySingleButton from "../../components/MySingleButton"
 import MyText from "../../components/MyText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const DeleteUser = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
@@ -33,22 +32,24 @@ const DeleteUser = ({ navigation }) => {
   };
   
   const getUserDB = async () => {
-    const readOnly = false;
-    let result = null;
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.getOneUser(tx, nombre + "%");
-    }, readOnly);
-    return result;
+    try {
+      const result = await databaseConection.getOneUser(nombre + "%");
+      return result;
+    } catch (error) {
+      console.error("Error:", error);
+      return { rows: [] };
+    }
   };
 
   const deleteUserDB = async (id) => {
-    const readOnly = false;
-    let result = null
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.deleteUser(tx, id);
-    }, readOnly);
-    return result
-  }
+    try {
+      const result = await databaseConection.deleteUser(id);
+      return result;
+    } catch (error) {
+      console.error("Error:", error);
+      return { rowsAffected: 0 };
+    }
+  };
 
   const deleteUser = async (id) => {
     // TODO hacer funcionalidad de borrado

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { StyleSheet, SafeAreaView, FlatList, View, Text } from "react-native";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const VerTodoRutina = () => {
   // estado
@@ -24,14 +23,15 @@ const VerTodoRutina = () => {
 
 
   const buscarRutinas = async () => {
-    const readOnly = false;
-    let result = null
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.getAllRutinas(tx);
-    }, readOnly);
-    console.log(result);
-    return result;
-  }
+    try {
+      const result = await databaseConection.getAllRutina();
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error("Error:", error);
+      return { rows: [] };
+    }
+  };
 
   const agruparRutinas = () => {
     const grupos = {};

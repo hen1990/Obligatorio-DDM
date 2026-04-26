@@ -5,7 +5,6 @@ import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const EliminarMaquina = ({ navigation }) => {
     // estado para busqueda 
@@ -14,13 +13,14 @@ const EliminarMaquina = ({ navigation }) => {
     const [maquinas, setMaquinas] = useState([]);
 
     const searchDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneMaquina(tx, buscarNombre + "%");
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getOneMaquina(buscarNombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Buscar maquina
     const buscarMaquina = async () => {
@@ -82,13 +82,14 @@ const EliminarMaquina = ({ navigation }) => {
     }
 
     const deleteMaquinaDB = async (id) => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.deleteMaquina(tx, id);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.deleteMaquina(id);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
+    };
 
     const listItemView = (item) => {
         return (

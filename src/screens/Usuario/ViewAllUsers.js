@@ -3,26 +3,25 @@ import { StyleSheet, SafeAreaView, FlatList, View, Text } from "react-native";
 import MyText from "../../components/MyText";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const ViewAllUsers = () => {
   // estado
   const [users, setUsers] = useState([]);
 
   const getUsersDB = async () => {
-    const readOnly = false;
-    let result = null;
-    await db.transactionAsync(async (tx) => {
-      result = await databaseConection.getAllUsers(tx);
-    }, readOnly);
-    // seteara test
-    return result;
+    try {
+      const result = await databaseConection.getAllUsers();
+      return result;
+    } catch (error) {
+      console.error("Error obteniendo usuarios:", error);
+      return { rows: [] };
+    }
   };
 
   useEffect(() => {
     const loadUser = async () => {
         const res = await getUsersDB()
-        if(res.rows.length > 0) {
+        if(res && res.rows && res.rows.length > 0) {
             let elements = []
             for(let i=0; i < res.rows.length; i++) {
                 elements.push(res.rows[i])

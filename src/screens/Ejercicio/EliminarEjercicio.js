@@ -5,7 +5,6 @@ import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const EliminarEjercicio = ({ navigation }) => {
     // estado para busqueda 
@@ -14,13 +13,14 @@ const EliminarEjercicio = ({ navigation }) => {
     const [ejercicio, setEjercicio] = useState([]);
 
     const searchDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneEjercicio(tx, buscarNombre + "%");
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getOneEjercicio(buscarNombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Buscar ejercicio
     const buscarMaquina = async () => {
@@ -83,13 +83,14 @@ const EliminarEjercicio = ({ navigation }) => {
     }
 
     const deleteEjercicioDB = async (id) => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.deleteEjercicio(tx, id);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.deleteEjercicio(id);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
+    };
 
     const buttonColor = Platform.select({
         ios: 'orange',

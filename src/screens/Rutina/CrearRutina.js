@@ -6,7 +6,6 @@ import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const CrearRutina = ({ navigation }) => {
     // Definir los estados.
@@ -47,22 +46,24 @@ const CrearRutina = ({ navigation }) => {
     }, []);
 
     const buscarUsuarios = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllUsers(tx);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getAllUsers();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     const buscarEjercicios = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllEjercicio(tx);
-        }, readOnly);
-        return result
-    }
+        try {
+            const result = await databaseConection.getAllEjercicio();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
+    };
 
     // Validar Datos
     const validateData = () => {
@@ -95,13 +96,14 @@ const CrearRutina = ({ navigation }) => {
     }
 
     const guardarRutina = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.createRutina(tx, dia, usuarioCi, ejercicioId, series, repeticiones);
-        }, readOnly);
-
-        return result
+        try {
+            const nombreRutina = `${dia} - ${usuarioCi}`;
+            const result = await databaseConection.createRutina(nombreRutina, ejercicioId);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
     };
 
     // funcion que se encargue de guardar los datos.

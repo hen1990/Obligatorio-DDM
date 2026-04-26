@@ -34,22 +34,23 @@ const ActualizarMaquina = ({ navigation }) => {
     }, []);
 
     const buscarTiposMaquinas = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getAllTipoMaquina(tx);
-        }, readOnly);
-        return result
+        try {
+            const result = await databaseConection.getAllTipoMaquina();
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     }
 
     const searchDB = async () => {
-        const readOnly = false;
-        let result = null
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.getOneMaquina(tx, buscarNombre + "%");
-        }, readOnly);
-        console.log(result)
-        return result
+        try {
+            const result = await databaseConection.getOneMaquina(buscarNombre + "%");
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rows: [] };
+        }
     }
 
     // Buscar maquina
@@ -85,8 +86,8 @@ const ActualizarMaquina = ({ navigation }) => {
             Alert.alert("Ingresar número de sala.");
             return false;
         } else {
-            for (i = 0; i < sala.length; i++) {
-                var code = sala.charCodeAt(i);
+            for (let i = 0; i < sala.length; i++) {
+                const code = sala.charCodeAt(i);
                 if (code < 48 || code > 57) {
                     Alert.alert("Sala: Ingrese solo números.");
                     return false;
@@ -118,14 +119,14 @@ const ActualizarMaquina = ({ navigation }) => {
     }
 
     const updateMaquinaDB = async () => {
-        const readOnly = false;
-        let result = null
-        
-        console.log(tipoMaquina)
-        await db.transactionAsync(async (tx) => {
-            result = await databaseConection.updateMaquina(tx, tipoMaquina, sala, id);
-        }, readOnly);
-        return result
+        try {
+            console.log(tipoMaquina)
+            const result = await databaseConection.updateMaquina(tipoMaquina, sala, id);
+            return result;
+        } catch (error) {
+            console.error("Error:", error);
+            return { rowsAffected: 0 };
+        }
     }
 
     const renderizarListaTiposMaquinas = () => {

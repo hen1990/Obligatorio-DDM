@@ -3,14 +3,12 @@ import MyText from "../../components/MyText"
 import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert } from "react-native";
 
 import databaseConection from "../../database/database-manager";
-const db = databaseConection.getConnection();
 
 const EliminarTodoEjercicio = ({ navigation }) => {
 
     const borrarEjercicios = async () => {
-        const readOnly = false;
-        await db.transactionAsync(async tx => {
-            databaseConection.deleteAllEjercicio(tx)
+        try {
+            await databaseConection.deleteAllEjercicio();
             Alert.alert(
                 "Exito",
                 "Ejercicios eliminados!!!",
@@ -24,8 +22,11 @@ const EliminarTodoEjercicio = ({ navigation }) => {
                   cancelable: false,
                 }
               );
-        }, readOnly)
-    }
+        } catch (error) {
+            console.error("Error:", error);
+            Alert.alert("Error", "Error al eliminar ejercicios");
+        }
+    };
 
     return (
 
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     textDanger: {
-        textAlign: "Right",
         color: "red",
         fontSize: 40,
         textAlign: 'left',
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     texto: {
-        textAlign: "center",
         color: "black",
         fontSize: 20,
         textAlign: 'left',
