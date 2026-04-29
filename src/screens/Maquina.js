@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import {SafeAreaView, View, StyleSheet, ScrollView} from "react-native"
 import MyButton from "../components/MyButton"
+import { globalStyles } from "./globalStyles"
 import databaseConection from "../database/database-manager"
 import OpenDatabase from "../database/import-database"
 
@@ -12,13 +13,14 @@ const Maquina = ({ navigation }) => {
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
-                        <ScrollView style={styles.scollview}>
+                        <ScrollView style={[styles.scollview, globalStyles.standardPadding]}>
                             {/* Agregar Maquina*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("CrearMaquina")} 
                                 title="◽ Agregar" 
                                 iconName="user-plus" 
                                 btnColor="green"
+                                style={globalStyles.btnSmall}
                             />
                             
                             {/* Actualizar Maquina */}
@@ -27,6 +29,7 @@ const Maquina = ({ navigation }) => {
                                 title="◽ Actualizar" 
                                 iconName="user-circle" 
                                 btnColor="green"
+                                style={globalStyles.btnSmall}
                             />
 
                               {/*Eliminar maquina*/}
@@ -35,6 +38,7 @@ const Maquina = ({ navigation }) => {
                                 title="◽ Borrar" 
                                 iconName="user-times" 
                                 btnColor="green"
+                                style={globalStyles.btnSmall}
                             />
 
                             {/* Ver todos maquina*/}
@@ -43,6 +47,7 @@ const Maquina = ({ navigation }) => {
                                 title="◽ Ver" 
                                 iconName="user-times" 
                                 btnColor="green"
+                                style={globalStyles.btnSmall}
                             />
 
                              {/* borrar todos maquinas*/}
@@ -51,6 +56,7 @@ const Maquina = ({ navigation }) => {
                                 title="◽ Borrar todos!" 
                                 iconName="user-times" 
                                 btnColor="red"
+                                style={globalStyles.btnSmall}
                             />
 
                         </ScrollView>
@@ -83,7 +89,6 @@ const styles = StyleSheet.create({
     scollview: {
         flex:1,
         flexDirection: "column",
-        padding:10,
         margin: 0
     }
 })

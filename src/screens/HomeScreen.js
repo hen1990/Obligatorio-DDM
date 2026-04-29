@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native"
 import MyButton from "../components/MyButton"
+import { globalStyles } from "./globalStyles"
 import databaseConection from "../database/database-manager"
 import OpenDatabase from "../database/import-database"
 
@@ -11,6 +12,9 @@ const HomeScreen = ({ navigation }) => {
                 console.log("Inicializando base de datos...");
                 
                 // Crear tablas
+                await databaseConection.crearTablaRol();
+                console.log("Tabla rol creada");
+
                 await databaseConection.createUserTable();
                 console.log("Tabla usuarios creada");
                 
@@ -22,9 +26,36 @@ const HomeScreen = ({ navigation }) => {
                 
                 await databaseConection.crearTablaEjercicio();
                 console.log("Tabla ejercicio creada");
+
+                await databaseConection.crearTablaTipoEjercicio();
+                console.log("Tabla tipo_ejercicio creada");
+
+                await databaseConection.crearTablaEjercicioTipoRelacion();
+                console.log("Tabla ejercicio_tipo_relacion creada");
                 
+                await databaseConection.crearTablaTipoRutina();
+                console.log("Tabla tipo_rutina creada");
+
                 await databaseConection.crearTablaRutina();
                 console.log("Tabla rutina creada");
+
+                await databaseConection.crearTablaPrograma();
+                console.log("Tabla programa creada");
+
+                await databaseConection.crearTablaRutinaEjercicio();
+                console.log("Tabla rutina_ejercicio creada");
+
+                await databaseConection.migrarRutinasAEjercicios();
+
+                await databaseConection.crearTablaUsuarioRutinaEjercicioOverride();
+                console.log("Tabla usuario_rutina_ejercicio_override creada");
+
+                // Insertamos los roles iniciales si la tabla está vacía
+                const roles = await databaseConection.getAllRoles();
+                if (roles.rows.length === 0) {
+                    await databaseConection.agregarRoles();
+                    console.log("Roles iniciales agregados");
+                }
 
                 const users = await databaseConection.getAllUsers();
                 if (users.rows.length === 0) {
@@ -32,13 +63,10 @@ const HomeScreen = ({ navigation }) => {
                     await databaseConection.agregarUsuarios();
                     console.log("Usuarios agregados");
                 }
-
-                const tiposMaquina = await databaseConection.getAllTipoMaquina();
-                if (tiposMaquina.rows.length === 0) {
-                    console.log("Agregando tipos de máquina iniciales...");
-                    await databaseConection.agregarTipoMaquina();
-                    console.log("Tipos de máquina agregados");
-                }
+                
+                // Sembrado masivo de datos si la base de datos está vacía (excepto usuarios)
+                await databaseConection.seedDatabaseInicial();
+                
             } catch (error) {
                 console.error("Error inicializando BD:", error);
             }
@@ -52,13 +80,22 @@ const HomeScreen = ({ navigation }) => {
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
-                        <ScrollView style={styles.scollview}>
+                        <ScrollView style={[styles.scollview, globalStyles.standardPadding]}>
+                            {/* button Roles*/}
+                            <MyButton
+                                onPress={() => navigation.navigate("Rol")}
+                                title="◽ Roles"
+                                iconName="user-tag"
+                                btnColor="#795548"
+                                style={globalStyles.btnSmall}
+                            />
                             {/* button Usuario*/}
                             <MyButton
                                 onPress={() => navigation.navigate("Usuario")}
                                 title="◽ Usuarios"
                                 iconName="user-plus"
                                 btnColor="#AFB42B"
+                                style={globalStyles.btnSmall}
                             />
                             {/* button Tipo Maquina*/}
                             <MyButton
@@ -66,6 +103,7 @@ const HomeScreen = ({ navigation }) => {
                                 title="◽ Tipos de Maquinas"
                                 iconName="user-plus"
                                 btnColor="#689F38"
+                                style={globalStyles.btnSmall}
                             />
 
                             {/* button Maquina*/}
@@ -74,6 +112,7 @@ const HomeScreen = ({ navigation }) => {
                                 title="◽ Maquinas"
                                 iconName="user-plus"
                                 btnColor="green"
+                                style={globalStyles.btnSmall}
                             />
 
                             {/* button Rutina*/}
@@ -82,6 +121,7 @@ const HomeScreen = ({ navigation }) => {
                                 title="◽ Rutinas"
                                 iconName="user-plus"
                                 btnColor="#00838F"
+                                style={globalStyles.btnSmall}
                             />
 
                             {/* button Ejercicio*/}
@@ -90,6 +130,7 @@ const HomeScreen = ({ navigation }) => {
                                 title="◽ Ejercicios"
                                 iconName="user-plus"
                                 btnColor="#673AB7"
+                                style={globalStyles.btnSmall}
                             />
                         </ScrollView>
                     </View>

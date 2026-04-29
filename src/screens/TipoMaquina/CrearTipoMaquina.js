@@ -13,6 +13,7 @@ import {
 // importar inputs
 import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
+import { globalStyles } from "../globalStyles";
 
 import databaseConection from "../../database/database-manager";
 const db = databaseConection.getConnection();
@@ -80,20 +81,18 @@ const CrearTipoMaquina = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
 
-                            <Text style={styles.texto}>Tipo de Máquina</Text>
+                            <Text style={globalStyles.label}>Tipo de Máquina</Text>
                             {/* Nombre */}
                             <MyInputText
-                                placeholder="Nombre"
+                                placeholder="Ingrese el nombre"
                                 onChangeText={setNombre}
-                                style={styles.input}
                                 value={nombre}
                             />
-                            <Text style={styles.texto}>URL de la Imágen</Text>
+                            <Text style={globalStyles.label}>URL de la Imágen</Text>
                             {/* URL de imagen */}
                             <MyInputText
-                                placeholder="URL de la imágen"
+                                placeholder="Ingrese la URL de la imagen"
                                 onChangeText={setFotoUrl}
-                                style={styles.input}
                                 value={fotoUrl}
                             />
                             {/*Presentacion de la FOTO*/}

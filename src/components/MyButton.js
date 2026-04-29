@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 // import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-const MyButton = ({onPress, title, iconName, btnColor}) => {
+const MyButton = ({onPress, title, iconName, btnColor, style}) => {
     console.log("params",title, iconName, btnColor )
     return (
-        <TouchableOpacity style={[styles.button, {backgroundColor: btnColor}]} onPress={onPress}>
+        <TouchableOpacity style={[styles.button, {backgroundColor: btnColor}, style]} onPress={onPress}>
             <View style={styles.view}>
                 {/* <FontAwesome style={styles.icon} name={iconName} size="40" color="white" /> */}
                 <Text style={styles.text}>
@@ -21,31 +21,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingLeft: 30,
     },
-    button: {
-        flex: 1,
-        color: "white",
-        padding: 30,
-        marginTop: 20,
-        marginBottom: 15,
-        marginLeft: 25,
-        marginRight: 25,
-        borderRadius:5,
-        height:120
-    },
-    /*
-    button: {
-        flex: 1,
-        color: "white",
-        paddingLeft: 50,
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        borderRadius:0,
-        borderBlockColor: "white",
-        borderWidth: 0,
-        height:120
-    },*/
     text: {
         color: "white",
         fontSize: 20,

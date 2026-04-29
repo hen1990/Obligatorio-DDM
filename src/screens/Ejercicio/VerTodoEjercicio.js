@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
-import React, { useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, SafeAreaView, FlatList, View, Alert, Text, Image, Linking, Button, Platform } from "react-native";
-//import Video, { VideoRef } from 'react-native';
 import MyText from "../../components/MyText";
 
 import databaseConection from "../../database/database-manager";
@@ -34,38 +32,41 @@ const VerTodoEjercicio = () => {
         }
     };
 
+    const handlePreview = useCallback(async (url) => {
+        console.log('handlePreview called with URL:', url);
+
+        if (!url?.toString().trim()) {
+            Alert.alert(`No hay video para mostrar en este ejercicio`);
+            return;
+        }
+
+        // Para una experiencia más confiable, abrimos el video directamente en el navegador
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            Alert.alert(`No se pudo abrir la URL: "${url}"`);
+        }
+    }, []);
+
     const OpenURLButton = ({ url, children }) => {
-        const handlePress = useCallback(async () => {
-            if (url.toString().trim()) {
-                const supported = await Linking.canOpenURL(url);
-
-                if (supported) {
-                    await Linking.openURL(url);
-                } else {
-                    Alert.alert(`No se pudo abrir la siguiente URL: "${url}"`);
-                }
-            } else {
-                Alert.alert(`No hay video para mostrar en este ejericio`);
-            }
-        }, [url]);
-
         const buttonColor = Platform.select({
             ios: '#673AB7',
             android: '#673AB7'
         });
 
-        return <Button title={children} onPress={handlePress} color={buttonColor} />;
+        return <Button title={children} onPress={() => handlePreview(url)} color={buttonColor} />;
     };
 
 
 
     const listItemView = (item) => {
         return (
-            <View key={item.id_ejercicio} style={styles.listItemView}>
+            <View style={styles.listItemView}>
                 <View style={styles.textContainer}>
-                    <MyText text={item.nom_ejercicio} style={styles.text_data} />
-                    {item.nombre ? (
-                        <MyText text={`Máquina: ${item.nombre}`} style={styles.text_data} />
+                    <MyText text={item.nombre} style={styles.text_data} />
+                    {item.maquina ? (
+                        <MyText text={`Máquina: ${item.maquina}`} style={styles.text_data} />
                     ) : (
                         <MyText text="Sin máquina" style={styles.text_data} />
                     )}
@@ -98,7 +99,7 @@ const VerTodoEjercicio = () => {
                 <FlatList
                     data={ejercicio}
                     contentContainerStyle={styles.flatContainer}
-                    keyExtractor={(item) => item.id_ejercicio.toString()}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => listItemView(item)}
                 />
             ) : (

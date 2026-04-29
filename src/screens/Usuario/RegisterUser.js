@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,12 +7,15 @@ import {
   Alert,
   View,
   Text,
-  Button,
+  Platform,
+  TouchableOpacity,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 // importar inputs
 import MyInputText from "../../components/MyInputText";
-import MySingleButton from "../../components/MySingleButton";
-
+import MyButton from "../../components/MyButton";
+import { globalStyles } from "../globalStyles";
 import databaseConection from "../../database/database-manager";
 
 const RegisterUser = ({ navigation }) => {
@@ -20,21 +23,37 @@ const RegisterUser = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [ci, setCi] = useState("");
-  const [dia, setDia] = useState("")
-  const [mes, setMes] = useState("")
-  const [anio, setAnio] = useState("")
-  const [fechaNac, setFechaNac] = useState("")
-  const anioActual = new Date().getFullYear();
+  
+  // Estados para Fecha y Roles
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [rolId, setRolId] = useState("");
+
+  useEffect(() => {
+    const loadRoles = async () => {
+      const res = await databaseConection.getAllRoles();
+      setRoles(res.rows);
+      if (res.rows.length > 0) {
+        setRolId(res.rows[0].id);
+      }
+    };
+    loadRoles();
+  }, []);
+
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
 
   // funcion de borrar los estados
   const clearData = () => {
     setNombre("");
     setApellido("");
     setCi("");
-    setFechaNac("");
-    setDia("");
-    setMes("");
-    setAnio("");
+    setRolId(roles.length > 0 ? roles[0].id : "");
+    setDate(new Date());
   };
 
   // Validar datos
@@ -65,65 +84,9 @@ const RegisterUser = ({ navigation }) => {
         }
       }
     }
-    //Dia
-    if (!dia.trim()) {
-      Alert.alert("Ingresar dia.");
-      return false;
-    } else {
-      for (let i = 0; i < dia.length; i++) {
-        const code = dia.charCodeAt(i);
-        if (code < 48 || code > 57) {
-          Alert.alert("Ingrese solo números.");
-          return false;
-        } else if (dia.length != 2) {
-          Alert.alert("Día debe contener 2 dígitos.");
-          return false;
-        } else if (dia < 1 || dia > 31) {
-          Alert.alert("Día fuera de rango.");
-          return false;
-        }
-      }
-    }
-    //Mes
-    if (!mes.trim()) {
-      Alert.alert("Ingresar mes.");
-      return false;
-    } else {
-      for (let i = 0; i < mes.length; i++) {
-        const code = mes.charCodeAt(i);
-        if (code < 48 || code > 57) {
-          Alert.alert("Ingrese solo números.");
-          return false;
-        } else if (mes.length != 2) {
-          Alert.alert("Mes debe contener 2 dígitos.");
-          return false;
-        } else if (mes < 1 || mes > 12) {
-          Alert.alert("Mes fuera de rango.");
-          return false;
-        }
-      }
-    }
-    //Año
-    if (!anio.trim()) {
-      Alert.alert("Ingresar año.");
-      return false;
-    } else {
-      for (let i = 0; i < anio.length; i++) {
-        const code = anio.charCodeAt(i);
-        if (code < 48 || code > 57) {
-          Alert.alert("Ingrese solo números.");
-          return false;
-        } else if (anio.length != 4) {
-          Alert.alert("Año debe contener 4 dígitos.");
-          return false;
-        } else if (anio < 1900 || anio > anioActual) {
-          Alert.alert("Año fuera de rango.");
-          return false;
-        }
-      }
-    }
-    if (!nombre.trim()) {
-      Alert.alert("Ingresr nombre.");
+    //Rol
+    if (!rolId) {
+      Alert.alert("Debe seleccionar un rol.");
       return false;
     }
     return true;
@@ -141,8 +104,9 @@ const RegisterUser = ({ navigation }) => {
 
   const saveUser = async () => {
     try {
-      const fechaNacLocal = `${dia}/${mes}/${anio}`;
-      const result = await databaseConection.createUser(nombre, apellido, ci, fechaNacLocal);
+      // Formato DD/MM/AAAA
+      const fechaNacLocal = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+      const result = await databaseConection.createUser(nombre, apellido, ci, fechaNacLocal, rolId);
       return result;
     } catch (error) {
       Alert.alert("Error al guardar usuario");
@@ -198,70 +162,69 @@ const RegisterUser = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.viewContainer}>
         <View style={styles.generalView}>
-          <ScrollView>
-            <KeyboardAvoidingView style={styles.keyboard}>
+          <ScrollView contentContainerStyle={globalStyles.standardPadding}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboard}>
 
-              <Text style={styles.texto}>Nombre</Text>
-              {/* Nombre */}
+              <Text style={globalStyles.label}>Nombre *</Text>
               <MyInputText
-                placeholder="Nombre"
+                placeholder="Ingrese el nombre"
                 onChangeText={setNombre}
-                style={styles.input}
                 value={nombre}
               />
-              <Text style={styles.texto}>Apellido</Text>
-              {/* Apellido */}
+
+              <Text style={globalStyles.label}>Apellido *</Text>
               <MyInputText
-                placeholder="Apellido"
+                placeholder="Ingrese el apellido"
                 onChangeText={setApellido}
-                style={styles.input}
                 value={apellido}
               />
 
-              <Text style={styles.texto}>Cédula</Text>
-              {/* Cedula */}
+              <Text style={globalStyles.label}>Cédula *</Text>
               <MyInputText
-                placeholder="Cédula (Sin puntos ni guión)"
+                placeholder="12345678"
                 onChangeText={setCi}
                 maxLength={8}
                 keyboardType="numeric"
-                style={styles.input}
                 value={ci}
               />
-              <Text style={styles.texto}>Fecha de Nacimiento:</Text>
-              <View style={styles.enLinea}>
-                {/* Fecha */}
-                {/* Dia */}
-                <MyInputText
-                  placeholder="Dia"
-                  onChangeText={setDia}
-                  maxLength={2}
-                  keyboardType="numeric"
-                  style={styles.inputFecha}
-                  value={dia}
-                />
-                {/* Mes */}
-                <MyInputText
-                  placeholder="Mes"
-                  onChangeText={setMes}
-                  maxLength={2}
-                  keyboardType="numeric"
-                  style={styles.inputFecha}
-                  value={mes}
-                />
-                {/* Año */}
-                <MyInputText
-                  placeholder="Año"
-                  onChangeText={setAnio}
-                  maxLength={4}
-                  keyboardType="numeric"
-                  style={styles.inputFecha}
-                  value={anio}
-                />
 
+              <Text style={globalStyles.label}>Fecha de Nacimiento *</Text>
+              <TouchableOpacity style={globalStyles.dateButton} onPress={() => setShowDatePicker(true)}>
+                <Text style={globalStyles.dateText}>
+                  {`${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`}
+                </Text>
+              </TouchableOpacity>
+
+              {showDatePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeDate}
+                  maximumDate={new Date()}
+                />
+              )}
+
+              <Text style={globalStyles.label}>Rol *</Text>
+              <View style={globalStyles.pickerContainer}>
+                <Picker
+                  selectedValue={rolId}
+                  onValueChange={(itemValue) => setRolId(itemValue)}
+                >
+                  {roles.map((rol) => (
+                    <Picker.Item key={rol.id} label={rol.nombre} value={rol.id} />
+                  ))}
+                </Picker>
               </View>
-              {/* button */}
-              <MySingleButton onPress={registerUser} title={"Guardar"} />
+
+              <Text style={globalStyles.legend}>* Campos obligatorios</Text>
+
+              <MyButton 
+                onPress={registerUser} 
+                title="◽ Guardar" 
+                btnColor="#AFB42B"
+                style={globalStyles.btnSmall}
+              />
             </KeyboardAvoidingView>
           </ScrollView>
         </View>
@@ -273,40 +236,17 @@ const RegisterUser = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 30,
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: "#fcfceb",
+    backgroundColor: "#ecf8e8",
   },
   generalView: {
     flex: 1,
-    marginTop: 30,
   },
   keyboard: {
     flex: 1,
     justifyContent: "space-between",
-  },
-  input: {
-    padding: 0,
-    height: 20,
-  },
-  enLinea: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputFecha: {
-    padding: 0,
-    margin: 0,
-    height: 20,
-    textAlign: "center",
-    justifyContent: "center",
-  },
-  texto: {
-    fontSize: 18,
-    textAlign: 'left',
-    marginLeft: 50,
-    marginTop: 8
   },
 });
 

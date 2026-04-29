@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import {SafeAreaView, View, StyleSheet, ScrollView} from "react-native"
 import MyButton from "../components/MyButton"
+import { globalStyles } from "./globalStyles"
 import databaseConection from "../database/database-manager"
 import OpenDatabase from "../database/import-database"
 
@@ -12,13 +13,14 @@ const Ejercicio = ({ navigation }) => {
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
-                        <ScrollView style={styles.scollview}>
+                        <ScrollView style={[styles.scollview, globalStyles.standardPadding]}>
                             {/* Agregar Rutina*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("CrearRutina")} 
                                 title="◽ Agregar" 
                                 iconName="user-plus" 
                                 btnColor="#00838F"
+                                style={globalStyles.btnSmall}
                             />
                             
                             {/* Actualizar Rutina */}
@@ -27,6 +29,7 @@ const Ejercicio = ({ navigation }) => {
                                 title="◽ Actualizar" 
                                 iconName="user-circle" 
                                 btnColor="#00838F"
+                                style={globalStyles.btnSmall}
                             />
 
                               {/*Eliminar Rutina*/}
@@ -35,6 +38,7 @@ const Ejercicio = ({ navigation }) => {
                                 title="◽ Borrar" 
                                 iconName="user-times" 
                                 btnColor="#00838F"
+                                style={globalStyles.btnSmall}
                             />
 
                             {/* Ver todos Rutinas*/}
@@ -43,6 +47,7 @@ const Ejercicio = ({ navigation }) => {
                                 title="◽ Ver" 
                                 iconName="user-times" 
                                 btnColor="#00838F"
+                                style={globalStyles.btnSmall}
                             />
 
                              {/* borrar todos Rutinas*/}
@@ -51,6 +56,7 @@ const Ejercicio = ({ navigation }) => {
                                 title="◽ Borrar todos!" 
                                 iconName="user-times" 
                                 btnColor="red"
+                                style={globalStyles.btnSmall}
                             />
 
                         </ScrollView>
@@ -83,7 +89,6 @@ const styles = StyleSheet.create({
     scollview: {
         flex:1,
         flexDirection: "column",
-        padding:10,
         margin: 0
     }
 })

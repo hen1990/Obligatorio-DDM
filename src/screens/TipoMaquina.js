@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import {SafeAreaView, View, StyleSheet, ScrollView} from "react-native"
 import MyButton from "../components/MyButton"
+import { globalStyles } from "./globalStyles"
 import databaseConection from "../database/database-manager"
 import OpenDatabase from "../database/import-database"
 
@@ -12,13 +13,14 @@ const TipoMaquina = ({ navigation }) => {
             <View style={styles.viewContainer}>
                 <View style={styles.generalView}>
                     <View style={styles.internalView}>
-                        <ScrollView style={styles.scollview}>
+                        <ScrollView style={[styles.scollview, globalStyles.standardPadding]}>
                             {/* Agregar Tipo Maquina*/}
                             <MyButton 
                                 onPress={() => navigation.navigate("CrearTipoMaquina")} 
                                 title="◽ Agregar" 
                                 iconName="user-plus" 
                                 btnColor="#689F38"
+                                style={globalStyles.btnSmall}
                             />
                             
                             {/* Actualizar tipo Maquina */}
@@ -27,6 +29,7 @@ const TipoMaquina = ({ navigation }) => {
                                 title="◽ Actualizar" 
                                 iconName="user-circle" 
                                 btnColor="#689F38"
+                                style={globalStyles.btnSmall}
                             />
 
                               {/*Eliminar tipo de maquina*/}
@@ -35,6 +38,7 @@ const TipoMaquina = ({ navigation }) => {
                                 title="◽ Borrar" 
                                 iconName="user-times" 
                                 btnColor="#689F38"
+                                style={globalStyles.btnSmall}
                             />
 
                             {/* Ver todos tipos de maquina*/}
@@ -43,6 +47,7 @@ const TipoMaquina = ({ navigation }) => {
                                 title="◽ Ver" 
                                 iconName="user-times" 
                                 btnColor="#689F38"
+                                style={globalStyles.btnSmall}
                             />
 
                              {/* borrar todos tipos de maquinas*/}
@@ -51,6 +56,7 @@ const TipoMaquina = ({ navigation }) => {
                                 title="◽ Borrar todos!" 
                                 iconName="user-times" 
                                 btnColor="red"
+                                style={globalStyles.btnSmall}
                             />
 
                         </ScrollView>
@@ -84,7 +90,6 @@ const styles = StyleSheet.create({
     scollview: {
         flex:1,
         flexDirection: "column",
-        padding:10,
         margin: 0
     }
 })

@@ -401,7 +401,10 @@ const styles = StyleSheet.create({
         height: 40,
     },
     boton: {
-        marginBottom: 10,
+        marginVertical: 5,
+        marginHorizontal: 20,
+        borderRadius: 12,
+        minHeight: 45,
     },
     emptyText: {
         margin: 30,

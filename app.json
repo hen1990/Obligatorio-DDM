@@ -24,15 +24,13 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       "expo-asset",
-      "expo-sqlite"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+      "expo-sqlite",
+      "expo-web-browser"
+    ]
   }
 }

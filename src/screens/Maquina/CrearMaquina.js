@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
+import { globalStyles } from "../globalStyles";
 
 import databaseConection from "../../database/database-manager";
 
@@ -110,9 +111,9 @@ const CrearMaquina = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
 
-                            <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
+                            <Text style={globalStyles.label}>Selecciona el tipo de Máquina</Text>
                             {/* Tipo Maquina Lista*/}
-                            <View style={styles.picker}>
+                            <View style={globalStyles.pickerContainer}>
                                 <Picker
                                     selectedValue={tipoMaquina}
                                     style={{ height: 100, width: "100%" }}
@@ -122,13 +123,12 @@ const CrearMaquina = ({ navigation }) => {
                                     {renderizarListaTiposMaquinas()}
                                 </Picker>
                             </View>
-                            <Text style={styles.texto}>Número de Sala</Text>
+                            <Text style={globalStyles.label}>Número de Sala</Text>
                             {/* Sala */}
                             <MyInputText
-                                placeholder="Número de Sala"
+                                placeholder="Ingrese el número de sala"
                                 onChangeText={setSala}
                                 keyboardType="numeric"
-                                style={styles.input}
                                 value={sala}
                             />
 

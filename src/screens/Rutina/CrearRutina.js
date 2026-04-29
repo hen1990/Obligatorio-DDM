@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
+import { globalStyles } from "../globalStyles";
 
 import databaseConection from "../../database/database-manager";
 
@@ -152,8 +153,8 @@ const CrearRutina = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
                             {/* Usuario Lista*/}
-                            <Text style={styles.texto}>Seleccionar Usuario</Text>
-                            <View style={styles.picker}>
+                            <Text style={globalStyles.label}>Seleccionar Usuario</Text>
+                            <View style={globalStyles.pickerContainer}>
                                 <Picker
                                     selectedValue={usuarioCi}
                                     style={{ height: 100, width: "100%" }}
@@ -165,8 +166,8 @@ const CrearRutina = ({ navigation }) => {
                             </View>
 
                             {/* Ejercicio Lista*/}
-                            <Text style={styles.texto}>Seleccionar Ejercicio</Text>
-                            <View style={styles.picker}>
+                            <Text style={globalStyles.label}>Seleccionar Ejercicio</Text>
+                            <View style={globalStyles.pickerContainer}>
                                 <Picker
                                     selectedValue={ejercicioId}
                                     style={{ height: 100, width: "100%" }}
@@ -178,8 +179,8 @@ const CrearRutina = ({ navigation }) => {
                             </View>
 
                             {/* Dias Lista*/}
-                            <Text style={styles.texto}>Seleccionar Día</Text>
-                            <View style={styles.picker}>
+                            <Text style={globalStyles.label}>Seleccionar Día</Text>
+                            <View style={globalStyles.pickerContainer}>
                                 <Picker
                                     selectedValue={dia}
                                     style={{ height: 100, width: "100%" }}
@@ -196,22 +197,20 @@ const CrearRutina = ({ navigation }) => {
                             </View>
 
                             {/* Series */}
-                            <Text style={styles.texto}>Series</Text>
+                            <Text style={globalStyles.label}>Series</Text>
                             <MyInputText
-                                placeholder="Cantidad de series"
+                                placeholder="Ingrese la cantidad de series"
                                 onChangeText={setSeries}
                                 keyboardType="numeric"
-                                style={styles.input}
                                 value={series}
                             />
 
                             {/* Repeticiones */}
-                            <Text style={styles.texto}>Repeticiones</Text>
+                            <Text style={globalStyles.label}>Repeticiones</Text>
                             <MyInputText
-                                placeholder="Cantidad de repeticiones"
+                                placeholder="Ingrese la cantidad de repeticiones"
                                 onChangeText={setRepeticiones}
                                 keyboardType="numeric"
-                                style={styles.input}
                                 value={repeticiones}
                             />
 

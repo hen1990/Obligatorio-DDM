@@ -1,8 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
-const MySingleButton = ({ onPress, title, style }) => {
+const MySingleButton = ({ onPress, title, style, disabled }) => {
     return (
-        <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
+        <TouchableOpacity
+            style={[styles.button, style, disabled ? styles.disabledButton : null]}
+            onPress={disabled ? null : onPress}
+            disabled={disabled}
+        >
             <View style={styles.view}>
                 <Text style={styles.text}>
                     {title}

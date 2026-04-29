@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 // importar inputs
 import MyInputText from "../../components/MyInputText";
 import MySingleButton from "../../components/MySingleButton";
+import { globalStyles } from "../globalStyles";
 
 import databaseConection from "../../database/database-manager";
 
@@ -52,7 +53,7 @@ const CrearEjercicio = ({ navigation }) => {
 
     const guardarEjercicio = async () => {
         try {
-            const result = await databaseConection.createEjercicio(nombre, tipoMaquina);
+            const result = await databaseConection.createEjercicio(nombre, tipoMaquina, videoUrl);
             return result;
         } catch (error) {
             console.error("Error:", error);
@@ -103,18 +104,17 @@ const CrearEjercicio = ({ navigation }) => {
                     <ScrollView>
                         <KeyboardAvoidingView style={styles.keyboard}>
 
-                            <Text style={styles.texto}>Nombre</Text>
+                            <Text style={globalStyles.label}>Nombre</Text>
                             {/* Nombre */}
                             <MyInputText
-                                placeholder="Nombre"
+                                placeholder="Ingrese el nombre del ejercicio"
                                 onChangeText={setNombre}
-                                style={styles.input}
                                 value={nombre}
                             />
 
-                            <Text style={styles.texto}>Selecciona el tipo de Máquina</Text>
+                            <Text style={globalStyles.label}>Selecciona el tipo de Máquina</Text>
                             {/* Tipo Maquina Lista*/}
-                            <View style={styles.picker}>
+                            <View style={globalStyles.pickerContainer}>
                                 <Picker
                                     selectedValue={tipoMaquina}
                                     style={{ height: 100, width: "100%" }}
@@ -124,12 +124,11 @@ const CrearEjercicio = ({ navigation }) => {
                                     {renderizarListaTiposMaquinas()}
                                 </Picker>
                             </View>
-                            <Text style={styles.texto}>Video Demostrativo</Text>
+                            <Text style={globalStyles.label}>Video Demostrativo</Text>
                             {/* Sala */}
                             <MyInputText
-                                placeholder="URL del video"
+                                placeholder="Ingrese la URL del video"
                                 onChangeText={setVideoUrl}
-                                style={styles.input}
                                 value={videoUrl}
                             />
 

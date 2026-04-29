@@ -14,7 +14,7 @@ const EliminarEjercicio = ({ navigation }) => {
 
     const searchDB = async () => {
         try {
-            const result = await databaseConection.getOneEjercicio(buscarNombre + "%");
+            const result = await databaseConection.getOneEjercicio(buscarNombre);
             return result;
         } catch (error) {
             console.error("Error:", error);
@@ -30,14 +30,15 @@ const EliminarEjercicio = ({ navigation }) => {
         }
         //  llamar a funcion buscar
         const res = await searchDB()
-        if (res.rows.length > 0) {
+        if (res && res.rows && res.rows.length > 0) {
             let elements = []
             for (let i = 0; i < res.rows.length; i++) {
                 elements.push(res.rows[i])
             }
             setEjercicio(elements)
         } else {
-            Alert.alert("No se encontró Tipo de Máquina.")
+            setEjercicio([])
+            Alert.alert("No se encontró ejercicio.")
         }
     }
 
@@ -99,12 +100,12 @@ const EliminarEjercicio = ({ navigation }) => {
 
     const listItemView = (item) => {
         return (
-            <ScrollView styles={styles.generalView}>
-                <View key={item.id_ejercicio} style={styles.listItemView}>
+            <ScrollView style={styles.generalView}>
+                <View key={item.id} style={styles.listItemView}>
                     <View style={styles.textContainer}>
-                        <MyText text={item.nom_ejercicio} style={styles.text_data} />
+                        <MyText text={item.nombre} style={styles.text_data} />
                         <Button title="Eliminar" color={buttonColor}
-                            onPress={() => { confirmarEliminar(item.id_ejercicio) }} />
+                            onPress={() => { confirmarEliminar(item.id) }} />
                     </View>
                     <View style={styles.imageContainer}>
                         {item.fotoUrl ? (
@@ -145,7 +146,7 @@ const EliminarEjercicio = ({ navigation }) => {
                         <FlatList style={styles.flatList}
                             data={ejercicio}
                             contentContainerStyle={styles.flatContainer}
-                            keyExtractor={(item) => item.id_ejercicio.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => listItemView(item)}
                         />
                     ) : (

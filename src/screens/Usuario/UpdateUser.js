@@ -3,6 +3,7 @@ import { StyleSheet, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Alert
 import MySingleButton from "../../components/MySingleButton"
 import MyInputText from "../../components/MyInputText"
 import MyText from "../../components/MyText"
+import { globalStyles } from "../globalStyles";
 
 import databaseConection from "../../database/database-manager";
 
@@ -238,58 +239,52 @@ const UpdateUser = ({ navigation }) => {
                         }} />
                     {!(item.user_id == id) ? "" :
                         <View style={styles.form}>
-                            <Text style={styles.texto}>Actualizar Datos</Text>
+                            <Text style={globalStyles.label}>Actualizar Datos</Text>
                             {/* Nombre */}
                             <MyInputText
-                                placeholder="Nombre"
+                                placeholder="Ingrese el nombre"
                                 onChangeText={setNombre}
-                                style={styles.input}
                                 value={nombre}
                             />
 
                             {/* Apellido */}
                             <MyInputText
-                                placeholder="Apellido"
+                                placeholder="Ingrese el apellido"
                                 onChangeText={setApellido}
-                                style={styles.input}
                                 value={apellido}
                             />
 
                             {/* Cedula */}
                             <MyInputText
-                                placeholder="Cédula (Sin puntos ni guión)"
+                                placeholder="12345678"
                                 onChangeText={setCi}
                                 maxLength={8}
-                                style={styles.input}
                                 value={ci}
                             />
 
-                            <Text style={styles.texto}>Fecha de Nacimiento: DD/MM/AAAA</Text>
+                            <Text style={globalStyles.label}>Fecha de Nacimiento (DD/MM/AAAA)</Text>
                             <View style={styles.enLinea}>
                                 {/* Fecha */}
                                 {/* Dia */}
                                 <MyInputText
-                                    placeholder="Dia"
+                                    placeholder="DD"
                                     onChangeText={setDia}
                                     maxLength={2}
-                                    style={styles.inputFecha}
                                     value={dia}
                                 />
                                 {/* Mes */}
                                 <MyInputText
-                                    placeholder="Mes"
+                                    placeholder="MM"
                                     onChangeText={setMes}
                                     maxLength={2}
-                                    style={styles.inputFecha}
                                     value={mes}
                                 />
                                 {/* Año */}
                                 <MyInputText
-                                    placeholder="Año"
+                                    placeholder="AAAA"
                                     onChangeText={setAnio}
                                     minLength={4}
                                     maxLength={4}
-                                    style={styles.inputFecha}
                                     value={anio}
                                 />
                             </View>
@@ -307,10 +302,9 @@ const UpdateUser = ({ navigation }) => {
                     <View styles={styles.generalView}>
                         <ScrollView >
                             <KeyboardAvoidingView style={styles.keyBoardView}>
-                                <MyText text="Buscar Usuario" style={styles.texto} />
+                                <Text style={globalStyles.label}>Buscar Usuario</Text>
                                 <MyInputText
                                     placeholder="Ingrese Nombre, Apellido o C.I."
-                                    style={styles.input}
                                     onChangeText={(text) => setBuscarNombre(text)}
                                 />
                                 <MySingleButton title="Buscar" onPress={getUserData} />

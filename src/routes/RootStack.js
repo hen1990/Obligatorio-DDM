@@ -9,7 +9,9 @@ const Stack = createStackNavigator();
 import HomeScreen from "../screens/HomeScreen";
 import Usuario from "../screens/Usuario";
 
-//Usuario screen
+import Rol from "../screens/Rol";
+import CrearRol from "../screens/CrearRol";
+import VerTodosRoles from "../screens/VerTodosRoles";
 import RegisterUser from "../screens/Usuario/RegisterUser";
 import UpdateUser from "../screens/Usuario/UpdateUser";
 import DeleteUser from "../screens/Usuario/DeleteUser";
@@ -59,6 +61,54 @@ const RootStack = () => {
                             headerTitleStyle: {
                                 fontWeight: "bold",
                                 fontSize: 30
+                            }
+                        }}
+                    />
+                    {/*Rol */}
+                    <Stack.Screen
+                        name="Rol"
+                        component={Rol}
+                        options={{
+                            title: "Roles",
+                            headerStyle: {
+                                backgroundColor: "#C0CA33",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 36
+                            }
+                        }}
+                    />
+                    {/*CrearRol */}
+                    <Stack.Screen
+                        name="CrearRol"
+                        component={CrearRol}
+                        options={{
+                            title: "Crear Rol",
+                            headerStyle: {
+                                backgroundColor: "#C0CA33",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 36
+                            }
+                        }}
+                    />
+                    {/*VerTodosRoles */}
+                    <Stack.Screen
+                        name="VerTodosRoles"
+                        component={VerTodosRoles}
+                        options={{
+                            title: "Ver Todos los Roles",
+                            headerStyle: {
+                                backgroundColor: "#C0CA33",
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 36
                             }
                         }}
                     />
